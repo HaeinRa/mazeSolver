@@ -3,3 +3,6 @@ misc.xml
 modules.xml
 vcs.xml
 workspace.xml
+.idea/workspace.xml
+.idea/misc.xml
+out
