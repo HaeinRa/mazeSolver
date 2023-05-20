@@ -17,11 +17,7 @@ public class Mouse {
     }
 
     public void decreaseMana(){ // 마나 감소 메소드 -> item 메소드 내에서 사용
-        if (this.mana >= 3) {
-            this.mana -= 3;
-        } else {
-            System.out.println("Not enough mana.");
-        }
+        this.mana -= 3;
     }
 
     public int getEnergy() { // 쥐의 에너지 반환
@@ -45,7 +41,11 @@ public class Mouse {
     }
 
     @Override
-    public String toString() { // 좌표, 에너지, 마나, 스캔 횟수
-        return super.toString();
+    public String toString() {
+        return "Location: " + location +
+                ", Energy: " + energy +
+                ", Mana: " + mana +
+                ", Scan Count: " + scanCount;
     }
+
 }

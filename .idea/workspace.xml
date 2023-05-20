@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="83b79691-a57e-4f6f-a8c5-9332e474cdd1" name="변경" comment="">
+    <list default="true" id="83b79691-a57e-4f6f-a8c5-9332e474cdd1" name="변경" comment="mouse">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Mouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/Mouse.java" afterDir="false" />
     </list>
@@ -55,8 +55,16 @@
       <workItem from="1684559630176" duration="310000" />
       <workItem from="1684559944887" duration="76000" />
       <workItem from="1684560032089" duration="28000" />
-      <workItem from="1684561789203" duration="1019000" />
+      <workItem from="1684561789203" duration="1373000" />
     </task>
+    <task id="LOCAL-00001" summary="mouse">
+      <created>1684562834418</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1684562834418</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -87,5 +95,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="mouse" />
+    <option name="LAST_COMMIT_MESSAGE" value="mouse" />
   </component>
 </project>
