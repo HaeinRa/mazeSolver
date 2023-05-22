@@ -25,10 +25,13 @@ public class Main {
     willChangeMaze.print();*/
     int[][] readMaze = CeremonyAlgorithm.readMaze("C:\\Users\\herje\\OneDrive\\바탕 화면\\한기대\\3학년 1학기\\민고리즘\\민고리즘 텀프\\mazeSolver\\test.txt");
 
+    Point initialLocation = new Point(3, 50); // 초기 위치
+    int initialEnergy = 100; // 초기 에너지
+
     Maze maze = new Maze(readMaze);
+    Mouse mouse = new Mouse(initialLocation, initialEnergy);
 
-
-    GUI gui = new GUI(maze);
+    GUI gui = new GUI(maze, mouse);
     gui.repaint();
   }
 }
