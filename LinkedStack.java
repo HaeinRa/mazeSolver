@@ -10,6 +10,21 @@ class Point {
         System.out.printf("(%d, %d) ", this.x, this.y);
     }
 
+    public Point add() {
+        return add(0, 0);
+    }
+
+    public Point add(int x) {
+        return add(x, 0);
+    }
+
+    public Point add(int x, int y) {
+        Point tmp = new Point(0,0);
+        tmp.x += this.x;
+        tmp.y += this.y;
+        return tmp;
+    }
+
     @Override
     public String toString() {
         return String.format("(%d, %d) ", this.x, this.y);

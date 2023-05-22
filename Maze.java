@@ -22,6 +22,10 @@ public class Maze {
   {
     return cells[x][y];
   }
+  public Cell getCell(Point point) // 원하는 좌표의 cell을 반환
+  {
+    return cells[point.x][point.y];
+  }
   public void update(Point center, int d, Maze maze) // 기준 미로를 참고하여 마우스의 맵을 업데이트
   {
     int m = d/2;

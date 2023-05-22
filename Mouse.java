@@ -5,6 +5,7 @@ public class Mouse {
     private BigDecimal mana; // 마나
     private int scanCount; // 스캔 횟수
     private Point sight; // 쥐의 시야 3x3
+    protected Maze map;
 
     public Mouse(Point location, int energy ) {
         this.location = location; // 쥐의 좌표를 계속 갱신해주는 메소드도 필요하지 않나?
@@ -15,6 +16,10 @@ public class Mouse {
     public void move() { // 쥐 이동 : 이동 거리, 방향, 에너지 등 업데이트
         this.energy -= 1;
         this.mana = mana.add(BigDecimal.valueOf(0.1));
+    }
+
+    public void changeLocation(Point point){
+        this.location = point;
     }
 
 
