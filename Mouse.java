@@ -1,10 +1,9 @@
 import java.math.BigDecimal; // 부동소수점때문에 정확한 값이 안 나와서 사용
 public class Mouse {
-    private Point location; // 쥐의 좌표
+    private Point location; // 쥐의 좌표, 쥐의 시야 3x3 이용
     private int energy; // 에너지
     private BigDecimal mana; // 마나
     private int scanCount; // 스캔 횟수
-    private Point sight; // 쥐의 시야 3x3
     protected Maze map;
 
     public Mouse(Point location, int energy ) {
@@ -24,7 +23,7 @@ public class Mouse {
 
 
     public void scan(){  // 스캔할 때 : 마나 감소, 스캔 횟수 증가시키기
-        if(mana.compareTo(BigDecimal.valueOf(3)) >= 0) {
+        if(mana.compareTo(BigDecimal.valueOf(3)) >= 0) { // 이 조건은 scan에서 확인할 거긴 한데, test해보려고 한 거임
             mana = mana.subtract(BigDecimal.valueOf(3));
             scanCount ++;
         }
@@ -48,9 +47,6 @@ public class Mouse {
         return scanCount;
     }
 
-    public Point getSight(){ // 쥐의 시야 반환
-        return sight;
-    }
 
     @Override
     public String toString() {
