@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class CeremonyAlgorithm {
     private static Maze maze;
     private static GUI gui;
-    private static List<Point> scanList;
+    private static List<Point> scanList, compareList;
     private static Mouse mouse;
     private static LinkedStack<Point> stack, buffer;
     private static int scanMode;
@@ -146,7 +146,7 @@ public class CeremonyAlgorithm {
 
 
                     else{ // 스택이 비어있지 않음(갈 수 있는 곳이 있음)
-                        if(branchCounter>0){ // 분기점이라면
+                        if(branchCounter>1){ // 분기점이라면
                             buffer.push(new Point(-1, -1)); // 분기라는 것을 알린다
                         }
                         if(branchCounter==0){ // 현재는 갈 수 있는 곳이 없어서 이전 분기로 돌아가야한다면
@@ -180,7 +180,56 @@ public class CeremonyAlgorithm {
 //        *           - 쥐를 해당 위치로 움직인다
 //        *           - 해당 위치 VISITED state로 변경한다.
 //        *           - 버퍼에 추가한다.
-                    if()
+                    if(isValidPosByWeight(now.add(-1,0))){ // 상
+                        Point up = new Point(now.x-1, now.y);
+
+                        compareList.add(now.add(-1,0));
+                        branchCounter ++;
+                    }
+                    if(isValidPosByWeight(now.add(0,-1))){ // 좌
+                        stack.push(now.add(0,-1));
+                        branchCounter ++;
+                    }
+                    if(isValidPosByWeight(now.add(0,1))){ // 우
+                        stack.push(now.add(0,1));
+                        branchCounter ++;
+                    }
+                    if(isValidPosByWeight(now.add(1,0))){ // 하
+                        stack.push(now.add(1,0));
+                        branchCounter ++;
+                    }
+
+                    if(stack.isEmpty()){ // 스택이 완전히 비어있음(더 이상 갈 수 있는 곳이 없음)
+                        System.out.println("Fail");
+                        return;
+                    }
+
+
+                    else{ // 스택이 비어있지 않음(갈 수 있는 곳이 있음)
+                        if(branchCounter>1){ // 분기점이라면
+                            buffer.push(new Point(-1, -1)); // 분기라는 것을 알린다
+                        }
+                        if(branchCounter==0){ // 현재는 갈 수 있는 곳이 없어서 이전 분기로 돌아가야한다면
+                            mouse.map.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
+                            while(true){
+                                Point back = buffer.pop(); // 돌아갈 좌표를 뽑는다
+                                if(back.equals(new Point(-1, -1))) // 분기점의 끝이라면
+                                    break;
+                                else{
+                                    mouse.move();
+                                    mouse.changeLocation(back);
+                                    mouse.map.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
+                                }
+                            }
+                        }
+                        else{ // 현재 갈 수 있는 곳이 있다면
+                            now = stack.pop(); // 현재 위치를 결정
+                            mouse.move(); // 쥐를 해당 위치로 움직인다
+                            mouse.changeLocation(now); // 쥐의 위치를 바꾼다
+                            mouse.map.getCell(now).setState(Cell.State.VISIT); // 해당 위치 VISIT state로 변경
+                            buffer.push(now); // 버퍼에 집어넣는다
+                        }
+                    }
 
                 }
 
@@ -206,6 +255,15 @@ public class CeremonyAlgorithm {
             return false;
         else
             return maze.getCell(p.x, p.y).isAvailable() && !maze.getCell(p.x, p.y).isVisited();
+        // 이미 지나간 자리도 추가 해야하나?
+    }
+
+    static boolean isValidPosByWeight(Point p){
+
+        if (p.x<0 || p.y<0 || p.x>=maze.getWidth()-1 || p.y>=maze.getHeight()-1)
+            return false;
+        else
+            return maze.getCell(p.x, p.y).isAvailable();
         // 이미 지나간 자리도 추가 해야하나?
     }
 

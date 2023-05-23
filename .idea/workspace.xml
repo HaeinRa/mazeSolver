@@ -7,7 +7,6 @@
     <list default="true" id="83b79691-a57e-4f6f-a8c5-9332e474cdd1" name="변경" comment="mouse">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CeremonyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/CeremonyAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Mouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/Mouse.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,7 +78,7 @@
       <workItem from="1684559944887" duration="76000" />
       <workItem from="1684560032089" duration="28000" />
       <workItem from="1684561789203" duration="4463000" />
-      <workItem from="1684740797521" duration="1292000" />
+      <workItem from="1684740797521" duration="5928000" />
     </task>
     <task id="LOCAL-00001" summary="mouse">
       <created>1684562834418</created>
