@@ -34,7 +34,7 @@ public class Maze {
   public Point getEndPoint() {
     return point; // null을 반환하면 출구가 없음
   }
-  public void update(Point center, int d, Maze maze) // 기준 미로를 참고하여 마우스의 맵을 업데이트
+  public boolean update(Point center, int d, Maze maze, boolean isFindExit) // 기준 미로를 참고하여 마우스의 맵을 업데이트
   {
     int m = d/2;
     int x;
@@ -46,8 +46,14 @@ public class Maze {
     for (int i=startPoint.x; i<startPoint.x + d; i++) {
       for (int j= startPoint.y; j<startPoint.y + d; j++) {
         this.cells[i][j] = maze.getCell(i, j);
+        if(!isFindExit)
+          if(this.cells[i][j].getState() == Cell.State.EXIT)
+            return true;
+        else
+          return true;
       }
     }
+    return false;
   }
 
   public void print() {

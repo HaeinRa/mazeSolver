@@ -99,7 +99,7 @@ public class CeremonyAlgorithm {
                     // map 업데이트
                     // 스캔 리스트에 추가
                     Point scanPoint = new Point(maze.getHeight()-4, maze.getWidth()-4);
-                    mouse.map.update(scanPoint,2, maze);
+                    isFindExit = mouse.map.update(scanPoint,2, maze, isFindExit);
                     scanList.add(scanPoint);
                 }
                 else if (scanMode == 1) {
@@ -109,7 +109,7 @@ public class CeremonyAlgorithm {
                 }
 
                 // 현재 시야 업데이트
-                mouse.map.update(mouse.getLocation(),1,maze);
+                isFindExit = mouse.map.update(mouse.getLocation(),1,maze, isFindExit);
 
 
                 // 현재 위치를 확인한다.
@@ -170,8 +170,16 @@ public class CeremonyAlgorithm {
                             buffer.push(now); // 버퍼에 집어넣는다
                         }
                     }
+
+
                 }
                 else{ // 출구를 알고 있다면
+                    scanMode = 1; // 스캔모드를 바꾼다
+                    // 경로검사1: 현재 시야와 스캔 리스트가 겹치는지 확인한다.
+                    if(isPointOverlap(mouse.getLocation(), scanList)){
+                        // 경로검사2: A* 알고리즘을 사용하여 경로가 있는지 확인한다.
+                            // 경로가 있다면 출구까지 간다.
+                    }
 
                 }
 
@@ -198,6 +206,20 @@ public class CeremonyAlgorithm {
         else
             return maze.getCell(p.x, p.y).isAvailable() && !maze.getCell(p.x, p.y).isVisited();
         // 이미 지나간 자리도 추가 해야하나?
+    }
+    static boolean isPointOverlap(Point mouse, List<Point> scanList){
+        for (Point scanCenter : scanList) {
+            for (int i = -2; i <= 2; i++) {
+                for (int j = -2; j <= 2; j++) {
+                    Point currentScanPoint = new Point(scanCenter.x + i, scanCenter.y + j);
+                    // 현재 스캔 중인 포인트가 쥐의 시야 범위 내에 있는지 확인
+                    if (Math.abs(currentScanPoint.x - mouse.x) <= 1 && Math.abs(currentScanPoint.y - mouse.y) <= 1) {
+                        return true;  // 겹치는 부분 발견
+                    }
+                }
+            }
+        }
+        return false;  // 겹치는 부분이 없음
     }
 
     static int[][] readMaze(String path){
