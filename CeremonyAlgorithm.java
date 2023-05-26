@@ -171,6 +171,13 @@ public class CeremonyAlgorithm {
                         }
                     }
                 }
+
+
+
+
+
+
+
                 else{ // 출구를 알고 있다면
 
 //        *   - 선택: 출구 거리 가중치 알고리즘을 사용한다
@@ -183,7 +190,7 @@ public class CeremonyAlgorithm {
                     if(isValidPosByWeight(now.add(-1,0))){ // 상
                         Point up = new Point(now.x-1, now.y);
 
-                        compareList.add(now.add(-1,0));
+                        compareList.add(calculateDistance(up, ));
                         branchCounter ++;
                     }
                     if(isValidPosByWeight(now.add(0,-1))){ // 좌
@@ -314,5 +321,12 @@ public class CeremonyAlgorithm {
             j += 1;
         }
         return maze;
+    }
+
+    public static double calculateDistance(Point p1, Point p2) {
+        double deltaX = p2.x - p1.x;
+        double deltaY = p2.y - p2.y;
+        double distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+        return distance;
     }
 }
