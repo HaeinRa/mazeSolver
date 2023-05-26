@@ -20,23 +20,21 @@ public class Main {
             {1,1,1,1,1},
     };
     Maze willChangeMaze = new Maze(m);
-    willChangeMaze.print();
-
     Maze baseMaze = new Maze(m2);
     Point point = new Point(2, 2);
     willChangeMaze.update(point, 3, baseMaze);
 */
 /*
     willChangeMaze.print();*/
-    int[][] readMaze = CeremonyAlgorithm.readMaze("/Users/lahaein/Documents/GitHub/mazeSolver/Maze1.txt");
+    int[][] readMaze = CeremonyAlgorithm.readMaze("/Users/kwon-yechan/Documents/GitHub/mazeSolver/Maze1.txt");
 
-    Point initialLocation = new Point(0, 1); // 초기 위치
+    Point initialLocation = new Point(3, 25); // 초기 위치
     int initialEnergy = 100; // 초기 에너지
 
     Maze maze = new Maze(readMaze);
     Mouse mouse = new Mouse(initialLocation, initialEnergy, maze);
 
-    Point scanPoint = new Point(0, 2);
+    Point scanPoint = new Point(3, 27);
 
     //maze, mouse
     GUI gui = new GUI(maze, mouse);
