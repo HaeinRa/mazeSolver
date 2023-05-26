@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class CeremonyAlgorithm {
     private static Maze maze;
@@ -21,7 +22,7 @@ public class CeremonyAlgorithm {
         return path;
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws InterruptedException {
 
 
 
@@ -34,14 +35,20 @@ public class CeremonyAlgorithm {
 
         // SetUp: 미로 txt 파일 읽기 (출구, 벽)
         // SetUp: 사용 가능한 미로로 변환 (Cell에 저장)
-        maze = new Maze(readMaze("test.txt"));
+        stack = new LinkedStack<Point>();
+        buffer = new LinkedStack<Point>();
+        maze = new Maze(readMaze("Maze1.txt"));
+        mouse = new Mouse(new Point(0,1), maze.getHeight()*maze.getWidth(), maze);
+        gui = new GUI(maze,mouse);
+
 
         // SetUp: GUI 띄우기 (미로, 쥐)
-        //gui.draw(maze);
+        gui.repaint();
+        TimeUnit.SECONDS.sleep(1);
 
 
 
-
+        System.out.println("point001: setup done");
 
 
         isFindExit = false;
@@ -49,40 +56,59 @@ public class CeremonyAlgorithm {
         branchCounter = 0; // 분기점인지 체크하는 카운터
 
         // Run 단계 시작 (반복시켜야함)
-        branchCounter = 0; // 분기점 카운터 초기화
+        System.out.println("point002: Run state start");
 
         // 현재 쥐의 상태를 확인 (체력과 마나)
-        mouse = new Mouse(new Point(0,1), maze.getHeight()*maze.getWidth());
         // 체력이 남아 있다면
         while(true){
+            branchCounter = 0; // 분기점 카운터 초기화
+            System.out.println("stack: "+ stack);
+            System.out.println("mouse: "+ mouse.getLocation());
+            TimeUnit.MILLISECONDS.sleep(20);
+            System.out.println("point003: Enter while loop");
+            gui.repaint();
+            System.out.println("point003-1: gui repaint");
+
             if (mouse.getEnergy() > 0) {
+                System.out.println("point004: Energy condition");
+
                 // 5x5 스캔하기 (모드에 따라)
-                if(scanMode == 0){
-                    // map 업데이트
-                    // 스캔 리스트에 추가
-                    Point scanPoint = new Point(maze.getHeight()-4, maze.getWidth()-4);
-                    isFindExit = mouse.map.update(scanPoint,2, maze, isFindExit);
-                    scanList.add(scanPoint);
-                }
-                else if (scanMode == 1) {
-                    // something:1
-                    // map 업데이트
-                    // 스캔 리스트에 추가
-                }
+//                if(scanMode == 0){
+//                    System.out.println("point005: scanMode 0");
+//
+//                    // map 업데이트
+//                    // 스캔 리스트에 추가
+//                    Point scanPoint = new Point(maze.getHeight()-4, maze.getWidth()-4);
+//                    isFindExit = mouse.map.update(scanPoint,5, maze, isFindExit);
+//                    scanList.add(scanPoint);
+//                }
+//                else if (scanMode == 1) {
+//                    System.out.println("point006: scanMode 1");
+//
+//                    // something:1
+//                    // map 업데이트
+//                    // 스캔 리스트에 추가
+//                }
 
                 // 현재 시야 업데이트
-                isFindExit = mouse.map.update(mouse.getLocation(),1,maze, isFindExit);
+                isFindExit = mouse.map.update(mouse.getLocation(),3,maze, isFindExit);
+                System.out.println("point007: Update sight");
 
 
                 // 현재 위치를 확인한다.
                 Point now = mouse.getLocation();
+
+
                 // 현재 위치가 출구라면 Exit
                 if (maze.getCell(now.x, now.y).isExit()){
+                    System.out.println("point008: Exit state, Done");
                     System.out.println("Exit");
                     return;
                 }
                 // else
                 if (!isFindExit){ // 출구를 모르고 있다면
+                    System.out.println("point009: no Exit info");
+
                     // 갈 곳이 있나 체크
                     if(isValidPos(now.add(-1,0))){
                         stack.push(now.add(-1,0));
@@ -100,31 +126,51 @@ public class CeremonyAlgorithm {
                         stack.push(now.add(1,0));
                         branchCounter ++;
                     }
+                    System.out.println("point010: isValidPos Done ");
+
 
                     if(stack.isEmpty()){ // 스택이 완전히 비어있음(더 이상 갈 수 있는 곳이 없음)
+                        System.out.println("point011: Stack is totally empty, Done");
                         System.out.println("Fail");
                         return;
                     }
 
 
                     else{ // 스택이 비어있지 않음(갈 수 있는 곳이 있음)
+                        System.out.println("point012: Stack is not empty");
+
                         if(branchCounter>0){ // 분기점이라면
+                            System.out.println("point013: Branch Set");
+
                             buffer.push(new Point(-1, -1)); // 분기라는 것을 알린다
                         }
                         if(branchCounter==0){ // 현재는 갈 수 있는 곳이 없어서 이전 분기로 돌아가야한다면
+                            System.out.println("point014: Can not go for now, Back to branch, Start buffer pop");
+                            Point prev = new Point();
                             mouse.map.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
                             while(true){
+                                System.out.println("point015: do Buffer pop");
                                 Point back = buffer.pop(); // 돌아갈 좌표를 뽑는다
-                                if(back.equals(new Point(-1, -1))) // 분기점의 끝이라면
+                                System.out.println("buffer: "+buffer);
+
+                                if(back.x == -1 && back.y == -1) { // 분기점의 끝이라면
+                                    System.out.println("point016: Branch arrived");
+                                    buffer.push(prev);
                                     break;
-                                else{
+                                }else{
+                                    System.out.println("point017: Mouse moving");
                                     mouse.move();
                                     mouse.changeLocation(back);
+                                    gui.repaint();
+                                    TimeUnit.MILLISECONDS.sleep(200);
                                     mouse.map.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
+                                    prev = back;
                                 }
+
                             }
                         }
                         else{ // 현재 갈 수 있는 곳이 있다면
+                            System.out.println("point018: Can go for now, Keep going");
                             now = stack.pop(); // 현재 위치를 결정
                             mouse.move(); // 쥐를 해당 위치로 움직인다
                             mouse.changeLocation(now); // 쥐의 위치를 바꾼다
@@ -136,9 +182,15 @@ public class CeremonyAlgorithm {
 
                 }
                 else{ // 출구를 알고 있다면
+                    System.out.println("point019: Exit already found");
+                    System.out.println(mouse.map.getEndPoint());
                     scanMode = 1; // 스캔모드를 바꾼다
+                    System.out.println("point020: change scanMode to 1");
+
                     // 경로검사1: 현재 시야와 스캔 리스트가 겹치는지 확인한다.
                     if(isPointOverlap(mouse.getLocation(), scanList)){
+                        System.out.println("point021: Check overlap between sight and scanList ");
+
                         // 경로검사2: A* 알고리즘을 사용하여 경로가 있는지 확인한다.
                             // 경로가 있다면 출구까지 간다.
                     }

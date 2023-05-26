@@ -3,6 +3,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class GUI extends JPanel {
+    private Mouse mouse;
     private Maze maze;
     private Mouse mouse;
     private int cellSize = 10;
@@ -21,11 +22,7 @@ public class GUI extends JPanel {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(this);
-//        JFrame frame = new JFrame("Maze");
-//        frame.setSize(1000, 1000);
-//        frame.setVisible(true);
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        frame.add(this);
+        frame.setVisible(true);
     }
 
     public void paintComponent(Graphics g) {
@@ -56,4 +53,5 @@ public class GUI extends JPanel {
             }
         }
     }
+
 }
