@@ -90,7 +90,6 @@ public class AstarAlgorithm
 
     return null;
   }
-
   private int[][] reconstructPath(int[] current) {
     int[][] path = new int[g_score[current[0]][current[1]] + 1][2];
     int index = path.length - 1;

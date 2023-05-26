@@ -160,7 +160,7 @@ public class CeremonyAlgorithm {
                                     mouse.move();
                                     mouse.changeLocation(back);
                                     gui.repaint();
-                                    TimeUnit.MILLISECONDS.sleep(200);
+                                    TimeUnit.MILLISECONDS.sleep(10);
                                     mouse.map.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
                                     prev = back;
                                 }
@@ -176,8 +176,6 @@ public class CeremonyAlgorithm {
                             buffer.push(now); // 버퍼에 집어넣는다
                         }
                     }
-
-
                 }
                 else{ // 출구를 알고 있다면
                     System.out.println("point019: Exit already found");
@@ -186,15 +184,29 @@ public class CeremonyAlgorithm {
                     System.out.println("point020: change scanMode to 1");
 
                     // 경로검사1: 현재 시야와 스캔 리스트가 겹치는지 확인한다.
-                    if(isPointOverlap(mouse.getLocation(), scanList)){
+                    if(isPointOverlap(mouse.getLocation(), scanList))
+                    {
                         System.out.println("point021: Check overlap between sight and scanList ");
-
-                        // 경로검사2: A* 알고리즘을 사용하여 경로가 있는지 확인한다.
-                            // 경로가 있다면 출구까지 간다.
                     }
 
-                }
+                    // 경로검사2: A* 알고리즘을 사용하여 경로가 있는지 확인한다.
+                    AstarAlgorithm aStar = new AstarAlgorithm(maze, mouse.getLocation().x, mouse.getLocation().y, maze.getEndPoint().x, maze.getEndPoint().y);
+                    int[][] path = aStar.run();
 
+                    // 경로가 있다면 출구까지 간다.
+                    if (path == null)
+                    {
+                        System.out.println("no route");
+                    }
+                    else {
+                        for (int i=0;i<path.length; i++) {
+                            mouse.move();
+                            Point point = new Point(path[i][0], path[i][1]);
+                            System.out.println(point.x + ", " + point.y);
+                            mouse.changeLocation(point);
+                        }
+                    }
+                }
             } else { // 체력이 남아있지 않다면
                 System.out.println("Fail: 체력 없음");
                 return;
@@ -233,7 +245,6 @@ public class CeremonyAlgorithm {
         }
         return false;  // 겹치는 부분이 없음
     }
-
     static int[][] readMaze(String path){
         Scanner scanner = null;
         try {

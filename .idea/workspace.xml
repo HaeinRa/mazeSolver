@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="83b79691-a57e-4f6f-a8c5-9332e474cdd1" name="변경" comment="">
+    <list default="true" id="83b79691-a57e-4f6f-a8c5-9332e474cdd1" name="변경" comment="변경">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AstarAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/AstarAlgorithm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CeremonyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/CeremonyAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LinkedStack.java" beforeDir="false" afterPath="$PROJECT_DIR$/LinkedStack.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Maze.java" beforeDir="false" afterPath="$PROJECT_DIR$/Maze.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -136,7 +134,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685096618872</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="변경">
+      <created>1685108237433</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1685108237433</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -171,6 +176,7 @@
     <MESSAGE value="update 함수 예외 처리" />
     <MESSAGE value="test 케이스 추가" />
     <MESSAGE value="출구 알 때" />
-    <option name="LAST_COMMIT_MESSAGE" value="출구 알 때" />
+    <MESSAGE value="변경" />
+    <option name="LAST_COMMIT_MESSAGE" value="변경" />
   </component>
 </project>
