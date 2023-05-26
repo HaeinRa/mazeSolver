@@ -34,7 +34,7 @@ public class CeremonyAlgorithm {
 
         // SetUp: 미로 txt 파일 읽기 (출구, 벽)
         // SetUp: 사용 가능한 미로로 변환 (Cell에 저장)
-        maze = new Maze(readMaze("test.txt"));
+        maze = new Maze(readMaze("C:\\Users\\user\\matrix\\Maze1.txt"));
 
         // SetUp: GUI 띄우기 (미로, 쥐)
         //gui.draw(maze);
@@ -170,16 +170,24 @@ public class CeremonyAlgorithm {
                             buffer.push(now); // 버퍼에 집어넣는다
                         }
                     }
-
-
                 }
                 else{ // 출구를 알고 있다면
                     scanMode = 1; // 스캔모드를 바꾼다
                     // 경로검사1: 현재 시야와 스캔 리스트가 겹치는지 확인한다.
-                    if(isPointOverlap(mouse.getLocation(), scanList)){
-                        // 경로검사2: A* 알고리즘을 사용하여 경로가 있는지 확인한다.
+                    if(isPointOverlap(mouse.getLocation(), scanList))
+                    {
+                        AstarAlgorithm aStar = new AstarAlgorithm(maze, mouse.getLocation().x, mouse.getLocation().y, maze.getEndPoint().x, maze.getEndPoint().y);
+                        int[][] path = aStar.run();
+                        if (path == null) System.out.println("no route");
+                        else {
+                            for (int i=0; i<path.length; i++) {
+                                System.out.print(path[i][0]);
+                                System.out.print(path[i][1]);
+                            }
+                        }
                             // 경로가 있다면 출구까지 간다.
                     }
+
 
                 }
 

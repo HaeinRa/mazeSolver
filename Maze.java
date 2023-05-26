@@ -62,12 +62,14 @@ public class Maze {
 
     for (int i = startPoint.x; i < startPoint.x + d; i++) {
       for (int j = startPoint.y; j < startPoint.y + d; j++) {
-        this.cells[i][j] = maze.getCell(i, j);
-        if (!isFindExit) {
-          if (this.cells[i][j].getState() == Cell.State.EXIT)
+        if (i < maze.getWidth() && j < maze.getHeight()) {
+          this.cells[i][j] = maze.getCell(i, j);
+          if (!isFindExit) {
+            if (this.cells[i][j].getState() == Cell.State.EXIT)
+              return true;
+          } else {
             return true;
-        } else {
-          return true;
+          }
         }
       }
     }
