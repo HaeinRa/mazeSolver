@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class CeremonyAlgorithm {
@@ -80,7 +81,6 @@ public class CeremonyAlgorithm {
          *           - 버퍼가 비워질 때가지 쥐를 해당 위치로 움직인다
          *           - 해당 위치 NotRecommended state로 변경한다
          */
-
 
         isFindExit = false;
         scanMode = 0;
@@ -170,27 +170,30 @@ public class CeremonyAlgorithm {
                             buffer.push(now); // 버퍼에 집어넣는다
                         }
                     }
-
-
                 }
                 else{ // 출구를 알고 있다면
                     scanMode = 1; // 스캔모드를 바꾼다
                     // 경로검사1: 현재 시야와 스캔 리스트가 겹치는지 확인한다.
                     if(isPointOverlap(mouse.getLocation(), scanList)){
                         // 경로검사2: A* 알고리즘을 사용하여 경로가 있는지 확인한다.
+                        AstarAlgorithm aStar = new AstarAlgorithm(maze, mouse.getLocation().x, mouse.getLocation().y, maze.getEndPoint().x, maze.getEndPoint().y);
+                        int[][] path = aStar.run();
+                        if (path != null) {
+                            for (int i=0; i<path.length; i++) {
+
+                            }
                             // 경로가 있다면 출구까지 간다.
+                        }
                     }
-
                 }
-
             } else { // 체력이 남아있지 않다면
                 System.out.println("Fail: 체력 없음");
                 return;
             }
         }
-
     }
-
+    // a* 알고리즘
+    // 맨하탄 거리로 휴리스틱 값을 구한다.
     static boolean isValidPos(int x, int y){
 
         if (x<0 || y<0 || x>=maze.getWidth()-1 || y>=maze.getHeight()-1)

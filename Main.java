@@ -48,6 +48,5 @@ public class Main {
 
     gui.repaint();
     //gui.drawMaze(maze, mouse);
-
   }
 }

@@ -40,7 +40,7 @@ public class GUI extends JPanel {
                 } else if (maze.getCell(i, j).getState() == Cell.State.NotRecommended) {
                     g2d.setColor(Color.ORANGE);
                 }
-                if (mouse.getLocation().x == j && mouse.getLocation().y == i) {
+                if (mouse.getLocation().x == i && mouse.getLocation().y == j) {
                     g2d.setColor(Color.BLUE);
                 }
 
