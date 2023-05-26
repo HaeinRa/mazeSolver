@@ -214,28 +214,32 @@ public class CeremonyAlgorithm {
                     if(isValidPosByWeight(now.add(-1,0))){ // 상
                         Point up = new Point(now.x-1, now.y);
                         points.add(up);
+                        System.out.println("up : " + up);
                         branchCounter ++;
                     }
                     if(isValidPosByWeight(now.add(0,-1))){ // 좌
                         Point left = new Point(now.x, now.y-1);
                         points.add(left);
+                        System.out.println("left : " + left);
                         branchCounter ++;
                     }
                     if(isValidPosByWeight(now.add(0,1))){ // 우
                         Point right = new Point(now.x, now.y+1);
                         points.add(right);
+                        System.out.println("right : " + right);
                         branchCounter ++;
                     }
                     if(isValidPosByWeight(now.add(1,0))){ // 하
                         Point down = new Point(now.x+1, now.y);
                         points.add(down);
+                        System.out.println("down : " + down);
                         branchCounter ++;
                     }
 
 
 //                    Stack<Point> stack = new Stack<>();
                     // 거리에 따라 우선순위를 두는 우선순위큐 distanceQueue를 생성한다.
-                    PriorityQueue<Point> distanceQueue = new PriorityQueue<>(Comparator.comparingDouble(p -> calculateDistance(p)));
+                    PriorityQueue<Point> distanceQueue = new PriorityQueue<>(Comparator.comparingDouble(p -> -calculateDistance(p)));
 
                     if(distanceQueue == null){
                         System.out.println("null");
@@ -301,7 +305,7 @@ public class CeremonyAlgorithm {
 
     static boolean isValidPos(int x, int y){
 
-        if (x<0 || y<0 || x>=maze.getWidth()-1 || y>=maze.getHeight()-1)
+        if (x<0 || y<0 || x>=maze.getWidth() || y>=maze.getHeight())
             return false;
         else
             return maze.getCell(x, y).isAvailable() && !maze.getCell(x, y).isVisited();
@@ -309,7 +313,7 @@ public class CeremonyAlgorithm {
     }
     static boolean isValidPos(Point p){
 
-        if (p.x<0 || p.y<0 || p.x>=maze.getWidth()-1 || p.y>=maze.getHeight()-1)
+        if (p.x<0 || p.y<0 || p.x>=maze.getWidth() || p.y>=maze.getHeight())
             return false;
         else
             return maze.getCell(p.x, p.y).isAvailable() && !maze.getCell(p.x, p.y).isVisited();
@@ -332,7 +336,7 @@ public class CeremonyAlgorithm {
 
     static boolean isValidPosByWeight(Point p){
 
-        if (p.x<0 || p.y<0 || p.x>=maze.getWidth()-1 || p.y>=maze.getHeight()-1)
+        if (p.x<0 || p.y<0 || p.x>=maze.getWidth() || p.y>=maze.getHeight())
             return false;
         else
             return maze.getCell(p.x, p.y).isAvailable();
