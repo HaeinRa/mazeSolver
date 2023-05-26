@@ -6,8 +6,8 @@ public class Maze {
   Maze(int[][] maze) {
     this.width = maze.length;
     this.height = maze[0].length;
+    this.point = new Point();
     cells = new Cell[width][height];
-    point = new Point();
     for (int i=0; i<this.width; i++) {
       for (int j=0; j<this.height; j++) {
         cells[i][j] = new Cell(maze[i][j]);
@@ -60,18 +60,20 @@ public class Maze {
     }
     Point startPoint = new Point(x, y);
 
-    for (int i=startPoint.x; i<startPoint.x + d; i++) {
-      for (int j= startPoint.y; j<startPoint.y + d; j++) {
+    for (int i = startPoint.x; i < startPoint.x + d; i++) {
+      for (int j = startPoint.y; j < startPoint.y + d; j++) {
         this.cells[i][j] = maze.getCell(i, j);
-        if(!isFindExit)
-          if(this.cells[i][j].getState() == Cell.State.EXIT)
+        if (!isFindExit) {
+          if (this.cells[i][j].getState() == Cell.State.EXIT)
             return true;
-        else
+        } else {
           return true;
+        }
       }
     }
     return false;
   }
+
 
   public void print() {
     for (int x = 0; x < width; x++) {

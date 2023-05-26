@@ -11,9 +11,9 @@ public class GUI extends JPanel {
         this.mouse = mouse;
         JFrame frame = new JFrame("Maze");
         frame.setSize(1000, 1000);
-        frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(this);
+        frame.setVisible(true);
     }
 
     public void paintComponent(Graphics g) {

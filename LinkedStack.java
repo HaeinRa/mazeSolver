@@ -1,12 +1,13 @@
 
 class Point {
     int x, y;
+    Point(){
+        this.x = -99;
+        this.y = -99;
+    }
     Point(int x, int y){
         this.x = x;
         this.y = y;
-    }
-    Point() {
-        // default
     }
     void printPoint(){
         System.out.printf("(%d, %d) ", this.x, this.y);
@@ -21,11 +22,9 @@ class Point {
     }
 
     public Point add(int x, int y) {
-        Point tmp = new Point(0,0);
-        tmp.x += this.x;
-        tmp.y += this.y;
-        return tmp;
+        return new Point(this.x + x, this.y + y);
     }
+
 
     @Override
     public String toString() {

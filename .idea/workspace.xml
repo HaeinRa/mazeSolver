@@ -4,12 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="2dda7934-22d0-4588-9e19-256db6474018" name="Changes" comment="test 케이스 추가">
       <change afterPath="$PROJECT_DIR$/AstarAlgorithm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CeremonyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/CeremonyAlgorithm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/GUI.java" afterDir="false" />
+=======
+    <list default="true" id="83b79691-a57e-4f6f-a8c5-9332e474cdd1" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+>>>>>>> origin/feature4
       <change beforePath="$PROJECT_DIR$/LinkedStack.java" beforeDir="false" afterPath="$PROJECT_DIR$/LinkedStack.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Main.java" afterDir="false" />
     </list>
@@ -44,6 +49,10 @@
     &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+<<<<<<< HEAD
+=======
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+>>>>>>> origin/feature4
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/lahaein/Documents/GitHub/mazeSolver&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -56,6 +65,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+<<<<<<< HEAD
   <component name="RunManager" selected="Application.Main">
     <configuration name="CeremonyAlgorithm" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="CeremonyAlgorithm" />
@@ -64,6 +74,9 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+=======
+  <component name="RunManager" selected="애플리케이션.Main">
+>>>>>>> origin/feature4
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="mazeSolver" />
@@ -80,8 +93,12 @@
     </configuration>
     <recent_temporary>
       <list>
+<<<<<<< HEAD
         <item itemvalue="Application.Main" />
         <item itemvalue="Application.CeremonyAlgorithm" />
+=======
+        <item itemvalue="애플리케이션.Main" />
+>>>>>>> origin/feature4
       </list>
     </recent_temporary>
   </component>
@@ -96,7 +113,14 @@
       <workItem from="1684559630176" duration="310000" />
       <workItem from="1684559944887" duration="76000" />
       <workItem from="1684560032089" duration="28000" />
+<<<<<<< HEAD
       <workItem from="1684561789203" duration="3438000" />
+=======
+      <workItem from="1684561789203" duration="4463000" />
+      <workItem from="1684740797521" duration="5928000" />
+      <workItem from="1685095685898" duration="3429000" />
+      <workItem from="1685099575426" duration="1710000" />
+>>>>>>> origin/feature4
     </task>
     <task id="LOCAL-00001" summary="mouse">
       <created>1684562834418</created>
@@ -126,7 +150,18 @@
       <option name="project" value="LOCAL" />
       <updated>1685101676548</updated>
     </task>
+<<<<<<< HEAD
     <option name="localTasksCounter" value="5" />
+=======
+    <task id="LOCAL-00005" summary="출구 알 때">
+      <created>1685096618872</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1685096618872</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
+>>>>>>> origin/feature4
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -158,8 +193,13 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="mouse" />
+<<<<<<< HEAD
     <MESSAGE value="update 함수 예외 처리" />
     <MESSAGE value="test 케이스 추가" />
     <option name="LAST_COMMIT_MESSAGE" value="test 케이스 추가" />
+=======
+    <MESSAGE value="출구 알 때" />
+    <option name="LAST_COMMIT_MESSAGE" value="출구 알 때" />
+>>>>>>> origin/feature4
   </component>
 </project>
