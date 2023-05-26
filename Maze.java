@@ -7,6 +7,7 @@ public class Maze {
     this.width = maze.length;
     this.height = maze[0].length;
     cells = new Cell[width][height];
+    point = new Point();
     for (int i=0; i<this.width; i++) {
       for (int j=0; j<this.height; j++) {
         cells[i][j] = new Cell(maze[i][j]);
@@ -40,7 +41,23 @@ public class Maze {
     int x;
     int y;
     x = center.x - m;
+    if (x < 0) // 계산된 x좌표가 왼쪽 벽이거나 벗어나면
+    {
+      x = 0;
+    }
+    else if (x >= maze.getWidth())
+    {
+      x = maze.getWidth() - 1;;
+    }
     y = center.y - m;
+    if (y < 0)
+    {
+      y = 0;
+    }
+    else if (y >= maze.getHeight())
+    {
+      y = maze.getHeight() - 1;
+    }
     Point startPoint = new Point(x, y);
 
     for (int i=startPoint.x; i<startPoint.x + d; i++) {
