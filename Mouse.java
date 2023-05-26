@@ -6,9 +6,10 @@ public class Mouse {
     private int scanCount; // 스캔 횟수
     protected Maze map;
 
-    public Mouse(Point location, int energy ) {
+    public Mouse(Point location, int energy, Maze map ) {
         this.location = location; // 쥐의 좌표를 계속 갱신해주는 메소드도 필요하지 않나?
         this.energy = energy;
+        this.map = map;
         mana = BigDecimal.valueOf(3);
     }
 
@@ -47,6 +48,16 @@ public class Mouse {
         return scanCount;
     }
 
+    public void setMap(){
+        for (int i=0; i<map.getWidth(); i++) {
+            for (int j=0; j<map.getHeight(); j++) {
+                map.getCell(i,j).setState(Cell.State.WALL);
+            }
+        }
+    }
+
+
+
 
     @Override
     public String toString() {
@@ -59,26 +70,26 @@ public class Mouse {
 
 
     public static void main(String[] args) {
-        Point initialLocation = new Point(3, 100); // 초기 위치
-        int initialEnergy = 100; // 초기 에너지
-
-        Mouse mouse = new Mouse(initialLocation, initialEnergy);
-        System.out.println("mouse의 초기 상태 >>> "+mouse +"\n"); // 객체 출력
-
-        mouse.move();
-        System.out.println("mouse가 move한 상태 >>> "+mouse +"\n"); // 이동 후 객체 출력
-
-        // 다른 동작 수행...
-
-        // 확인하고자 하는 다양한 동작 수행 후 객체 출력
-        mouse.scan();
-        System.out.println("mouse가 scan한 상태 >>> "+mouse +"\n");
-
-        mouse.move();
-        System.out.println("mouse의 move한 상태 >>> "+mouse +"\n");
-
-        mouse.move();
-        System.out.println("mouse의 move한 상태 >>> "+mouse +"\n");
+//        Point initialLocation = new Point(3, 100); // 초기 위치
+//        int initialEnergy = 100; // 초기 에너지
+//
+//        Mouse mouse = new Mouse(initialLocation, initialEnergy);
+//        System.out.println("mouse의 초기 상태 >>> "+mouse +"\n"); // 객체 출력
+//
+//        mouse.move();
+//        System.out.println("mouse가 move한 상태 >>> "+mouse +"\n"); // 이동 후 객체 출력
+//
+//        // 다른 동작 수행...
+//
+//        // 확인하고자 하는 다양한 동작 수행 후 객체 출력
+//        mouse.scan();
+//        System.out.println("mouse가 scan한 상태 >>> "+mouse +"\n");
+//
+//        mouse.move();
+//        System.out.println("mouse의 move한 상태 >>> "+mouse +"\n");
+//
+//        mouse.move();
+//        System.out.println("mouse의 move한 상태 >>> "+mouse +"\n");
 
     }
 

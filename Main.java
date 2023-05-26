@@ -1,5 +1,8 @@
+import javax.swing.*;
+import java.util.concurrent.TimeUnit;
+
 public class Main {
-  public static void main(String[] arg) {
+  public static void main(String[] arg) throws InterruptedException {
 /*
     System.out.println("채승윤");
     int[][] m = {
@@ -23,15 +26,27 @@ public class Main {
 */
 /*
     willChangeMaze.print();*/
-    int[][] readMaze = CeremonyAlgorithm.readMaze("C:\\Users\\herje\\OneDrive\\바탕 화면\\한기대\\3학년 1학기\\민고리즘\\민고리즘 텀프\\mazeSolver\\test.txt");
+    int[][] readMaze = CeremonyAlgorithm.readMaze("/Users/kwon-yechan/Documents/GitHub/mazeSolver/Maze1.txt");
 
-    Point initialLocation = new Point(3, 50); // 초기 위치
+    Point initialLocation = new Point(3, 25); // 초기 위치
     int initialEnergy = 100; // 초기 에너지
 
     Maze maze = new Maze(readMaze);
-    Mouse mouse = new Mouse(initialLocation, initialEnergy);
+    Mouse mouse = new Mouse(initialLocation, initialEnergy, maze);
 
+    Point scanPoint = new Point(3, 27);
+
+    //maze, mouse
     GUI gui = new GUI(maze, mouse);
     gui.repaint();
+
+    TimeUnit.SECONDS.sleep(1);
+
+    maze.update(scanPoint, 3, maze, false);
+    mouse.changeLocation(scanPoint);
+
+    gui.repaint();
+    //gui.drawMaze(maze, mouse);
+
   }
 }
