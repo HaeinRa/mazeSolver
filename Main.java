@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
@@ -33,9 +34,9 @@ public class Main {
     int initialEnergy = 100; // 초기 에너지
 
     Maze maze = new Maze(readMaze);
-    Mouse mouse = new Mouse(initialLocation, initialEnergy);
+    Mouse mouse = new Mouse(initialLocation, initialEnergy, maze);
 
-    Point scanPoint = new Point(0, 2);
+    Point scanPoint = new Point(3, 27);
 
     //maze, mouse
     GUI gui = new GUI(maze, mouse);

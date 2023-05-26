@@ -11,9 +11,9 @@ public class GUI extends JPanel {
         this.mouse = mouse;
         JFrame frame = new JFrame("Maze");
         frame.setSize(1000, 1000);
-        frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(this);
+        frame.setVisible(true);
     }
 
     public void paintComponent(Graphics g) {
@@ -40,7 +40,7 @@ public class GUI extends JPanel {
                 } else if (maze.getCell(i, j).getState() == Cell.State.NotRecommended) {
                     g2d.setColor(Color.ORANGE);
                 }
-                if (mouse.getLocation().x == j && mouse.getLocation().y == i) {
+                if (mouse.getLocation().x == i && mouse.getLocation().y == j) {
                     g2d.setColor(Color.BLUE);
                 }
 
