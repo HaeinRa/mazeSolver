@@ -27,15 +27,15 @@ public class Main {
 */
 /*
     willChangeMaze.print();*/
-    int[][] readMaze = CeremonyAlgorithm.readMaze("C:\\Users\\user\\matrix\\Maze1.txt");
+    int[][] readMaze = CeremonyAlgorithm.readMaze("/Users/lahaein/Documents/GitHub/mazeSolver/Maze1.txt");
 
-    Point initialLocation = new Point(3, 25); // 초기 위치
+    Point initialLocation = new Point(0, 1); // 초기 위치
     int initialEnergy = 100; // 초기 에너지
 
     Maze maze = new Maze(readMaze);
     Mouse mouse = new Mouse(initialLocation, initialEnergy);
 
-    Point scanPoint = new Point(3, 27);
+    Point scanPoint = new Point(0, 2);
 
     //maze, mouse
     GUI gui = new GUI(maze, mouse);
