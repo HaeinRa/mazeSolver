@@ -2,6 +2,7 @@ public class Maze {
   Cell[][] cells;
   private int width;
   private int height;
+  private Point point;
   Maze(int[][] maze) {
     this.width = maze.length;
     this.height = maze[0].length;
@@ -9,6 +10,10 @@ public class Maze {
     for (int i=0; i<this.width; i++) {
       for (int j=0; j<this.height; j++) {
         cells[i][j] = new Cell(maze[i][j]);
+        if(cells[i][j].getState() == Cell.State.EXIT) {
+          point.x = i;
+          point.y = j;
+        }
       }
     }
   }
@@ -25,6 +30,9 @@ public class Maze {
   public Cell getCell(Point point) // 원하는 좌표의 cell을 반환
   {
     return cells[point.x][point.y];
+  }
+  public Point getEndPoint() {
+    return point; // null을 반환하면 출구가 없음
   }
   public void update(Point center, int d, Maze maze) // 기준 미로를 참고하여 마우스의 맵을 업데이트
   {
