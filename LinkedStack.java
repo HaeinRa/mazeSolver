@@ -5,6 +5,9 @@ class Point {
         this.x = x;
         this.y = y;
     }
+    Point() {
+        //
+    }
 
     void printPoint(){
         System.out.printf("(%d, %d) ", this.x, this.y);

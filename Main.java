@@ -1,52 +1,27 @@
-import javax.swing.*;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
-    public static void main(String[] arg) throws InterruptedException {
-/*
-    System.out.println("채승윤");
-    int[][] m = {
-            {1,0,1,1,1},
-            {1,0,0,0,1},
-            {1,0,0,0,0},
-            {1,0,0,0,1},
-            {1,1,1,1,1}
-    };
-    int[][] m2 = {
-            {1,0,1,1,1},
-            {1,1,1,1,1},
-            {1,1,1,1,1},
-            {1,1,1,1,1},
-            {1,1,1,1,1},
-    };
-    Maze willChangeMaze = new Maze(m);
-    Maze baseMaze = new Maze(m2);
-    Point point = new Point(2, 2);
-    willChangeMaze.update(point, 3, baseMaze);
-*/
-/*
-    willChangeMaze.print();*/
-        int[][] readMaze = CeremonyAlgorithm.readMaze("C:\\Users\\herje\\OneDrive\\바탕 화면\\한기대\\3학년 1학기\\민고리즘\\민고리즘 텀프\\mazeSolver\\test.txt");
+  public static void main(String[] arg) throws InterruptedException {
 
-        Point initialLocation = new Point(0, 1); // 초기 위치
-        int initialEnergy = 100; // 초기 에너지
+    int[][] readMaze = CeremonyAlgorithm.readMaze("C:\\Users\\herje\\OneDrive\\바탕 화면\\한기대\\3학년 1학기\\민고리즘\\민고리즘 텀프\\mazeSolver\\test.txt");
 
-        Maze maze = new Maze(readMaze);
-        Mouse mouse = new Mouse(initialLocation, initialEnergy);
+    Point initialLocation = new Point(0, 1); // 초기 위치
+    int initialEnergy = 100; // 초기 에너지
 
-        Point scanPoint = new Point(3, 27);
+    Maze maze = new Maze(readMaze);
+    Mouse mouse = new Mouse(initialLocation, initialEnergy);
 
-        //maze, mouse
-        GUI gui = new GUI(maze, mouse);
-        gui.repaint();
+    GUI gui = new GUI(maze, mouse);
+    gui.repaint();
 
-        TimeUnit.SECONDS.sleep(1);
+    Point scanPoint = new Point(27, 45);
 
-        maze.update(scanPoint, 3, maze);
-        mouse.changeLocation(scanPoint);
+    TimeUnit.SECONDS.sleep(1);
 
-        gui.repaint();
-        //gui.drawMaze(maze, mouse);
+    maze.update(scanPoint, 3, maze, false);
+    mouse.changeLocation(scanPoint);
 
-    }
+    gui.repaint();
+
+  }
 }

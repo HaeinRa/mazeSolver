@@ -4,12 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0402f819-fe82-411f-8bd4-de0deccbc5a4" name="Changes" comment="">
+    <list default="true" id="0402f819-fe82-411f-8bd4-de0deccbc5a4" name="Changes" comment="Merge remote-tracking branch 'feature3/feature1' into feature3&#10;&#10;# Conflicts:&#10;#&#9;Main.java">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CeremonyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/CeremonyAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/GUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LinkedStack.java" beforeDir="false" afterPath="$PROJECT_DIR$/LinkedStack.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Maze.java" beforeDir="false" afterPath="$PROJECT_DIR$/Maze.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,7 +84,8 @@
       <workItem from="1684740797521" duration="1292000" />
       <workItem from="1685003408228" duration="265000" />
       <workItem from="1685014241072" duration="5334000" />
-      <workItem from="1685095653770" duration="5940000" />
+      <workItem from="1685095653770" duration="6082000" />
+      <workItem from="1685102332134" duration="531000" />
     </task>
     <task id="LOCAL-00001" summary="mouse">
       <created>1684562834418</created>
@@ -128,7 +129,14 @@
       <option name="project" value="LOCAL" />
       <updated>1684745546895</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="feat : Mouse GUI 그리기">
+      <created>1685102212380</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1685102212380</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -145,7 +153,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="feature3/feature3" />
+                        <option value="feature3/feature1" />
                       </list>
                     </value>
                   </entry>
@@ -162,7 +170,8 @@
     <MESSAGE value="mouse" />
     <MESSAGE value="feat : GUI 바꾸기" />
     <MESSAGE value="feat : Mouse GUI 그리기" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat : Mouse GUI 그리기" />
+    <MESSAGE value="Merge remote-tracking branch 'feature3/feature1' into feature3&#10;&#10;# Conflicts:&#10;#&#9;Main.java" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge remote-tracking branch 'feature3/feature1' into feature3&#10;&#10;# Conflicts:&#10;#&#9;Main.java" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
