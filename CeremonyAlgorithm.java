@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class CeremonyAlgorithm {
     private static Maze maze;
@@ -57,13 +58,12 @@ public class CeremonyAlgorithm {
         System.out.println("point002: Run state start");
 
         // 현재 쥐의 상태를 확인 (체력과 마나)
-        mouse = new Mouse(new Point(0,1), maze.getHeight()*maze.getWidth());
         // 체력이 남아 있다면
         while(true){
             branchCounter = 0; // 분기점 카운터 초기화
             System.out.println("stack: "+ stack);
             System.out.println("mouse: "+ mouse.getLocation());
-            TimeUnit.MILLISECONDS.sleep(20);
+            TimeUnit.MILLISECONDS.sleep(1);
             System.out.println("point003: Enter while loop");
             gui.repaint();
             System.out.println("point003-1: gui repaint");
@@ -161,7 +161,7 @@ public class CeremonyAlgorithm {
                                     mouse.move();
                                     mouse.changeLocation(back);
                                     gui.repaint();
-                                    TimeUnit.MILLISECONDS.sleep(200);
+                                    TimeUnit.MILLISECONDS.sleep(1);
                                     mouse.map.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
                                     prev = back;
                                 }
@@ -180,15 +180,19 @@ public class CeremonyAlgorithm {
 
 
                 }
-
-
-
-
-
-
-
                 else{ // 출구를 알고 있다면
+                    System.out.println("point019: Exit already found");
+                    System.out.println(mouse.map.getEndPoint());
+                    scanMode = 1; // 스캔모드를 바꾼다
+                    System.out.println("point020: change scanMode to 1");
 
+                    // 경로검사1: 현재 시야와 스캔 리스트가 겹치는지 확인한다.
+//                    if(isPointOverlap(mouse.getLocation(), scanList)){
+//                        System.out.println("point021: Check overlap between sight and scanList ");
+//
+//                        // 경로검사2: A* 알고리즘을 사용하여 경로가 있는지 확인한다.
+//                            // 경로가 있다면 출구까지 간다.
+//                    }
 //        *   - 선택: 출구 거리 가중치 알고리즘을 사용한다
 //        *       - 갈 곳이 있다면
 //        *           - 출구로 부터 거리가 가장 작은 한 좌표만을 스택에 추가한다.
@@ -201,43 +205,41 @@ public class CeremonyAlgorithm {
                     stack.clear();
                     buffer.clear();
 
+
+                    List<Point> points = new ArrayList<>();
                     // 네 가지 방향의 좌표
-                    Point up = null;
-                    Point down = null;
-                    Point left = null;
-                    Point right = null;
+
 
                     // 리스트로 거리 먼저 계산하기
                     if(isValidPosByWeight(now.add(-1,0))){ // 상
-                        up = new Point(now.x-1, now.y);
+                        Point up = new Point(now.x-1, now.y);
+                        points.add(up);
                         branchCounter ++;
                     }
                     if(isValidPosByWeight(now.add(0,-1))){ // 좌
-                        left = new Point(now.x, now.y-1);
+                        Point left = new Point(now.x, now.y-1);
+                        points.add(left);
                         branchCounter ++;
                     }
                     if(isValidPosByWeight(now.add(0,1))){ // 우
-                        right = new Point(now.x, now.y+1);
+                        Point right = new Point(now.x, now.y+1);
+                        points.add(right);
                         branchCounter ++;
                     }
                     if(isValidPosByWeight(now.add(1,0))){ // 하
-                        down = new Point(now.x+1, now.y);
+                        Point down = new Point(now.x+1, now.y);
+                        points.add(down);
                         branchCounter ++;
                     }
-
-
-                    // point를 arraylist에 추가
-                    List<Point> points = new ArrayList<>();
-                    points.add(up);
-                    points.add(left);
-                    points.add(right);
-                    points.add(down);
 
 
 //                    Stack<Point> stack = new Stack<>();
                     // 거리에 따라 우선순위를 두는 우선순위큐 distanceQueue를 생성한다.
                     PriorityQueue<Point> distanceQueue = new PriorityQueue<>(Comparator.comparingDouble(p -> calculateDistance(p)));
 
+                    if(distanceQueue == null){
+                        System.out.println("null");
+                    }
                     // point 리스트에 있는 모든 포인트 객체를 distanceQueue에 추가
                     for(Point point : points){
                         distanceQueue.add(point);
