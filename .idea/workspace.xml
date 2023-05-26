@@ -4,7 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="83b79691-a57e-4f6f-a8c5-9332e474cdd1" name="변경" comment="mouse">
+    <list default="true" id="83b79691-a57e-4f6f-a8c5-9332e474cdd1" name="변경" comment="출구 알 때">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CeremonyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/CeremonyAlgorithm.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -78,7 +79,8 @@
       <workItem from="1684560032089" duration="28000" />
       <workItem from="1684561789203" duration="4463000" />
       <workItem from="1684740797521" duration="5928000" />
-      <workItem from="1685095685898" duration="898000" />
+      <workItem from="1685095685898" duration="3429000" />
+      <workItem from="1685099575426" duration="1710000" />
     </task>
     <task id="LOCAL-00001" summary="mouse">
       <created>1684562834418</created>
@@ -108,7 +110,14 @@
       <option name="project" value="LOCAL" />
       <updated>1684565626943</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="출구 알 때">
+      <created>1685096618872</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1685096618872</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -140,6 +149,7 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="mouse" />
-    <option name="LAST_COMMIT_MESSAGE" value="mouse" />
+    <MESSAGE value="출구 알 때" />
+    <option name="LAST_COMMIT_MESSAGE" value="출구 알 때" />
   </component>
 </project>

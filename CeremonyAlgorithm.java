@@ -3,13 +3,14 @@ import sun.awt.image.ImageWatched;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class CeremonyAlgorithm {
     private static Maze maze;
     private static GUI gui;
-    private static List<Point> scanList, compareList;
+    private static List<Point> scanList;
+    private static List<Double> compareList;
+//    private static Stack<Point> stack = new Stack<>();
     private static Mouse mouse;
     private static LinkedStack<Point> stack, buffer;
     private static int scanMode;
@@ -187,24 +188,64 @@ public class CeremonyAlgorithm {
 //        *           - 쥐를 해당 위치로 움직인다
 //        *           - 해당 위치 VISITED state로 변경한다.
 //        *           - 버퍼에 추가한다.
-                    if(isValidPosByWeight(now.add(-1,0))){ // 상
-                        Point up = new Point(now.x-1, now.y);
 
-                        compareList.add(calculateDistance(up, ));
+                    // 버퍼랑 리스트 다 비우기
+                    stack.clear();
+                    buffer.clear();
+
+                    // 네 가지 방향의 좌표
+                    Point up = null;
+                    Point down = null;
+                    Point left = null;
+                    Point right = null;
+
+                    // 리스트로 거리 먼저 계산하기
+                    if(isValidPosByWeight(now.add(-1,0))){ // 상
+                        up = new Point(now.x-1, now.y);
                         branchCounter ++;
                     }
                     if(isValidPosByWeight(now.add(0,-1))){ // 좌
-                        stack.push(now.add(0,-1));
+                        left = new Point(now.x, now.y-1);
                         branchCounter ++;
                     }
                     if(isValidPosByWeight(now.add(0,1))){ // 우
-                        stack.push(now.add(0,1));
+                        right = new Point(now.x, now.y+1);
                         branchCounter ++;
                     }
                     if(isValidPosByWeight(now.add(1,0))){ // 하
-                        stack.push(now.add(1,0));
+                        down = new Point(now.x+1, now.y);
                         branchCounter ++;
                     }
+
+
+                    // point를 arraylist에 추가
+                    List<Point> points = new ArrayList<>();
+                    points.add(up);
+                    points.add(left);
+                    points.add(right);
+                    points.add(down);
+
+
+//                    Stack<Point> stack = new Stack<>();
+                    // 거리에 따라 우선순위를 두는 우선순위큐 distanceQueue를 생성한다.
+                    PriorityQueue<Point> distanceQueue = new PriorityQueue<>(Comparator.comparingDouble(p -> calculateDistance(p)));
+
+                    // point 리스트에 있는 모든 포인트 객체를 distanceQueue에 추가
+                    for(Point point : points){
+                        distanceQueue.add(point);
+                    }
+
+                    // 우선순위 큐에 있는 포인트들은 모두 스택에 넣는다.
+                    while(!distanceQueue.isEmpty()){
+                        Point point = distanceQueue.poll();
+                        stack.push(point);
+                    }
+
+
+
+
+
+
 
                     if(stack.isEmpty()){ // 스택이 완전히 비어있음(더 이상 갈 수 있는 곳이 없음)
                         System.out.println("Fail");
@@ -323,9 +364,10 @@ public class CeremonyAlgorithm {
         return maze;
     }
 
-    public static double calculateDistance(Point p1, Point p2) {
-        double deltaX = p2.x - p1.x;
-        double deltaY = p2.y - p2.y;
+    public static double calculateDistance(Point p) {
+        Point exit = maze.getEndPoint();
+        double deltaX = exit.x - p.x;
+        double deltaY = exit.y - p.y;
         double distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
         return distance;
     }
