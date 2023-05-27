@@ -55,7 +55,7 @@ public class GUI extends JPanel {
                         g2d.setColor(Color.ORANGE);
                         break;
                     case BRANCH:
-                        g2d.setColor(Color.BLUE);
+                        g2d.setColor(Color.PINK);
                         break;
                     //case SCAN:
                     //  g2d.setColor(SCAN_COLOR);

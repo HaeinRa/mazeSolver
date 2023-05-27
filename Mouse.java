@@ -57,15 +57,7 @@ public class Mouse {
         }
     }
 
-    public void resetVisitedInfo(){
-        for (int i = 0; i < map.getHeight(); i++) {
-            for (int j = 0; j < map.getWidth(); j++) {
-                if ( this.map.getCell(i,j).getState() == Cell.State.VISIT || this.map.getCell(i,j).getState() == Cell.State.BRANCH) {
-                    this.map.getCell(i,j).setState(Cell.State.AVAILABLE);
-                }
-            }
-        }
-    }
+
 
 
     @Override

@@ -22,6 +22,18 @@ public class Cell {
         this.isBranch = false;
     }
 
+    public Cell(Cell cell) {
+        this.isAvailable = cell.isAvailable;
+        this.isWall = cell.isWall;
+        this.isExit = cell.isExit;
+        this.isVisited = cell.isVisited;
+        this.isBranch = cell.isBranch;
+    }
+
+    public static Cell createCopy(Cell cell) {
+        return new Cell(cell);
+    }
+
     public boolean isWall() {
         return this.isWall;
     }
@@ -100,6 +112,8 @@ public class Cell {
                 break;
             case BRANCH:
                 this.isBranch = true;
+                this.isVisited = true;
+                break;
             default:
                 System.out.println("That state does not exist.");
         }

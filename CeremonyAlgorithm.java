@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+
 public class CeremonyAlgorithm {
     private static Maze maze;
     private static Maze mouseMap;
@@ -44,7 +45,7 @@ public class CeremonyAlgorithm {
         mouse = new Mouse(new Point(0,1), mouseMap.getHeight()*mouseMap.getWidth(), mouseMap);
         mouse.map.getCell(0,1).setState(Cell.State.VISIT);
         mouse.setMap();
-        gui = new GUI(maze, mouse);
+        gui = new GUI(mouseMap, mouse);
         scanList = new ArrayList<>();
 
         // DFS 안간거 고쳐야함
@@ -106,6 +107,8 @@ public class CeremonyAlgorithm {
 
                 // 현재 시야 업데이트
                 isFindExit = mouse.map.update(mouse.getLocation(),3, maze, isFindExit);
+                gui.repaint();
+                TimeUnit.MILLISECONDS.sleep(10);
                 System.out.println("point007: Update sight");
 
 
@@ -159,6 +162,8 @@ public class CeremonyAlgorithm {
                             buffer.push(new Point(-1, -1)); // 분기라는 것을 알린다
                             buffer.push(now);
                             maze.getCell(now).setState(Cell.State.BRANCH);
+                            isFindExit = mouse.map.update(mouse.getLocation(),3, maze, isFindExit);
+
                         }
                         if(branchCounter==0){ // 현재는 갈 수 있는 곳이 없어서 이전 분기로 돌아가야한다면
                             System.out.println("point014: Can not go for now, Back to branch, Start buffer pop");
@@ -183,7 +188,7 @@ public class CeremonyAlgorithm {
                                     maze.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
                                     //prev = back;
                                 }
-
+                                isFindExit = mouse.map.update(mouse.getLocation(),3, maze, isFindExit);
                             }
                         }
                         else{ // 현재 갈 수 있는 곳이 있다면
@@ -226,7 +231,8 @@ public class CeremonyAlgorithm {
                         System.out.println("point029: clear stack and buffer");
                         stack.clear();
                         buffer.clear();
-                        mouse.resetVisitedInfo();
+                        mouse.map.resetVisitedInfo();
+                        maze.resetVisitedInfo();
                     }
                     gui.repaint();
                     TimeUnit.MILLISECONDS.sleep(10);
@@ -300,6 +306,8 @@ public class CeremonyAlgorithm {
                             buffer.push(new Point(-1, -1)); // 분기라는 것을 알린다
                             buffer.push(now);
                             maze.getCell(now).setState(Cell.State.BRANCH);
+                            isFindExit = mouse.map.update(mouse.getLocation(),3, maze, isFindExit);
+
                         }
                         if(branchCounter==0){ // 현재는 갈 수 있는 곳이 없어서 이전 분기로 돌아가야한다면
                             System.out.println("point034: Can not go for now, Back to branch, Start buffer pop");
@@ -325,6 +333,8 @@ public class CeremonyAlgorithm {
                                     maze.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
                                     //prev = back;
                                 }
+                                isFindExit = mouse.map.update(mouse.getLocation(),3, maze, isFindExit);
+
 
                             }
                         }
