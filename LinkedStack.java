@@ -1,6 +1,9 @@
 
 class Point {
     int x, y;
+    int fScore;
+    int gScore; // 지금까지 소모한 비용을 계산해야하므로 가지고 있어야 함
+    Point prevPoint; // 이전 노드
     Point(){
         this.x = -99;
         this.y = -99;
@@ -8,6 +11,13 @@ class Point {
     Point(int x, int y){
         this.x = x;
         this.y = y;
+    }
+    Point(int x, int y, int gScore, int fScore, Point prevPoint) {
+        this.x = x;
+        this.y = y;
+        this.gScore = gScore;
+        this.fScore = fScore;
+        this.prevPoint = prevPoint;
     }
     void printPoint(){
         System.out.printf("(%d, %d) ", this.x, this.y);

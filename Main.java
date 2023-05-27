@@ -26,7 +26,7 @@ public class Main {
 */
 /*
     willChangeMaze.print();*/
-    int[][] readMaze = CeremonyAlgorithm.readMaze("/Users/kwon-yechan/Documents/GitHub/mazeSolver/Maze1.txt");
+    int[][] readMaze = CeremonyAlgorithm.readMaze("C:\\Users\\user\\matrix\\Maze2.txt");
 
     Point initialLocation = new Point(3, 25); // 초기 위치
     int initialEnergy = 100; // 초기 에너지

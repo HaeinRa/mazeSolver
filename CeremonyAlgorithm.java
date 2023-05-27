@@ -3,8 +3,7 @@ import sun.awt.image.ImageWatched;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class CeremonyAlgorithm {
@@ -37,10 +36,20 @@ public class CeremonyAlgorithm {
         // SetUp: 사용 가능한 미로로 변환 (Cell에 저장)
         stack = new LinkedStack<Point>();
         buffer = new LinkedStack<Point>();
-        maze = new Maze(readMaze("Maze1.txt"));
+        maze = new Maze(readMaze("C:\\Users\\user\\matrix\\Maze2.txt"));
         mouse = new Mouse(new Point(0,1), maze.getHeight()*maze.getWidth(), maze);
         gui = new GUI(maze,mouse);
 
+        // 열린 목록, fScore가 큰 것을 출력 
+        PriorityQueue<Point> openList = new PriorityQueue<>((a, b) -> (int)(a.fScore - b.fScore));
+        //Set<Point> closedList = new HashSet<>(); // 닫힌 목록
+        boolean[][] closeList = new boolean[maze.getWidth()][maze.getHeight()];
+        for (int i=0; i< maze.getWidth(); i++) {
+            for (int j=0; j<maze.getHeight(); j++) {
+                closeList[i][j] = false;
+            }
+        }
+        int openListCount = 0;
 
         // SetUp: GUI 띄우기 (미로, 쥐)
         gui.repaint();
@@ -58,7 +67,8 @@ public class CeremonyAlgorithm {
 
         // 현재 쥐의 상태를 확인 (체력과 마나)
         // 체력이 남아 있다면
-        while(true){
+        while(true)
+        {
             branchCounter = 0; // 분기점 카운터 초기화
             System.out.println("stack: "+ stack);
             System.out.println("mouse: "+ mouse.getLocation());
@@ -91,7 +101,6 @@ public class CeremonyAlgorithm {
                 // 현재 시야 업데이트
                 isFindExit = mouse.map.update(mouse.getLocation(),3,maze, isFindExit);
                 System.out.println("point007: Update sight");
-
 
                 // 현재 위치를 확인한다.
                 Point now = mouse.getLocation();
@@ -139,7 +148,6 @@ public class CeremonyAlgorithm {
 
                         if(branchCounter>0){ // 분기점이라면
                             System.out.println("point013: Branch Set");
-
                             buffer.push(new Point(-1, -1)); // 분기라는 것을 알린다
                         }
                         if(branchCounter==0){ // 현재는 갈 수 있는 곳이 없어서 이전 분기로 돌아가야한다면
@@ -182,28 +190,135 @@ public class CeremonyAlgorithm {
                     System.out.println(mouse.map.getEndPoint());
                     scanMode = 1; // 스캔모드를 바꾼다
                     System.out.println("point020: change scanMode to 1");
+                    // 시야 업데이트 시 출구를 찾으면 a* 알고리즘 준비
+                    if (mouse.map.getEndPoint() != null && openListCount == 0) {
+                        // 지나온 길(탐색한 길)을 닫힌 목록에 추가
+                        for (int i=0; i<maze.getWidth(); i++) {
+                            for (int j=0; j<maze.getHeight(); j++) {
+                                if (maze.getCell(i,j).getState() == Cell.State.NotRecommended) {
+                                    //closedList.add(new Point(i, j));
+                                    closeList[i][j] = true;
+                                }
+                            }
+                        }
+                        // 현재 위치(시작점)을 열린 목록에 한 번만 추가
+                        Point current = new Point(mouse.getLocation().x, mouse.getLocation().y, 0,
+                                Math.abs(mouse.getLocation().x - maze.getEndPoint().x) + Math.abs(mouse.getLocation().y - maze.getEndPoint().y), null);
+                        openList.add(current);
+                        System.out.println("시야 업데이트 후 열린 목록에 시작점 추가 : " + current.x + ", " + current.y);
+                        System.out.println(openList.size());
+                        openListCount += 1;
+                    }
 
-                    // 경로검사1: 현재 시야와 스캔 리스트가 겹치는지 확인한다.
+
+/*                    // 경로검사1: 현재 시야와 스캔 리스트가 겹치는지 확인한다.
                     if(isPointOverlap(mouse.getLocation(), scanList))
                     {
                         System.out.println("point021: Check overlap between sight and scanList ");
-                    }
+                        // 경로검사2: A* 알고리즘을 사용하여 경로가 있는지 확인한다.
+                        AstarAlgorithm aStar = new AstarAlgorithm(maze, mouse.getLocation().x, mouse.getLocation().y, maze.getEndPoint().x, maze.getEndPoint().y);
+                        int[][] path = aStar.run();
 
-                    // 경로검사2: A* 알고리즘을 사용하여 경로가 있는지 확인한다.
-                    AstarAlgorithm aStar = new AstarAlgorithm(maze, mouse.getLocation().x, mouse.getLocation().y, maze.getEndPoint().x, maze.getEndPoint().y);
-                    int[][] path = aStar.run();
-
-                    // 경로가 있다면 출구까지 간다.
-                    if (path == null)
+                        // 경로가 있다면 출구까지 간다.
+                        if (path == null)
+                        {
+                            System.out.println("no route");
+                        }
+                        else {
+                            for (int i=0;i<path.length; i++) {
+                                mouse.move();
+                                Point point = new Point(path[i][0], path[i][1]);
+                                System.out.println(point.x + ", " + point.y);
+                                mouse.changeLocation(point);
+                            }
+                        }
+                    }*/
+                    //else
                     {
-                        System.out.println("no route");
-                    }
-                    else {
-                        for (int i=0;i<path.length; i++) {
+                        // a* 알고리즘 시작
+                        // 열린 목록에서 아이템을 꺼냄, 가중치가 가장 낮은(fScore가 가장 작은) 아이템이 poll됨
+                        if (!openList.isEmpty()) {
+                            Point point = openList.poll();
+                            System.out.println("열린 목록에서 poll함, 열린 목록 크기: " + openList.size());
+                            System.out.println("현재 위치 : " + point.x + "," + point.y);
+                            // 꺼낸 아이템는 닫힌 목록에 추가(다시 탐색하지 않음)
+                            //closedList.add(point);
+                            closeList[point.x][point.y] = true;
+                            // 꺼낸 위치로 이동
                             mouse.move();
-                            Point point = new Point(path[i][0], path[i][1]);
-                            System.out.println(point.x + ", " + point.y);
                             mouse.changeLocation(point);
+                            // 열린 목록 주위(상하좌우) 중 닫힌 목록에 없는 아이템은 벽을 제외하고 열린 목록에 추가
+                            for (int i=0; i<4; i++) {
+                                if (i==0) {
+                                    // 가중치가 계산된 Point를 집어넣음
+                                    // 가중치는 g와 f가 있음
+                                    int hScore = Math.abs(point.x - 1 - maze.getEndPoint().x) + Math.abs(point.y - maze.getEndPoint().x);
+                                    // gScore는 시작지점으로부터 현재 노드까지의 비용, 간선의 가중치는 임의로 1로 정함
+                                    int gScore;
+                                    // 현재 노드의 이전 노드가 없으면, 즉 시작 노드이면
+                                    if (point.prevPoint == null) {
+                                        gScore = 0;
+                                    } else {
+                                        gScore = point.prevPoint.gScore + 1;
+                                    }
+                                    int fScore = hScore + gScore;
+                                    // 현재 x, y좌표, gScore, fScore, 이전 노드
+                                    Point up = new Point(point.x - 1, point.y, gScore, fScore, point);
+                                    System.out.println("위쪽 좌표 : " + up.x + "," + up.y);
+                                    if (up.x > 0 || up.x < maze.getWidth() -1 || maze.getCell(up).getState() != Cell.State.WALL || !closeList[up.x][up.y])
+                                    {
+                                        openList.add(up);
+                                    }
+                                }
+                                else if (i==1) {
+                                    int hScore = Math.abs(point.x + 1 - maze.getEndPoint().x) + Math.abs(point.y - maze.getEndPoint().x);
+                                    int gScore;
+                                    if (point.prevPoint == null) {
+                                        gScore = 0;
+                                    } else {
+                                        gScore = point.prevPoint.gScore + 1;
+                                    }
+                                    int fScore = hScore + gScore;
+                                    Point down = new Point(point.x + 1, point.y, gScore, fScore, point);
+                                    System.out.println("아래쪽 좌표 : " + down.x + "," + down.y);
+                                    if (down.x > 0 || down.x < maze.getWidth() -1 || maze.getCell(down).getState() != Cell.State.WALL || !closeList[down.x][down.y] ) {
+                                        System.out.println(maze.getCell(down).getState());
+                                        openList.add(down);
+                                        System.out.println(openList.size());
+                                    }
+                                } else if (i==2) {
+                                    int hScore = Math.abs(point.x - maze.getEndPoint().x) + Math.abs(point.y - 1 - maze.getEndPoint().x);
+                                    int gScore;
+                                    if (point.prevPoint == null) {
+                                        gScore = 0;
+                                    } else {
+                                        gScore = point.prevPoint.gScore + 1;
+                                    }
+                                    int fScore = hScore + gScore;
+                                    Point left = new Point(point.x, point.y - 1, gScore, fScore, point);
+                                    System.out.println("왼쪽 좌표 : " + left.x + "," + left.y);
+                                    if (left.y > 0 || left.y < maze.getHeight() -1 || maze.getCell(left).getState() != Cell.State.WALL || !closeList[left.x][left.y]) {
+                                        openList.add(left);
+                                    }
+                                } else {
+                                    int hScore = Math.abs(point.x- maze.getEndPoint().x) + Math.abs(point.y + 1 - maze.getEndPoint().x);
+                                    int gScore;
+                                    if (point.prevPoint == null) {
+                                        gScore = 0;
+                                    } else {
+                                        gScore = point.prevPoint.gScore + 1;
+                                    }
+                                    int fScore = hScore + gScore;
+                                    Point right = new Point(point.x, point.y + 1, gScore, fScore, point);
+                                    System.out.println("오른쪽 좌표 : " + right.x + "," + right.y);
+                                    if (right.y > 0 || right.y < maze.getHeight() -1 || maze.getCell(right).getState() != Cell.State.WALL || !closeList[right.x][right.y]) {
+                                        openList.add(right);
+                                    }
+                                }
+                            }
+                        } else {
+                            // 열린 목록에 아이템이 없으면 탐색 실패(길이 없음)
+                            System.out.println("no route");
                         }
                     }
                 }
@@ -280,6 +395,7 @@ public class CeremonyAlgorithm {
         while(in.hasNextInt())
         {
             c = in.nextInt();
+
             if (j == column) {
                 i += 1;
                 j = 0;
@@ -291,6 +407,7 @@ public class CeremonyAlgorithm {
             } else maze[i][j] = c;
             j += 1;
         }
+
         return maze;
     }
 }
