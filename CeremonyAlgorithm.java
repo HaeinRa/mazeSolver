@@ -38,7 +38,7 @@ public class CeremonyAlgorithm {
         // SetUp: 사용 가능한 미로로 변환 (Cell에 저장)
         stack = new LinkedStack<Point>();
         buffer = new LinkedStack<Point>();
-        maze = new Maze(readMaze("Maze2.txt"));
+        maze = new Maze(readMaze("Maze1.txt"));
         mouse = new Mouse(new Point(0,1), maze.getHeight()*maze.getWidth(), maze);
         mouse.map.getCell(0,1).setState(Cell.State.VISIT);
         gui = new GUI(maze,mouse);
@@ -337,7 +337,7 @@ public class CeremonyAlgorithm {
     }
     static boolean isValidPos(Point p){
 
-        if (p.x<0 || p.y<0 || p.x>=maze.getWidth() || p.y>=maze.getHeight())
+        if (p.x<0 || p.y<0 || p.x>=maze.getHeight() || p.y>=maze.getWidth())
             return false;
         else
             return maze.getCell(p.x, p.y).isAvailable() && !maze.getCell(p.x, p.y).isVisited();
@@ -360,7 +360,7 @@ public class CeremonyAlgorithm {
 
     static boolean isValidPosByWeight(Point p){
 
-        if (p.x<0 || p.y<0 || p.x>=maze.getWidth() || p.y>=maze.getHeight())
+        if (p.x<0 || p.y<0 || p.x>=maze.getHeight() || p.y>=maze.getWidth())
             return false;
         else
             return maze.getCell(p.x, p.y).isAvailable();

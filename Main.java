@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
-  public static void main(String[] arg) throws InterruptedException {
+    public static void main(String[] arg) throws InterruptedException {
 /*
     System.out.println("채승윤");
     int[][] m = {
@@ -28,7 +28,7 @@ public class Main {
     int initialEnergy = 100; // 초기 에너지
 
     Maze maze = new Maze(readMaze);
-    Mouse mouse = new Mouse(initialLocation, initialEnergy);
+    Mouse mouse = new Mouse(initialLocation, initialEnergy, maze);
 
     Point scanPoint = new Point(3, 27);
 
@@ -47,4 +47,6 @@ public class Main {
     //gui.drawMaze(maze, mouse);
 
   }
+}*/
+    }
 }
