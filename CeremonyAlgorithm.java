@@ -10,6 +10,8 @@ public class CeremonyAlgorithm {
     private static Maze maze;
     private static GUI gui;
     private static List<Point> scanList;
+    private static List<Double> compareList;
+//    private static Stack<Point> stack = new Stack<>();
     private static Mouse mouse;
     private static LinkedStack<Point> stack, buffer;
     private static int scanMode;
@@ -38,9 +40,10 @@ public class CeremonyAlgorithm {
         buffer = new LinkedStack<Point>();
         maze = new Maze(readMaze("C:\\Users\\user\\matrix\\Maze2.txt"));
         mouse = new Mouse(new Point(0,1), maze.getHeight()*maze.getWidth(), maze);
+        mouse.map.getCell(0,1).setState(Cell.State.VISIT);
         gui = new GUI(maze,mouse);
 
-        // 열린 목록, fScore가 큰 것을 출력 
+        // 열린 목록, fScore가 큰 것을 출력
         PriorityQueue<Point> openList = new PriorityQueue<>((a, b) -> (int)(a.fScore - b.fScore));
         //Set<Point> closedList = new HashSet<>(); // 닫힌 목록
         boolean[][] closeList = new boolean[maze.getWidth()][maze.getHeight()];
@@ -55,6 +58,8 @@ public class CeremonyAlgorithm {
         gui.repaint();
         TimeUnit.SECONDS.sleep(1);
 
+
+
         System.out.println("point001: setup done");
 
 
@@ -67,14 +72,15 @@ public class CeremonyAlgorithm {
 
         // 현재 쥐의 상태를 확인 (체력과 마나)
         // 체력이 남아 있다면
-        while(true)
-        {
+        while(true){
+            gui.repaint();
+            TimeUnit.MILLISECONDS.sleep(1);
             branchCounter = 0; // 분기점 카운터 초기화
             System.out.println("stack: "+ stack);
             System.out.println("mouse: "+ mouse.getLocation());
-            TimeUnit.MILLISECONDS.sleep(20);
+
             System.out.println("point003: Enter while loop");
-            gui.repaint();
+
             System.out.println("point003-1: gui repaint");
 
             if (mouse.getEnergy() > 0) {
@@ -101,6 +107,7 @@ public class CeremonyAlgorithm {
                 // 현재 시야 업데이트
                 isFindExit = mouse.map.update(mouse.getLocation(),3,maze, isFindExit);
                 System.out.println("point007: Update sight");
+
 
                 // 현재 위치를 확인한다.
                 Point now = mouse.getLocation();
@@ -146,13 +153,15 @@ public class CeremonyAlgorithm {
                     else{ // 스택이 비어있지 않음(갈 수 있는 곳이 있음)
                         System.out.println("point012: Stack is not empty");
 
-                        if(branchCounter>0){ // 분기점이라면
+                        if(branchCounter>=2){ // 분기점이라면
                             System.out.println("point013: Branch Set");
+
                             buffer.push(new Point(-1, -1)); // 분기라는 것을 알린다
+                            buffer.push(now);
                         }
                         if(branchCounter==0){ // 현재는 갈 수 있는 곳이 없어서 이전 분기로 돌아가야한다면
                             System.out.println("point014: Can not go for now, Back to branch, Start buffer pop");
-                            Point prev = new Point();
+                            //Point prev = new Point();
                             mouse.map.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
                             while(true){
                                 System.out.println("point015: do Buffer pop");
@@ -161,7 +170,8 @@ public class CeremonyAlgorithm {
 
                                 if(back.x == -1 && back.y == -1) { // 분기점의 끝이라면
                                     System.out.println("point016: Branch arrived");
-                                    buffer.push(prev);
+                                    stack.pop(); // 분기점 중복 제거?
+                                    //buffer.push(prev);
                                     break;
                                 }else{
                                     System.out.println("point017: Mouse moving");
@@ -170,7 +180,7 @@ public class CeremonyAlgorithm {
                                     gui.repaint();
                                     TimeUnit.MILLISECONDS.sleep(10);
                                     mouse.map.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
-                                    prev = back;
+                                    //prev = back;
                                 }
 
                             }
@@ -180,6 +190,8 @@ public class CeremonyAlgorithm {
                             now = stack.pop(); // 현재 위치를 결정
                             mouse.move(); // 쥐를 해당 위치로 움직인다
                             mouse.changeLocation(now); // 쥐의 위치를 바꾼다
+                            gui.repaint();
+                            TimeUnit.MILLISECONDS.sleep(1);
                             mouse.map.getCell(now).setState(Cell.State.VISIT); // 해당 위치 VISIT state로 변경
                             buffer.push(now); // 버퍼에 집어넣는다
                         }
@@ -332,7 +344,7 @@ public class CeremonyAlgorithm {
 
     static boolean isValidPos(int x, int y){
 
-        if (x<0 || y<0 || x>=maze.getWidth()-1 || y>=maze.getHeight()-1)
+        if (x<0 || y<0 || x>=maze.getWidth() || y>=maze.getHeight())
             return false;
         else
             return maze.getCell(x, y).isAvailable() && !maze.getCell(x, y).isVisited();
@@ -340,7 +352,7 @@ public class CeremonyAlgorithm {
     }
     static boolean isValidPos(Point p){
 
-        if (p.x<0 || p.y<0 || p.x>=maze.getWidth()-1 || p.y>=maze.getHeight()-1)
+        if (p.x<0 || p.y<0 || p.x>=maze.getHeight() || p.y>=maze.getWidth())
             return false;
         else
             return maze.getCell(p.x, p.y).isAvailable() && !maze.getCell(p.x, p.y).isVisited();
@@ -360,6 +372,16 @@ public class CeremonyAlgorithm {
         }
         return false;  // 겹치는 부분이 없음
     }
+
+    static boolean isValidPosByWeight(Point p){
+
+        if (p.x<0 || p.y<0 || p.x>=maze.getHeight() || p.y>=maze.getWidth())
+            return false;
+        else
+            return maze.getCell(p.x, p.y).isAvailable();
+        // 이미 지나간 자리도 추가 해야하나?
+    }
+
     static int[][] readMaze(String path){
         Scanner scanner = null;
         try {
@@ -409,5 +431,13 @@ public class CeremonyAlgorithm {
         }
 
         return maze;
+    }
+
+    public static double calculateDistance(Point p) {
+        Point exit = maze.getEndPoint();
+        double deltaX = exit.x - p.x;
+        double deltaY = exit.y - p.y;
+        double distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+        return distance;
     }
 }

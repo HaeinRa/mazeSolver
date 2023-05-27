@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
-  public static void main(String[] arg) throws InterruptedException {
+    public static void main(String[] arg) throws InterruptedException {
 /*
     System.out.println("채승윤");
     int[][] m = {
@@ -20,15 +20,11 @@ public class Main {
             {1,1,1,1,1},
     };
     Maze willChangeMaze = new Maze(m);
-    Maze baseMaze = new Maze(m2);
-    Point point = new Point(2, 2);
-    willChangeMaze.update(point, 3, baseMaze);
-*/
-/*
-    willChangeMaze.print();*/
-    int[][] readMaze = CeremonyAlgorithm.readMaze("C:\\Users\\user\\matrix\\Maze2.txt");
+    willChangeMaze.print();
 
-    Point initialLocation = new Point(3, 25); // 초기 위치
+    int[][] readMaze = CeremonyAlgorithm.readMaze("C:\\Users\\herje\\OneDrive\\바탕 화면\\한기대\\3학년 1학기\\민고리즘\\민고리즘 텀프\\mazeSolver\\test.txt");
+
+    Point initialLocation = new Point(0, 1); // 초기 위치
     int initialEnergy = 100; // 초기 에너지
 
     Maze maze = new Maze(readMaze);
@@ -40,6 +36,8 @@ public class Main {
     GUI gui = new GUI(maze, mouse);
     gui.repaint();
 
+    Point scanPoint = new Point(27, 45);
+
     TimeUnit.SECONDS.sleep(1);
 
     maze.update(scanPoint, 3, maze, false);
@@ -49,4 +47,6 @@ public class Main {
     //gui.drawMaze(maze, mouse);
 
   }
+}*/
+    }
 }
