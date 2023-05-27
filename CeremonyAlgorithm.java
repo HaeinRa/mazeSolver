@@ -43,6 +43,7 @@ public class CeremonyAlgorithm {
         buffer = new LinkedStack<Point>();
         maze = new Maze(readMaze("Maze1.txt"));
         mouse = new Mouse(new Point(0,1), maze.getHeight()*maze.getWidth(), maze);
+        mouse.map.getCell(0,1).setState(Cell.State.VISIT);
         gui = new GUI(maze,mouse);
 
         // 다 벽인 미로 - 스캔한 부분 DFS 사용하려고 만듦
@@ -71,12 +72,14 @@ public class CeremonyAlgorithm {
         // 현재 쥐의 상태를 확인 (체력과 마나)
         // 체력이 남아 있다면
         while(true){
+            gui.repaint();
+            TimeUnit.MILLISECONDS.sleep(1);
             branchCounter = 0; // 분기점 카운터 초기화
             System.out.println("stack: "+ stack);
             System.out.println("mouse: "+ mouse.getLocation());
-            TimeUnit.MILLISECONDS.sleep(1);
+
             System.out.println("point003: Enter while loop");
-            gui.repaint();
+
             System.out.println("point003-1: gui repaint");
 
 
@@ -210,14 +213,15 @@ public class CeremonyAlgorithm {
                     else{ // 스택이 비어있지 않음(갈 수 있는 곳이 있음)
                         System.out.println("point012: Stack is not empty");
 
-                        if(branchCounter>0){ // 분기점이라면
+                        if(branchCounter>=2){ // 분기점이라면
                             System.out.println("point013: Branch Set");
 
                             buffer.push(new Point(-1, -1)); // 분기라는 것을 알린다
+                            buffer.push(now);
                         }
                         if(branchCounter==0){ // 현재는 갈 수 있는 곳이 없어서 이전 분기로 돌아가야한다면
                             System.out.println("point014: Can not go for now, Back to branch, Start buffer pop");
-                            Point prev = new Point();
+                            //Point prev = new Point();
                             mouse.map.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
                             while(true){
                                 System.out.println("point015: do Buffer pop");
@@ -226,7 +230,8 @@ public class CeremonyAlgorithm {
 
                                 if(back.x == -1 && back.y == -1) { // 분기점의 끝이라면
                                     System.out.println("point016: Branch arrived");
-                                    buffer.push(prev);
+                                    stack.pop(); // 분기점 중복 제거?
+                                    //buffer.push(prev);
                                     break;
                                 }else{
                                     System.out.println("point017: Mouse moving");
@@ -235,7 +240,7 @@ public class CeremonyAlgorithm {
                                     gui.repaint();
                                     TimeUnit.MILLISECONDS.sleep(1);
                                     mouse.map.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
-                                    prev = back;
+                                    //prev = back;
                                 }
 
                             }
@@ -245,6 +250,8 @@ public class CeremonyAlgorithm {
                             now = stack.pop(); // 현재 위치를 결정
                             mouse.move(); // 쥐를 해당 위치로 움직인다
                             mouse.changeLocation(now); // 쥐의 위치를 바꾼다
+                            gui.repaint();
+                            TimeUnit.MILLISECONDS.sleep(1);
                             mouse.map.getCell(now).setState(Cell.State.VISIT); // 해당 위치 VISIT state로 변경
                             buffer.push(now); // 버퍼에 집어넣는다
                         }
@@ -263,6 +270,7 @@ public class CeremonyAlgorithm {
 //                        System.out.println("point021: Check overlap between sight and scanList ");
 //
 //                        // 경로검사2: A* 알고리즘을 사용하여 경로가 있는지 확인한다.
+//                              //System.out.println("point022: Check path by a*");
 //                            // 경로가 있다면 출구까지 간다.
 //                    }
 //        *   - 선택: 출구 거리 가중치 알고리즘을 사용한다
@@ -274,6 +282,7 @@ public class CeremonyAlgorithm {
 //        *           - 버퍼에 추가한다.
 
                     // 버퍼랑 리스트 다 비우기
+                    System.out.println("point029: clear stack and buffer");
                     stack.clear();
                     buffer.clear();
 
@@ -281,7 +290,7 @@ public class CeremonyAlgorithm {
                     List<Point> points = new ArrayList<>();
                     // 네 가지 방향의 좌표
 
-
+                    System.out.println("point030: check distance from exit");
                     // 리스트로 거리 먼저 계산하기
                     if(isValidPosByWeight(now.add(-1,0))){ // 상
                         Point up = new Point(now.x-1, now.y);
@@ -327,47 +336,64 @@ public class CeremonyAlgorithm {
                         stack.push(point);
                     }
 
-
-
-
-
-
-
+                    System.out.println(stack);
                     if(stack.isEmpty()){ // 스택이 완전히 비어있음(더 이상 갈 수 있는 곳이 없음)
+                        System.out.println("point031: Stack is totally empty, Done");
                         System.out.println("Fail");
                         return;
                     }
 
 
                     else{ // 스택이 비어있지 않음(갈 수 있는 곳이 있음)
-                        if(branchCounter>1){ // 분기점이라면
+                        System.out.println("point032: Stack is not empty");
+
+                        if(branchCounter>0){ // 분기점이라면
+                            System.out.println("point033: Branch Set");
+
                             buffer.push(new Point(-1, -1)); // 분기라는 것을 알린다
                         }
                         if(branchCounter==0){ // 현재는 갈 수 있는 곳이 없어서 이전 분기로 돌아가야한다면
+                            System.out.println("point034: Can not go for now, Back to branch, Start buffer pop");
+                            Point prev = new Point();
                             mouse.map.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
                             while(true){
+                                System.out.println("point035: do Buffer pop");
                                 Point back = buffer.pop(); // 돌아갈 좌표를 뽑는다
-                                if(back.equals(new Point(-1, -1))) // 분기점의 끝이라면
+                                System.out.println("buffer: "+buffer);
+
+                                if(back.x == -1 && back.y == -1) { // 분기점의 끝이라면
+                                    System.out.println("point036: Branch arrived");
+                                    buffer.push(prev);
                                     break;
-                                else{
+                                }else{
+                                    System.out.println("point037: Mouse moving");
                                     mouse.move();
                                     mouse.changeLocation(back);
+                                    gui.repaint();
+                                    TimeUnit.MILLISECONDS.sleep(1);
                                     mouse.map.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
+                                    prev = back;
                                 }
+
                             }
                         }
                         else{ // 현재 갈 수 있는 곳이 있다면
+                            System.out.println("point038: Can go for now, Keep going");
                             now = stack.pop(); // 현재 위치를 결정
                             mouse.move(); // 쥐를 해당 위치로 움직인다
                             mouse.changeLocation(now); // 쥐의 위치를 바꾼다
+                            gui.repaint();
+                            TimeUnit.MILLISECONDS.sleep(1);
                             mouse.map.getCell(now).setState(Cell.State.VISIT); // 해당 위치 VISIT state로 변경
                             buffer.push(now); // 버퍼에 집어넣는다
                         }
                     }
-
+                    gui.repaint();
+                    TimeUnit.MILLISECONDS.sleep(1);
                 }
 
             } else { // 체력이 남아있지 않다면
+                System.out.println("point99: No more energy, Done");
                 System.out.println("Fail: 체력 없음");
                 return;
             }
