@@ -9,9 +9,6 @@ class Point {
         this.x = x;
         this.y = y;
     }
-    Point() {
-        //
-    }
 
     void printPoint(){
         System.out.printf("(%d, %d) ", this.x, this.y);
@@ -100,14 +97,17 @@ public class LinkedStack<T> {
     }
 
     // class print 가능
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
         Node n = this.top;
-        for(int i=0; i<this.size; i++) {
+        while(n != null) {
             result.append(n.data);
             n = n.link;
         }
+
         return "top -> "+result.toString()+" ]";
     }
+
 }
