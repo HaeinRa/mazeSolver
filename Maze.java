@@ -7,10 +7,10 @@ public class Maze {
     this.width = maze.length;
     this.height = maze[0].length;
     this.point = new Point();
-    cells = new Cell[width][height];
+    cells = new Cell[height][width];
     point = new Point();
-    for (int i=0; i<this.width; i++) {
-      for (int j=0; j<this.height; j++) {
+    for (int i=0; i<this.height; i++) {
+      for (int j=0; j<this.width; j++) {
         cells[i][j] = new Cell(maze[i][j]);
         if(cells[i][j].getState() == Cell.State.EXIT) {
           point.x = i;

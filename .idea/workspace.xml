@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0402f819-fe82-411f-8bd4-de0deccbc5a4" name="Changes" comment="">
+    <list default="true" id="0402f819-fe82-411f-8bd4-de0deccbc5a4" name="Changes" comment="Changes">
+      <change afterPath="$PROJECT_DIR$/Maze2.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CeremonyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/CeremonyAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LinkedStack.java" beforeDir="false" afterPath="$PROJECT_DIR$/LinkedStack.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Maze.java" beforeDir="false" afterPath="$PROJECT_DIR$/Maze.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +79,6 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="애플리케이션 수준" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="디폴트 작업">
-      <changelist id="83b79691-a57e-4f6f-a8c5-9332e474cdd1" name="변경" comment="" />
       <created>1684559629139</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -88,6 +88,11 @@
       <workItem from="1684560032089" duration="28000" />
       <workItem from="1684561789203" duration="4463000" />
       <workItem from="1684740797521" duration="1292000" />
+      <workItem from="1685174688671" duration="1066000" />
+      <workItem from="1685175765017" duration="260000" />
+      <workItem from="1685176034838" duration="956000" />
+      <workItem from="1685176997043" duration="5247000" />
+      <workItem from="1685191142758" duration="8365000" />
     </task>
     <task id="LOCAL-00001" summary="mouse">
       <created>1684562834418</created>
