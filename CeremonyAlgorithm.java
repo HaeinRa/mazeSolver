@@ -38,7 +38,7 @@ public class CeremonyAlgorithm {
         // SetUp: 사용 가능한 미로로 변환 (Cell에 저장)
         stack = new LinkedStack<Point>();
         buffer = new LinkedStack<Point>();
-        maze = new Maze(readMaze("Maze1.txt"));
+        maze = new Maze(readMaze("Maze2.txt"));
         mouse = new Mouse(new Point(0,1), maze.getHeight()*maze.getWidth(), maze);
         mouse.map.getCell(0,1).setState(Cell.State.VISIT);
         gui = new GUI(maze,mouse);
