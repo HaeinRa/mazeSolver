@@ -1,5 +1,5 @@
 public class Maze {
-    Cell[][] cells;
+    private Cell[][] cells;
     private int width;
     private int height;
     private Point point;
@@ -69,13 +69,12 @@ public class Maze {
                 if (!isFindExit) {
                     if (this.cells[i][j].getState() == Cell.State.EXIT)
                         return true;
-                } else {
-                    return true;
                 }
             }
         }
-        return false;
+        return isFindExit;
     }
+
 
 
     public void print() {
@@ -86,4 +85,6 @@ public class Maze {
             System.out.println();
         }
     }
+
+
 }
