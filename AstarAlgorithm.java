@@ -62,6 +62,9 @@ public class AstarAlgorithm
           if (i == 0 && j == 0) {
             continue;
           }
+          if (i != 0 && j != 0) {
+            continue; // 대각선 이동은 제외
+          }
 
           int x = current[0] + i;
           int y = current[1] + j;

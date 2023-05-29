@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="83b79691-a57e-4f6f-a8c5-9332e474cdd1" name="변경" comment="A* 알고리즘을 사용하여 경로가 있는지 확인 후 경로가 있다면 출구까지 이동">
+    <list default="true" id="83b79691-a57e-4f6f-a8c5-9332e474cdd1" name="변경" comment="A* 알고리즘 save 1">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AstarAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/AstarAlgorithm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CeremonyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/CeremonyAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LinkedStack.java" beforeDir="false" afterPath="$PROJECT_DIR$/LinkedStack.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,6 +63,7 @@
     <MESSAGE value="출구 알 때" />
     <MESSAGE value="변경" />
     <MESSAGE value="A* 알고리즘을 사용하여 경로가 있는지 확인 후 경로가 있다면 출구까지 이동" />
-    <option name="LAST_COMMIT_MESSAGE" value="A* 알고리즘을 사용하여 경로가 있는지 확인 후 경로가 있다면 출구까지 이동" />
+    <MESSAGE value="A* 알고리즘 save 1" />
+    <option name="LAST_COMMIT_MESSAGE" value="A* 알고리즘 save 1" />
   </component>
 </project>
