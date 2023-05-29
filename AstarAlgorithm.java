@@ -70,7 +70,7 @@ public class AstarAlgorithm
           int y = current[1] + j;
 
           // 미로 범위 밖을 벗어나거나 벽 또는 닫힌 목록에 있는 아이템은 고려하지 않음
-          if (x < 0 || x >= maze.getWidth() || y < 0 || y >= maze.getHeight() || maze.getCell(x,y).getState() == Cell.State.WALL || closed_set[x][y]) 
+          if (x < 0 || x >= maze.getHeight() || y < 0 || y >= maze.getWidth() || maze.getCell(x,y).getState() == Cell.State.WALL || closed_set[x][y])
           {
             continue;
           }

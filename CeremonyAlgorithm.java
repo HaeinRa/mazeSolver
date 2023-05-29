@@ -5,11 +5,11 @@ import java.util.concurrent.TimeUnit;
 
 
 public class CeremonyAlgorithm {
-    private static Maze maze, mouseMap, view;
+    private static Maze maze, mouseMap, view, scanMap;
     private static GUI gui;
     private static List<Point> scanList;
     private static List<Double> compareList;
-//    private static Stack<Point> stack = new Stack<>();
+    private static Point scanPoint;
     private static Mouse mouse;
     private static LinkedStack<Point> stack, buffer;
     private static int scanMode;
@@ -40,18 +40,18 @@ public class CeremonyAlgorithm {
         maze = new Maze(readMaze("filename")); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
         mouseMap = new Maze(readMaze("filename")); // 쥐의 시야, maze에 영향을 받음
         view = new Maze(readMaze("filename")); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
+
         mouse = new Mouse(new Point(0,1), mouseMap.getHeight()*mouseMap.getWidth(), mouseMap);
 
         maze.getCell(0,1).setState(Cell.State.VISIT);
         view.getCell(0,1).setState(Cell.State.VISIT);
 
         mouse.setMap();
-        gui = new GUI(mouseMap, mouse);
+        gui = new GUI(mouseMap, mouse, scanMap);
         scanList = new ArrayList<>();
 
         // Todo: 스캔모드0 완전제공
-        // Todo: 쥐 시야에서 매 순간 경로검사 추가하기(입구를 찾은 경우에만)
-        // Todo: 벽을 뚫었을 때, 가능한 경로가 있는지 검사
+
         // 스캔 모드
         // SetUp: GUI 띄우기 (미로, 쥐)
         gui.repaint();
@@ -59,6 +59,12 @@ public class CeremonyAlgorithm {
 
         System.out.println("point001: setup done");
 
+        // 스캔 맵 초기화
+        for (int i = 0; i < scanMap.getHeight(); i++) {
+            for (int j = 0; j < scanMap.getWidth(); j++) {
+                scanMap.getCell(i,j).setState(Cell.State.AVAILABLE);
+            }
+        }
 
         isFindExit = false;
         scanMode = 0;
@@ -89,9 +95,8 @@ public class CeremonyAlgorithm {
                     System.out.println("point005: scanMode 0");
                     // map 업데이트
                     System.out.println("point005-1: scanning.. 5x5");
-                    //Point scanPoint = new Point(maze.getHeight()- 5 * mouse.getScanCount() -1, maze.getWidth()-2-1);
-                    Point scanPoint = new Point( 5 * mouse.getScanCount() - 1, maze.getWidth()-2-1);
-                    isFindExit = mouse.map.update(scanPoint,5, maze, isFindExit);
+                    scanPoint = new Point(maze.getHeight()- 5 * mouse.getScanCount() -1, maze.getWidth()-2-1);
+                    isFindExit = mouse.map.update(scanPoint,5, maze, scanMap, isFindExit);
 
                     mouse.scan();
                     System.out.println("scanPoint: " + scanPoint);
@@ -225,44 +230,26 @@ public class CeremonyAlgorithm {
                     System.out.println(maze.getEndPoint());
 
                     // 경로검사, a* 알고리즘을 통해 쥐가 알고있는 맵에서 출구까지 가는 길이 있는지 확인
-                    AstarAlgorithm astarAlgorithm = new AstarAlgorithm(mouse.map, mouse.getLocation().x, mouse.getLocation().y,
-                            maze.getEndPoint().x, maze.getEndPoint().y);
-                    int[][] path = astarAlgorithm.run();
-                    // 경로가 존재하면
+                    // TODO: A* + 벽뚫
+                    // 벽을 뚫고 A* 썼을 때, 가능한 경로가 있는가?
+                    int [][] path = isPathWithWallBreak();
                     if (path != null) {
                         System.out.println("경로가 존재합니다. 출구로 이동합니다");
                         System.out.println("출구 위치 : " + maze.getEndPoint().x + ", " + maze.getEndPoint().y);
-                        System.out.println("경로의 마지막 위치 : " + path[path.length-1][0] + ", " + path[path.length-1][1]);
-                        for (int i=0; i<path.length; i++) {
+                        System.out.println("경로의 마지막 위치 : " + path[path.length - 1][0] + ", " + path[path.length - 1][1]);
+                        for (int i = 0; i < path.length; i++) {
                             // 출구까지 곧바로 이동
                             mouse.move();
                             now = new Point(path[i][0], path[i][1]);
                             mouse.changeLocation(now);
-                            mouse.map.getCell(now).setState(Cell.State.VISIT);
+                            mouseMap.getCell(now).setState(Cell.State.VISIT);
+                            maze.getCell(now).setState(Cell.State.VISIT);
+                            view.getCell(now).setState(Cell.State.VISIT);
                             gui.repaint();
-                            TimeUnit.MILLISECONDS.sleep(10);
+                            TimeUnit.MILLISECONDS.sleep(100);
                         }
-                        // 이동 후 while문 종료
                         continue;
-                    } else {
-                        System.out.println("경로 없음, dfs로 진행");
                     }
-
-                    // 경로검사1: 현재 시야와 스캔 리스트가 겹치는지 확인한다.
-//                    if(isPointOverlap(mouse.getLocation(), scanList)){
-//                        System.out.println("point021: Check overlap between sight and scanList ");
-//
-//                        // 경로검사2: A* 알고리즘을 사용하여 경로가 있는지 확인한다.
-//                              //System.out.println("point022: Check path by a*");
-//                            // 경로가 있다면 출구까지 간다.
-//                    }
-//        *   - 선택: 출구 거리 가중치 알고리즘을 사용한다
-//        *       - 갈 곳이 있다면
-//        *           - 출구로 부터 거리가 가장 작은 한 좌표만을 스택에 추가한다.
-//        *           - 다음 위치 스택 pop
-//        *           - 쥐를 해당 위치로 움직인다
-//        *           - 해당 위치 VISITED state로 변경한다.
-//        *           - 버퍼에 추가한다.
 
                     // 버퍼랑 리스트 다 비우기
                     if(scanMode != 1){
@@ -432,6 +419,7 @@ public class CeremonyAlgorithm {
         return false;  // 겹치는 부분이 없음
     }
 
+    // TODO: 이거 이제 isValidPos랑 같아졌는데 쓸모 있는지?
     static boolean isValidPosByWeight(Point p){
 
         if (p.x<0 || p.y<0 || p.x>=maze.getHeight() || p.y>=maze.getWidth())
@@ -440,6 +428,38 @@ public class CeremonyAlgorithm {
             return mouse.map.getCell(p.x, p.y).isAvailable() && !mouse.map.getCell(p.x, p.y).isVisited();
         // 이미 지나간 자리도 추가 해야하나?
     }
+
+
+    static int[][] isPathWithWallBreak() throws InterruptedException {
+        AstarAlgorithm Astar;
+        Cell prevCell;
+
+        for(int i =0; i< mouseMap.getHeight(); i++){
+            for(int j=0; j<mouseMap.getWidth(); j++){
+                prevCell = mouseMap.getCell(new Point(i, j));
+                if (prevCell.isWall()){
+                    prevCell.setState(Cell.State.AVAILABLE);
+
+                    Astar = new AstarAlgorithm(mouseMap, mouse.getLocation().x, mouse.getLocation().y,
+                            maze.getEndPoint().x, maze.getEndPoint().y);
+                    int[][] path = Astar.run();
+                    // 경로가 존재하면
+                    if (path != null) {
+                        System.out.println("벽 부순 위치: " + new Point(i,j));
+                        maze.getCell(new Point(i,j)).setState(Cell.State.VISIT);
+                        view.getCell(new Point(i,j)).setState(Cell.State.VISIT);
+                        return path;
+                    } else {
+                        System.out.println("현재 경로 없음");
+                        prevCell.setState(Cell.State.WALL);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+
 
     static int[][] readMaze(String path){
         Scanner scanner = null;

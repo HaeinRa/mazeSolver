@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
-  </component>
   <component name="ChangeListManager">
-    <list default="true" id="83b79691-a57e-4f6f-a8c5-9332e474cdd1" name="변경" comment="A* 알고리즘 완성">
+    <list default="true" id="f8dce668-dfb5-47bd-bba6-3ec0536e990e" name="Changes" comment="feat : 스캔 색깔 바꾸기 완성(?)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AstarAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/AstarAlgorithm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CeremonyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/CeremonyAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/GUI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Class" />
-      </list>
-    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -27,7 +17,7 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectId" id="2QSrI5hoHYdIJYLRV5sann2rCYy" />
+  <component name="ProjectId" id="2QNFYnAATBR1KYe7F9jLJk2uKxw" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
@@ -35,12 +25,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="CeremonyAlgorithm" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="CeremonyAlgorithm" />
@@ -57,43 +48,87 @@
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
-      <created>1685357745942</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
-      <updated>1685357745942</updated>
-    </task>
-    <task id="LOCAL-00001" summary="A* 알고리즘 완성">
-      <created>1685357860051</created>
+    <task id="LOCAL-00001" summary="feat : Maze의 Width와 Height가 바껴있어서 Maze 변경&#10;ValidPos에서 getWidth와 getHeight 변경">
+      <created>1685172711734</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1685357860051</updated>
+      <updated>1685172711734</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f8dce668-dfb5-47bd-bba6-3ec0536e990e" name="Changes" comment="feat : Maze의 Width와 Height가 바껴있어서 Maze 변경&#10;ValidPos에서 getWidth와 getHeight 변경" />
+      <created>1685186187372</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1685186187372</updated>
+      <workItem from="1685186188944" duration="13895000" />
+      <workItem from="1685265087784" duration="103000" />
+      <workItem from="1685278548588" duration="1327000" />
+      <workItem from="1685354010790" duration="506000" />
+      <workItem from="1685357821516" duration="10123000" />
+    </task>
+    <task id="LOCAL-00002" summary="feat : GUI 미로 옆 상태창 구현">
+      <created>1685197893393</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1685197893393</updated>
+    </task>
+    <task id="LOCAL-00003" summary="feat : 스캔 색깔 바꾸기">
+      <created>1685367687973</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1685367687973</updated>
+    </task>
+    <task id="LOCAL-00004" summary="feat : 스캔 색깔 바꾸기 완성(?)">
+      <created>1685367866384</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1685367866384</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="feature3/feature3" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="mouse" />
-    <MESSAGE value="update 함수 예외 처리" />
-    <MESSAGE value="test 케이스 추가" />
-    <MESSAGE value="출구 알 때" />
-    <MESSAGE value="변경" />
-    <MESSAGE value="A* 알고리즘을 사용하여 경로가 있는지 확인 후 경로가 있다면 출구까지 이동" />
-    <MESSAGE value="A* 알고리즘 save 1" />
-    <MESSAGE value="A* 알고리즘 완성" />
-    <option name="LAST_COMMIT_MESSAGE" value="A* 알고리즘 완성" />
+    <MESSAGE value="feat : Maze의 Width와 Height가 바껴있어서 Maze 변경&#10;ValidPos에서 getWidth와 getHeight 변경" />
+    <MESSAGE value="feat : GUI 미로 옆 상태창 구현" />
+    <MESSAGE value="feat : 스캔 색깔 바꾸기" />
+    <MESSAGE value="feat : 스캔 색깔 바꾸기 완성(?)" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat : 스캔 색깔 바꾸기 완성(?)" />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="maze" language="JAVA" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>
