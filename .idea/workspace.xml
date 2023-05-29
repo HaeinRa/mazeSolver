@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f8dce668-dfb5-47bd-bba6-3ec0536e990e" name="Changes" comment="feat : Maze의 Width와 Height가 바껴있어서 Maze 변경&#10;ValidPos에서 getWidth와 getHeight 변경">
+    <list default="true" id="f8dce668-dfb5-47bd-bba6-3ec0536e990e" name="Changes" comment="feat : GUI 미로 옆 상태창 구현">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CeremonyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/CeremonyAlgorithm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/GUI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -60,9 +61,20 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1685186187372</updated>
-      <workItem from="1685186188944" duration="8921000" />
+      <workItem from="1685186188944" duration="13895000" />
+      <workItem from="1685265087784" duration="103000" />
+      <workItem from="1685278548588" duration="1327000" />
+      <workItem from="1685354010790" duration="506000" />
+      <workItem from="1685357821516" duration="8214000" />
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="feat : GUI 미로 옆 상태창 구현">
+      <created>1685197893393</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1685197893393</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -93,18 +105,10 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feat : Maze의 Width와 Height가 바껴있어서 Maze 변경&#10;ValidPos에서 getWidth와 getHeight 변경" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat : Maze의 Width와 Height가 바껴있어서 Maze 변경&#10;ValidPos에서 getWidth와 getHeight 변경" />
+    <MESSAGE value="feat : GUI 미로 옆 상태창 구현" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat : GUI 미로 옆 상태창 구현" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/CeremonyAlgorithm.java</url>
-          <line>196</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="maze" language="JAVA" />

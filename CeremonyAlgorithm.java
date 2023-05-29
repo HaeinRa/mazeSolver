@@ -45,8 +45,8 @@ public class CeremonyAlgorithm {
         mouse = new Mouse(new Point(0,1), mouseMap.getHeight()*mouseMap.getWidth(), mouseMap);
         mouse.map.getCell(0,1).setState(Cell.State.VISIT);
         mouse.setMap();
-        gui = new GUI(mouseMap, mouse);
         scanList = new ArrayList<>();
+        gui = new GUI(maze, mouse, scanList);
 
         // DFS 안간거 고쳐야함
         // SetUp: GUI 띄우기 (미로, 쥐)
@@ -67,7 +67,7 @@ public class CeremonyAlgorithm {
         // 체력이 남아 있다면
         while(true){
             gui.repaint();
-            TimeUnit.MILLISECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(10);
             branchCounter = 0; // 분기점 카운터 초기화
             System.out.println("stack: "+ stack);
             System.out.println("mouse: "+ mouse.getLocation());
@@ -107,8 +107,6 @@ public class CeremonyAlgorithm {
 
                 // 현재 시야 업데이트
                 isFindExit = mouse.map.update(mouse.getLocation(),3, maze, isFindExit);
-                gui.repaint();
-                TimeUnit.MILLISECONDS.sleep(10);
                 System.out.println("point007: Update sight");
 
 
@@ -162,8 +160,6 @@ public class CeremonyAlgorithm {
                             buffer.push(new Point(-1, -1)); // 분기라는 것을 알린다
                             buffer.push(now);
                             maze.getCell(now).setState(Cell.State.BRANCH);
-                            isFindExit = mouse.map.update(mouse.getLocation(),3, maze, isFindExit);
-
                         }
                         if(branchCounter==0){ // 현재는 갈 수 있는 곳이 없어서 이전 분기로 돌아가야한다면
                             System.out.println("point014: Can not go for now, Back to branch, Start buffer pop");
@@ -188,7 +184,7 @@ public class CeremonyAlgorithm {
                                     maze.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
                                     //prev = back;
                                 }
-                                isFindExit = mouse.map.update(mouse.getLocation(),3, maze, isFindExit);
+
                             }
                         }
                         else{ // 현재 갈 수 있는 곳이 있다면
@@ -235,7 +231,7 @@ public class CeremonyAlgorithm {
                         maze.resetVisitedInfo();
                     }
                     gui.repaint();
-                    TimeUnit.MILLISECONDS.sleep(10);
+                    TimeUnit.MILLISECONDS.sleep(1);
 
                     scanMode = 1; // 스캔모드를 바꾼다
                     System.out.println("point020: change scanMode to 1");
@@ -329,7 +325,7 @@ public class CeremonyAlgorithm {
                                     mouse.move();
                                     mouse.changeLocation(back);
                                     gui.repaint();
-                                    TimeUnit.MILLISECONDS.sleep(100);
+                                    TimeUnit.MILLISECONDS.sleep(10);
                                     maze.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
                                     //prev = back;
                                 }
