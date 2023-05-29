@@ -3,13 +3,15 @@ public class Cell {
     private boolean isWall; // 벽
     private boolean isExit; // 출구
     private boolean isVisited; // 방문한 곳
+    private boolean isBranch; // 분기점인가?
 
     public enum State {
         AVAILABLE,
         WALL,
         EXIT,
         VISIT,
-        NotRecommended
+        NotRecommended,
+        BRANCH
     }
 
     public Cell(int info) {
@@ -17,6 +19,19 @@ public class Cell {
         this.isWall = (info == 1);
         this.isExit = (info == 2);
         this.isVisited = (info == 3);
+        this.isBranch = false;
+    }
+
+    public Cell(Cell cell) {
+        this.isAvailable = cell.isAvailable;
+        this.isWall = cell.isWall;
+        this.isExit = cell.isExit;
+        this.isVisited = cell.isVisited;
+        this.isBranch = cell.isBranch;
+    }
+
+    public static Cell createCopy(Cell cell) {
+        return new Cell(cell);
     }
 
     public boolean isWall() {
@@ -35,6 +50,10 @@ public class Cell {
         return this.isVisited;
     }
 
+    public boolean isBranch(){
+        return this.isBranch;
+    }
+
 
     //방문 가능한데, 이미 방문했을 수도 있는거 아닌가? 상태를 딱 하나만 정하는게 맞나?
     //다시 되돌아갈 때, 방문 했던 곳을 가야하잖아.
@@ -45,6 +64,9 @@ public class Cell {
         }
         else if(isExit){
             return State.EXIT;
+        }
+        else if(isBranch){
+            return State.BRANCH;
         }
         else if(isAvailable){
             if(isVisited)
@@ -72,6 +94,8 @@ public class Cell {
                 this.isAvailable = true;
                 this.isWall = false;
                 this.isExit = false;
+                this.isVisited = false;
+                this.isBranch = false;
                 break;
             case EXIT:
                 this.isAvailable = true;
@@ -82,7 +106,13 @@ public class Cell {
                 this.isVisited = true;
                 break;
             case NotRecommended:
+                if(this.isBranch)
+                    break;
                 this.isAvailable = false;
+                break;
+            case BRANCH:
+                this.isBranch = true;
+                this.isVisited = true;
                 break;
             default:
                 System.out.println("That state does not exist.");

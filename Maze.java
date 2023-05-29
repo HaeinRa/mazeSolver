@@ -1,5 +1,5 @@
 public class Maze {
-    Cell[][] cells;
+    private Cell[][] cells;
     private int width;
     private int height;
     private Point point;
@@ -51,32 +51,39 @@ public class Maze {
         if (x < 0) // 계산된 x좌표가 왼쪽 벽이거나 벗어나면
         {
             x = 0;
-        } else if (x >= maze.getWidth()) {
-            x = maze.getWidth() - 1;
-            ;
+        } else if (x >= maze.getHeight()) {
+            x = maze.getHeight() - 1;
         }
         y = center.y - m;
         if (y < 0) {
             y = 0;
-        } else if (y >= maze.getHeight()) {
-            y = maze.getHeight() - 1;
+        } else if (y >= maze.getWidth()) {
+            y = maze.getWidth() - 1;
         }
         Point startPoint = new Point(x, y);
 
-        for (int i = startPoint.x; i < startPoint.x + d; i++) {
-            for (int j = startPoint.y; j < startPoint.y + d; j++) {
-                this.cells[i][j] = maze.getCell(i, j);
+        for (int i = startPoint.x; i < Math.min(startPoint.x + d, this.cells.length); i++) {
+            for (int j = startPoint.y; j < Math.min(startPoint.y + d, this.cells[i].length); j++) {
+                this.cells[i][j] = Cell.createCopy(maze.getCell(i, j));
                 if (!isFindExit) {
                     if (this.cells[i][j].getState() == Cell.State.EXIT)
-                        return true;
-                } else {
-                    return true;
+                        isFindExit = true;
                 }
             }
         }
-        return false;
+
+        return isFindExit;
     }
 
+    public void resetVisitedInfo(){
+        for (int i = 0; i < this.getHeight(); i++) {
+            for (int j = 0; j < this.getWidth(); j++) {
+                if ( this.getCell(i,j).getState() == Cell.State.VISIT || this.getCell(i,j).getState() == Cell.State.BRANCH) {
+                    this.getCell(i,j).setState(Cell.State.AVAILABLE);
+                }
+            }
+        }
+    }
 
     public void print() {
         for (int x = 0; x < width; x++) {
@@ -86,4 +93,6 @@ public class Maze {
             System.out.println();
         }
     }
+
+
 }

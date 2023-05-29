@@ -2,20 +2,21 @@ import java.math.BigDecimal; // 부동소수점때문에 정확한 값이 안 �
 public class Mouse {
     private Point location; // 쥐의 좌표, 쥐의 시야 3x3 이용
     private int energy; // 에너지
-    private BigDecimal mana; // 마나
+    private double mana; // 마나
     private int scanCount; // 스캔 횟수
-    protected Maze map;
+    Maze map;
 
     public Mouse(Point location, int energy, Maze map ) {
         this.location = location; // 쥐의 좌표를 계속 갱신해주는 메소드도 필요하지 않나?
         this.energy = energy;
         this.map = map;
-        mana = BigDecimal.valueOf(3);
+        this.scanCount = 0;
+        this.mana = 3;
     }
 
     public void move() { // 쥐 이동 : 이동 거리, 방향, 에너지 등 업데이트
         this.energy -= 1;
-        this.mana = mana.add(BigDecimal.valueOf(0.1));
+        this.mana = mana + 0.1;
     }
 
     public void changeLocation(Point point){
@@ -24,8 +25,8 @@ public class Mouse {
 
 
     public void scan(){  // 스캔할 때 : 마나 감소, 스캔 횟수 증가시키기
-        if(mana.compareTo(BigDecimal.valueOf(3)) >= 0) { // 이 조건은 scan에서 확인할 거긴 한데, test해보려고 한 거임
-            mana = mana.subtract(BigDecimal.valueOf(3));
+        if(mana >= 3) { // 이 조건은 scan에서 확인할 거긴 한데, test해보려고 한 거임
+            mana = mana - 3;
             scanCount ++;
         }
 //        this.mana -= 3;
@@ -36,7 +37,7 @@ public class Mouse {
         return energy;
     }
 
-    public BigDecimal getMana() { // 쥐의 마나 반환
+    public double getMana() { // 쥐의 마나 반환
         return mana;
     }
 
@@ -49,8 +50,8 @@ public class Mouse {
     }
 
     public void setMap(){
-        for (int i=0; i<map.getWidth(); i++) {
-            for (int j=0; j<map.getHeight(); j++) {
+        for (int i=0; i<map.getHeight(); i++) {
+            for (int j=0; j<map.getWidth(); j++) {
                 map.getCell(i,j).setState(Cell.State.WALL);
             }
         }
