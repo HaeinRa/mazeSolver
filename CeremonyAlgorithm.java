@@ -1,15 +1,11 @@
-import sun.awt.image.ImageWatched;
-
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
 public class CeremonyAlgorithm {
-    private static Maze maze;
-    private static Maze mouseMap;
+    private static Maze maze, mouseMap, view;
     private static GUI gui;
     private static List<Point> scanList;
     private static List<Double> compareList;
@@ -40,15 +36,23 @@ public class CeremonyAlgorithm {
         // SetUp: 사용 가능한 미로로 변환 (Cell에 저장)
         stack = new LinkedStack<Point>();
         buffer = new LinkedStack<Point>();
-        maze = new Maze(readMaze("Maze2.txt"));
-        mouseMap = new Maze(readMaze("Maze2.txt"));
+        String filename = "Maze2.txt";
+        maze = new Maze(readMaze("filename")); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
+        mouseMap = new Maze(readMaze("filename")); // 쥐의 시야, maze에 영향을 받음
+        view = new Maze(readMaze("filename")); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
         mouse = new Mouse(new Point(0,1), mouseMap.getHeight()*mouseMap.getWidth(), mouseMap);
-        mouse.map.getCell(0,1).setState(Cell.State.VISIT);
+
+        maze.getCell(0,1).setState(Cell.State.VISIT);
+        view.getCell(0,1).setState(Cell.State.VISIT);
+
         mouse.setMap();
         gui = new GUI(mouseMap, mouse);
         scanList = new ArrayList<>();
 
-        // DFS 안간거 고쳐야함
+        // Todo: 스캔모드0 완전제공
+        // Todo: 쥐 시야에서 매 순간 경로검사 추가하기(입구를 찾은 경우에만)
+        // Todo: 벽을 뚫었을 때, 가능한 경로가 있는지 검사
+        // 스캔 모드
         // SetUp: GUI 띄우기 (미로, 쥐)
         gui.repaint();
         TimeUnit.SECONDS.sleep(1);
@@ -59,6 +63,7 @@ public class CeremonyAlgorithm {
         isFindExit = false;
         scanMode = 0;
         branchCounter = 0; // 분기점인지 체크하는 카운터
+        boolean isInitBranch = false;
 
         // Run 단계 시작 (반복시켜야함)
         System.out.println("point002: Run state start");
@@ -158,7 +163,14 @@ public class CeremonyAlgorithm {
 
                         if(branchCounter>=2){ // 분기점이라면
                             System.out.println("point013: Branch Set");
-
+                            if(!isInitBranch){ // 출구부터 최조 분기점 이전의 경로를 추천하지 않는다.
+                                while(!buffer.isEmpty()){
+                                    Point tmp = buffer.pop();
+                                    maze.getCell(tmp).setState(Cell.State.NotRecommended);
+                                    mouseMap.getCell(tmp).setState(Cell.State.NotRecommended);
+                                }
+                                isInitBranch = true;
+                            }
                             buffer.push(new Point(-1, -1)); // 분기라는 것을 알린다
                             buffer.push(now);
                             maze.getCell(now).setState(Cell.State.BRANCH);
@@ -199,6 +211,8 @@ public class CeremonyAlgorithm {
                             gui.repaint();
                             TimeUnit.MILLISECONDS.sleep(1);
                             maze.getCell(now).setState(Cell.State.VISIT); // 해당 위치 VISIT state로 변경
+                            view.getCell(now).setState(Cell.State.VISIT);
+
                             buffer.push(now); // 버퍼에 집어넣는다
                         }
                     }
@@ -346,6 +360,7 @@ public class CeremonyAlgorithm {
                             gui.repaint();
                             TimeUnit.MILLISECONDS.sleep(100);
                             maze.getCell(now).setState(Cell.State.VISIT); // 해당 위치 VISIT state로 변경
+                            view.getCell(now).setState(Cell.State.VISIT);
                             buffer.push(now); // 버퍼에 집어넣는다
                         }
                     }
