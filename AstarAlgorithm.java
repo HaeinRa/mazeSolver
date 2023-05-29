@@ -20,16 +20,16 @@ public class AstarAlgorithm
     this.start_y = start_y;
     this.end_x = end_x; // 목표 지점
     this.end_y = end_y;
-    this.closed_set = new boolean[maze.getWidth()][maze.getHeight()]; // 닫힌 목록
-    this.came_from = new int[maze.getWidth()][maze.getHeight()];
-    this.g_score = new int[maze.getWidth()][maze.getHeight()]; // 시작점에서부터 가중치
-    this.f_score = new int[maze.getWidth()][maze.getHeight()]; // g score + h score, f_score가 큰 것을 먼저 탐색
+    this.closed_set = new boolean[maze.getHeight()][maze.getWidth()]; // 닫힌 목록
+    this.came_from = new int[maze.getHeight()][maze.getWidth()];
+    this.g_score = new int[maze.getHeight()][maze.getWidth()]; // 시작점에서부터 가중치
+    this.f_score = new int[maze.getHeight()][maze.getWidth()]; // g score + h score, f_score가 큰 것을 먼저 탐색
     this.open_set = new PriorityQueue<>((a, b) -> f_score[a[0]][a[1]] - f_score[b[0]][b[1]]); // 열린 목록
     init();
   }
 
   private void init() {
-    for (int i = 0; i < maze.getWidth(); i++) {
+    for (int i = 0; i < maze.getHeight(); i++) {
       Arrays.fill(closed_set[i], false);
       Arrays.fill(came_from[i], -1);
       Arrays.fill(g_score[i], Integer.MAX_VALUE);

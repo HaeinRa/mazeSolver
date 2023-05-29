@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="83b79691-a57e-4f6f-a8c5-9332e474cdd1" name="변경" comment="A* 알고리즘 save 1">
+    <list default="true" id="83b79691-a57e-4f6f-a8c5-9332e474cdd1" name="변경" comment="A* 알고리즘 완성">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AstarAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/AstarAlgorithm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CeremonyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/CeremonyAlgorithm.java" afterDir="false" />
@@ -24,9 +24,23 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2QSrI5hoHYdIJYLRV5sann2rCYy" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true"
+  }
+}]]></component>
   <component name="RunManager">
     <configuration name="CeremonyAlgorithm" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="CeremonyAlgorithm" />
@@ -41,7 +55,22 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <created>1685357745942</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1685357745942</updated>
+    </task>
+    <task id="LOCAL-00001" summary="A* 알고리즘 완성">
+      <created>1685357860051</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1685357860051</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -64,6 +93,7 @@
     <MESSAGE value="변경" />
     <MESSAGE value="A* 알고리즘을 사용하여 경로가 있는지 확인 후 경로가 있다면 출구까지 이동" />
     <MESSAGE value="A* 알고리즘 save 1" />
-    <option name="LAST_COMMIT_MESSAGE" value="A* 알고리즘 save 1" />
+    <MESSAGE value="A* 알고리즘 완성" />
+    <option name="LAST_COMMIT_MESSAGE" value="A* 알고리즘 완성" />
   </component>
 </project>

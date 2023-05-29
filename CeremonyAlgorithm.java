@@ -40,8 +40,8 @@ public class CeremonyAlgorithm {
         // SetUp: 사용 가능한 미로로 변환 (Cell에 저장)
         stack = new LinkedStack<Point>();
         buffer = new LinkedStack<Point>();
-        maze = new Maze(readMaze("Maze2.txt"));
-        mouseMap = new Maze(readMaze("Maze2.txt"));
+        maze = new Maze(readMaze("Maze1.txt"));
+        mouseMap = new Maze(readMaze("Maze1.txt"));
         mouse = new Mouse(new Point(0,1), mouseMap.getHeight()*mouseMap.getWidth(), mouseMap);
         mouse.map.getCell(0,1).setState(Cell.State.VISIT);
         mouse.setMap();
@@ -84,7 +84,8 @@ public class CeremonyAlgorithm {
                     System.out.println("point005: scanMode 0");
                     // map 업데이트
                     System.out.println("point005-1: scanning.. 5x5");
-                    Point scanPoint = new Point(maze.getHeight()- 5 * mouse.getScanCount() -1, maze.getWidth()-2-1);
+                    //Point scanPoint = new Point(maze.getHeight()- 5 * mouse.getScanCount() -1, maze.getWidth()-2-1);
+                    Point scanPoint = new Point( 5 * mouse.getScanCount() - 1, maze.getWidth()-2-1);
                     isFindExit = mouse.map.update(scanPoint,5, maze, isFindExit);
 
                     mouse.scan();
@@ -208,7 +209,30 @@ public class CeremonyAlgorithm {
                 else{ // 출구를 알고 있다면
                     System.out.println("point019: Exit already found");
                     System.out.println(maze.getEndPoint());
-
+                    
+                    // 경로검사, a* 알고리즘을 통해 쥐가 알고있는 맵에서 출구까지 가는 길이 있는지 확인
+                    AstarAlgorithm astarAlgorithm = new AstarAlgorithm(mouse.map, mouse.getLocation().x, mouse.getLocation().y,
+                            maze.getEndPoint().x, maze.getEndPoint().y);
+                    int[][] path = astarAlgorithm.run();
+                    // 경로가 존재하면
+                    if (path != null) {
+                        System.out.println("경로가 존재합니다. 출구로 이동합니다");
+                        System.out.println("출구 위치 : " + maze.getEndPoint().x + ", " + maze.getEndPoint().y);
+                        System.out.println("경로의 마지막 위치 : " + path[path.length-1][0] + ", " + path[path.length-1][1]);
+                        for (int i=0; i<path.length; i++) {
+                            // 출구까지 곧바로 이동
+                            mouse.move();
+                            now = new Point(path[i][0], path[i][1]);
+                            mouse.changeLocation(now);
+                            mouse.map.getCell(now).setState(Cell.State.VISIT);
+                            gui.repaint();
+                            TimeUnit.MILLISECONDS.sleep(10);
+                        }
+                        // 이동 후 while문 종료
+                        continue;
+                    } else {
+                        System.out.println("경로 없음, dfs로 진행");
+                    }
 
                     // 경로검사1: 현재 시야와 스캔 리스트가 겹치는지 확인한다.
 //                    if(isPointOverlap(mouse.getLocation(), scanList)){
