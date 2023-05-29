@@ -42,23 +42,24 @@ public class CeremonyAlgorithm {
         maze = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
         mouseMap = new Maze(readMaze(filename)); // 쥐의 시야, maze에 영향을 받음
         view = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
-        scanMap = new Maze(readMaze(filename)); // 스캔한 포인트 정보를 나타내는 맵
+        scanMap = new Maze(readMaze(filename)); // 스캔한 포인트 위치만 나타내는 맵
+        ra = new Maze(readMaze(filename)); // 스캔한 곳의 미로 정보를 나타내는 맵
         mouse = new Mouse(new Point(0,1), mouseMap.getHeight()*mouseMap.getWidth(), mouseMap);
 
         maze.getCell(0,1).setState(Cell.State.VISIT);
         view.getCell(0,1).setState(Cell.State.VISIT);
 
         mouse.setMap();
-        gui = new GUI(scanMap, mouse, scanMap);
-        long bufferTime = 100;
+        gui = new GUI(mouseMap, mouse, scanMap);
+        long bufferTime = 1;
         long stackTime = 1;
-        long setTime = 10;
+        long setTime = 1;
         scanList = new ArrayList<>();
         scanDistanceQueue = new PriorityQueue<>(Comparator.comparingDouble(p -> calculateDistance(p))); // 거리가 짧을 수록 우선순위 높음 -> 다시 스택에 넣지 않을 거임
 
 
         // 다 벽인 미로 - 스캔한 부분 DFS 사용하려고 만듦
-        ra = new Maze(readMaze(filename));
+
         for (int i=0; i<ra.getHeight(); i++) {
             for (int j=0; j<ra.getWidth(); j++) {
                 ra.getCell(i, j).setState(Cell.State.NotRecommended);
@@ -134,7 +135,8 @@ public class CeremonyAlgorithm {
 
                     // ra 업데이트 : 방 조명이 켜짐
                     ra.update(scanPoint, 5, maze, isFindExit);
-
+                    gui.repaint();
+                    TimeUnit.MILLISECONDS.sleep(setTime);
 
 
                     // 출구와 연결된 곳을 유망한 방면이라 하고, 그 방면들의 중점을 모아놓는 후보 리스트 : candidiateScan 리스트
@@ -152,15 +154,19 @@ public class CeremonyAlgorithm {
 
 
                     // 후보 중점의 요소들이 scanList에 있는지 검사하고 없다면 scanList에 추가하기
-                    for (int i = candidateScan.size() - 1; i >= 0; i--){
+                    for (int i = 0; i< candidateScan.size(); i++){
+                        boolean isRemoved = false;
                         Point point = candidateScan.get(i);
                         for(int j = 0; j<scanList.size(); j++){
                             // scanList에 있는 (중복된) Point는 후보에서 제거
                             if(point.x == scanList.get(j).x && point.y == scanList.get(j).y){
                                 System.out.println("채승윤님");
-                                candidateScan.remove(j);
-                                j--;
+                                candidateScan.remove(i);
+                                isRemoved = true;
                             }
+                        }
+                        if(isRemoved){
+                            i--;
                         }
                     }
 
@@ -490,6 +496,15 @@ public class CeremonyAlgorithm {
 
     }
 
+    static boolean isScanValidPos(int x, int y){
+
+        if (x<0 || y<0 || x>=maze.getHeight() || y>=maze.getWidth())
+            return false;
+        else
+            return ra.getCell(x, y).isAvailable() && !ra.getCell(x, y).isVisited() && ra.getCell(x, y).getState() != Cell.State.NotRecommended;
+        // 이미 지나간 자리도 추가 해야하나?
+    }
+
     static boolean isValidPos(int x, int y){
 
         if (x<0 || y<0 || x>=maze.getHeight() || y>=maze.getWidth())
@@ -630,47 +645,53 @@ public class CeremonyAlgorithm {
             System.out.println("현재 스택: " + scanStack);
             // 뽑을 때 현재 위치가 5*5에 걸쳐 있으면
             Point now = scanStack.pop();
+
             // 위쪽 벽으로 막혀서 dfs 진행을 못하면 위쪽 5*5의 중심점을 candidateScanPoint에 추가
-            if (ra.cells[now.x - 1][now.y].getState() == Cell.State.NotRecommended) {
-                Point up = new Point(scanPoint.x - 5, scanPoint.y);
-                candidateScanPoint.add(up);
+            if (!(now.x-1<0 || now.y<0 || now.x-1>=maze.getHeight() || now.y>=maze.getWidth())){
+                if (ra.getCell(now.x-1, now.y).getState() == Cell.State.NotRecommended) {
+                    Point up = new Point(scanPoint.x - 5, scanPoint.y);
+                    candidateScanPoint.add(up);
+                }
             }
+
             // 아래쪽 벽으로 막혀서 dfs 진행 x
-            else if (ra.cells[now.x + 1][now.y].getState() == Cell.State.NotRecommended) {
-                Point down = new Point(scanPoint.x + 5, scanPoint.y);
-                candidateScanPoint.add(down);
+            if (!(now.x+1<0 || now.y<0 || now.x+1>=maze.getHeight() || now.y>=maze.getWidth())){
+                if (ra.getCell(now.x+1, now.y).getState() == Cell.State.NotRecommended) {
+                    Point up = new Point(scanPoint.x + 5, scanPoint.y);
+                    candidateScanPoint.add(up);
+                }
             }
             // 왼쪽
-            else if (ra.cells[now.x][now.y - 1].getState() == Cell.State.NotRecommended) {
-                Point left = new Point(scanPoint.x, scanPoint.y - 5);
-                candidateScanPoint.add(left);
+            if (!(now.x<0 || now.y-1<0 || now.x>=maze.getHeight() || now.y-1>=maze.getWidth())){
+                if (ra.getCell(now.x, now.y-1).getState() == Cell.State.NotRecommended) {
+                    Point up = new Point(scanPoint.x, scanPoint.y-5);
+                    candidateScanPoint.add(up);
+                }
             }
             // 오른쪽은 필요한 경우에만 추가
-            else {
-                if (now.x < ra.getHeight() && now.y < ra.getWidth() + 5) {
-                    Point right = new Point(scanPoint.x, scanPoint.y + 5);
-                    candidateScanPoint.add(right);
+            if (!(now.x<0 || now.y+1<0 || now.x>=maze.getHeight() || now.y+1>=maze.getWidth())){
+                if (ra.getCell(now.x, now.y+1).getState() == Cell.State.NotRecommended) {
+                    Point up = new Point(scanPoint.x , scanPoint.y+5);
+                    candidateScanPoint.add(up);
                 }
             }
             System.out.println(now);
-            if (ra.getCell(now.x, now.y).isExit()) {
-                System.out.println("Exit");
-//                return candidateScanPoint;
+            ra.getCell(now).setState(Cell.State.VISIT);
+            //하
+            if(isScanValidPos(now.x+1, now.y)){
+                scanStack.push(new Point(now.x+1, now.y));
             }
-            else {
-                //ra.getCell(now.x, now.y).setState(Cell.State.VISIT);
-                if(isValidPos(now.x+1, now.y)){
-                    scanStack.push(new Point(now.x+1, now.y));
-                }
-                if(isValidPos(now.x-1, now.y)){
-                    scanStack.push(new Point(now.x-1, now.y));
-                }
-                if(isValidPos(now.x, now.y+1)){
-                    scanStack.push(new Point(now.x, now.y+1));
-                }
-                if(isValidPos(now.x, now.y-1)){
-                    scanStack.push(new Point(now.x, now.y-1));
-                }
+            //상
+            if(isScanValidPos(now.x-1, now.y)){
+                scanStack.push(new Point(now.x-1, now.y));
+            }
+            //우
+            if(isScanValidPos(now.x, now.y+1)){
+                scanStack.push(new Point(now.x, now.y+1));
+            }
+            //좌
+            if(isScanValidPos(now.x, now.y-1)){
+                scanStack.push(new Point(now.x, now.y-1));
             }
         }
         return candidateScanPoint;
