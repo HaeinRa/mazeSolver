@@ -19,6 +19,9 @@ public class CeremonyAlgorithm {
     private static boolean isFindExit;
     private static int branchCounter;
     private static List<Point> candidateScan;
+    static long bufferTime;
+    static long stackTime;
+    static long setTime;
 
     static PriorityQueue<Point> scanDistanceQueue;
 
@@ -51,9 +54,9 @@ public class CeremonyAlgorithm {
 
         mouse.setMap();
         gui = new GUI(mouseMap, mouse, scanMap);
-        long bufferTime = 1;
-        long stackTime = 1;
-        long setTime = 1;
+        bufferTime = 10;
+        stackTime = 10;
+        setTime = 1;
         scanList = new ArrayList<>();
         scanDistanceQueue = new PriorityQueue<>(Comparator.comparingDouble(p -> calculateDistance(p))); // 거리가 짧을 수록 우선순위 높음 -> 다시 스택에 넣지 않을 거임
 
@@ -126,8 +129,9 @@ public class CeremonyAlgorithm {
 
 
                 }
-                else if (scanMode == 1) { // 출구 찾은 후
+                else if (mouse.getMana() >= 3 && scanMode == 1) { // 출구 찾은 후
                     System.out.println("point006: scanMode 1");
+                    scanDistanceQueue.clear();
 
                     // map 업데이트
                     System.out.println("point005-1: scanning.. 5x5");
@@ -196,6 +200,7 @@ public class CeremonyAlgorithm {
                     // map 업데이트
                     // 스캔 리스트에 추가
                     // mouse 정보 갱신
+                    ra.update(scanPoint, 5, maze, scanMap, isFindExit);
                     mouse.scan();
                     System.out.println("scanPoint: " + scanPoint);
                     System.out.println("scanCount: " + mouse.getScanCount());
@@ -635,48 +640,55 @@ public class CeremonyAlgorithm {
         return distance;
     }
 
+    public static double calculateDistance(Point p1, Point p2) {
+        double deltaX = p2.x - p1.x;
+        double deltaY = p2.y - p1.y;
+        return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+    }
     // DFS 모드
-    static List<Point> scanDFSAlgorithm(Point exit){
+    static List<Point> scanDFSAlgorithm(Point exit) throws InterruptedException {
         LinkedStack<Point> scanStack = new LinkedStack<>();
         List<Point> candidateScanPoint = new ArrayList<>();
         scanStack.push(exit); // 시작 지점 지정
 
         while(!scanStack.isEmpty()){
-            System.out.println("현재 스택: " + scanStack);
+            System.out.println("스캔 가중치 스택: " + scanStack);
             // 뽑을 때 현재 위치가 5*5에 걸쳐 있으면
             Point now = scanStack.pop();
 
             // 위쪽 벽으로 막혀서 dfs 진행을 못하면 위쪽 5*5의 중심점을 candidateScanPoint에 추가
             if (!(now.x-1<0 || now.y<0 || now.x-1>=maze.getHeight() || now.y>=maze.getWidth())){
                 if (ra.getCell(now.x-1, now.y).getState() == Cell.State.NotRecommended) {
-                    Point up = new Point(scanPoint.x - 5, scanPoint.y);
-                    candidateScanPoint.add(up);
+                    Point up = findClosestPoint(now);
+                    candidateScanPoint.add(up.add(-5));
                 }
             }
 
             // 아래쪽 벽으로 막혀서 dfs 진행 x
             if (!(now.x+1<0 || now.y<0 || now.x+1>=maze.getHeight() || now.y>=maze.getWidth())){
                 if (ra.getCell(now.x+1, now.y).getState() == Cell.State.NotRecommended) {
-                    Point up = new Point(scanPoint.x + 5, scanPoint.y);
-                    candidateScanPoint.add(up);
+                    Point up = findClosestPoint(now);
+                    candidateScanPoint.add(up.add(5));
                 }
             }
             // 왼쪽
             if (!(now.x<0 || now.y-1<0 || now.x>=maze.getHeight() || now.y-1>=maze.getWidth())){
                 if (ra.getCell(now.x, now.y-1).getState() == Cell.State.NotRecommended) {
-                    Point up = new Point(scanPoint.x, scanPoint.y-5);
-                    candidateScanPoint.add(up);
+                    Point up = findClosestPoint(now);
+                    candidateScanPoint.add(up.add(0,-5));
                 }
             }
             // 오른쪽은 필요한 경우에만 추가
             if (!(now.x<0 || now.y+1<0 || now.x>=maze.getHeight() || now.y+1>=maze.getWidth())){
                 if (ra.getCell(now.x, now.y+1).getState() == Cell.State.NotRecommended) {
-                    Point up = new Point(scanPoint.x , scanPoint.y+5);
-                    candidateScanPoint.add(up);
+                    Point up = findClosestPoint(now);
+                    candidateScanPoint.add(up.add(0,5));
                 }
             }
             System.out.println(now);
             ra.getCell(now).setState(Cell.State.VISIT);
+            gui.repaint();
+            TimeUnit.MILLISECONDS.sleep(setTime+10);
             //하
             if(isScanValidPos(now.x+1, now.y)){
                 scanStack.push(new Point(now.x+1, now.y));
@@ -694,6 +706,31 @@ public class CeremonyAlgorithm {
                 scanStack.push(new Point(now.x, now.y-1));
             }
         }
+        ra.resetVisitedInfo();
+
         return candidateScanPoint;
     }
+
+
+    public static Point findClosestPoint(Point point) {
+        if (scanList.isEmpty()) {
+            return null; // 스캔 리스트가 비어있으면 null 반환
+        }
+
+        Point closestPoint = scanList.get(0);
+        double closestDistance = calculateDistance(closestPoint, point);
+
+        for (int i = 1; i < scanList.size(); i++) {
+            Point currentPoint = scanList.get(i);
+            double currentDistance = calculateDistance(currentPoint, point);
+            if (currentDistance < closestDistance) {
+                closestPoint = currentPoint;
+                closestDistance = currentDistance;
+            }
+        }
+
+        return closestPoint;
+    }
+
 }
+
