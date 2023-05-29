@@ -40,17 +40,17 @@ public class CeremonyAlgorithm {
         stack = new LinkedStack<Point>();
         buffer = new LinkedStack<Point>();
         String filename = "Maze2.txt";
-        maze = new Maze(readMaze("filename")); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
-        mouseMap = new Maze(readMaze("filename")); // 쥐의 시야, maze에 영향을 받음
-        view = new Maze(readMaze("filename")); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
+        maze = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
+        mouseMap = new Maze(readMaze(filename)); // 쥐의 시야, maze에 영향을 받음
+        view = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
         mouse = new Mouse(new Point(0,1), mouseMap.getHeight()*mouseMap.getWidth(), mouseMap);
 
         maze.getCell(0,1).setState(Cell.State.VISIT);
         view.getCell(0,1).setState(Cell.State.VISIT);
 
         mouse.setMap();
-        gui = new GUI(mouseMap, mouse);
         scanList = new ArrayList<>();
+        gui = new GUI(maze, mouse, scanList);
 
         // Todo: 스캔모드0 완전제공
         // Todo: 쥐 시야에서 매 순간 경로검사 추가하기(입구를 찾은 경우에만)
@@ -75,7 +75,7 @@ public class CeremonyAlgorithm {
         // 체력이 남아 있다면
         while(true){
             gui.repaint();
-            TimeUnit.MILLISECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(100);
             branchCounter = 0; // 분기점 카운터 초기화
             System.out.println("stack: "+ stack);
             System.out.println("mouse: "+ mouse.getLocation());
@@ -116,7 +116,7 @@ public class CeremonyAlgorithm {
                 // 현재 시야 업데이트
                 isFindExit = mouse.map.update(mouse.getLocation(),3, maze, isFindExit);
                 gui.repaint();
-                TimeUnit.MILLISECONDS.sleep(10);
+                TimeUnit.MILLISECONDS.sleep(100);
                 System.out.println("point007: Update sight");
 
 
@@ -199,7 +199,7 @@ public class CeremonyAlgorithm {
                                     mouse.move();
                                     mouse.changeLocation(back);
                                     gui.repaint();
-                                    TimeUnit.MILLISECONDS.sleep(1);
+                                    TimeUnit.MILLISECONDS.sleep(100);
                                     maze.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
                                     //prev = back;
                                 }
@@ -212,7 +212,7 @@ public class CeremonyAlgorithm {
                             mouse.move(); // 쥐를 해당 위치로 움직인다
                             mouse.changeLocation(now); // 쥐의 위치를 바꾼다
                             gui.repaint();
-                            TimeUnit.MILLISECONDS.sleep(1);
+                            TimeUnit.MILLISECONDS.sleep(100);
                             maze.getCell(now).setState(Cell.State.VISIT); // 해당 위치 VISIT state로 변경
                             view.getCell(now).setState(Cell.State.VISIT);
 
@@ -252,7 +252,7 @@ public class CeremonyAlgorithm {
                         maze.resetVisitedInfo();
                     }
                     gui.repaint();
-                    TimeUnit.MILLISECONDS.sleep(10);
+                    TimeUnit.MILLISECONDS.sleep(100);
 
                     scanMode = 1; // 스캔모드를 바꾼다
                     System.out.println("point020: change scanMode to 1");
@@ -368,7 +368,7 @@ public class CeremonyAlgorithm {
                         }
                     }
                     gui.repaint();
-                    TimeUnit.MILLISECONDS.sleep(1);
+                    TimeUnit.MILLISECONDS.sleep(100);
                 }
 
             } else { // 체력이 남아있지 않다면
