@@ -38,7 +38,6 @@ public class GUI extends JPanel {
 
     private void drawMaze(Graphics2D g2d, Maze maze, Mouse mouse, List<Point> scanList) {
 
-
         for (int i = 0; i < maze.getHeight(); i++) {
             List<Point> scanArea = new ArrayList<>();
             for (int j = 0; j < maze.getWidth(); j++) {
@@ -48,7 +47,7 @@ public class GUI extends JPanel {
                 Cell.State state = maze.getCell(i, j).getState();
                 switch (state) {
                     case WALL:
-                        g2d.setColor(Color.GRAY);
+                        g2d.setColor(Color.LIGHT_GRAY);
                         break;
                     case AVAILABLE:
                         g2d.setColor(Color.WHITE);
@@ -67,13 +66,10 @@ public class GUI extends JPanel {
                         break;
                 }
 
-
                 if (mouse.getLocation().x == i && mouse.getLocation().y == j) {
                     g2d.setColor(Color.BLUE);
                 }
                 g2d.fillRect(x, y, cellSize, cellSize);
-                /*addScanArea(scanList, scanArea);
-                fillScanArea(scanArea,g2d);*/
                 fillScanArea(maze,scanMap,g2d);
             }
         }
@@ -89,35 +85,6 @@ public class GUI extends JPanel {
             }
         }
     }
-    /*private void addScanArea(List<Point> scanList, List<Point> scanArea) {
-        for (int index = 0; index < scanList.size(); index++) {
-            Point center = scanList.get(index);
-            int xScan = center.x;
-            int yScan = center.y;
-            for (int yIndex = yScan - 2; yIndex <= yScan + 2; yIndex++) {
-                for (int xIndex = xScan - 2; xIndex <= xScan + 2; xIndex++) {
-                    Point point = new Point(xIndex, yIndex);
-                    scanArea.add(point);
-                }
-            }
-        }
-    }
-
-    private void fillScanArea(List<Point> scanArea, Graphics2D g2d) {
-        for (int checkPointIndex = 0; checkPointIndex < scanArea.size(); checkPointIndex++) {
-            Point checkPoint = scanArea.get(checkPointIndex);
-
-            Cell.State scanState = maze.getCell(checkPoint.x - 2, checkPoint.y).getState();
-            if (scanState == Cell.State.WALL) {
-                g2d.setColor(SCAN_COLOR);
-                g2d.fillRect((checkPoint.y)  * cellSize, (checkPoint.x-2) * cellSize, cellSize, cellSize);
-            }
-        }
-    }*/
-
-
-
-
 
     public void drawStatus(Graphics g, Maze maze, Mouse mouse) {
         int statusX = getWidth() - 200; // 상태 창 위치 X 좌표
@@ -178,6 +145,5 @@ public class GUI extends JPanel {
         g.fillRect(statusX + 15, statusY + 480, 10, 90);
         g.fillRect(statusX + 165, statusY + 480, 10, 90);
         g.fillRect(statusX + 15, statusY + 570, 160, 10);
-
     }
 }

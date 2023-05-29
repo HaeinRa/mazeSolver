@@ -32,7 +32,7 @@ public class CeremonyAlgorithm {
         // SetUp: 사용 가능한 미로로 변환 (Cell에 저장)
         stack = new LinkedStack<Point>();
         buffer = new LinkedStack<Point>();
-        String filename = "Maze1.txt";
+        String filename = "Maze2.txt";
         maze = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
         mouseMap = new Maze(readMaze(filename)); // 쥐의 시야, maze에 영향을 받음
         view = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
@@ -43,7 +43,7 @@ public class CeremonyAlgorithm {
         view.getCell(0,1).setState(Cell.State.VISIT);
 
         mouse.setMap();
-        gui = new GUI(view, mouse, scanMap);
+        gui = new GUI(mouseMap, mouse, scanMap);
         scanList = new ArrayList<>();
 
         // Todo: 스캔모드0 완전제공
@@ -115,7 +115,7 @@ public class CeremonyAlgorithm {
                 // 현재 시야 업데이트
                 isFindExit = mouse.map.update(mouse.getLocation(),3, maze, isFindExit);
                 gui.repaint();
-                TimeUnit.MILLISECONDS.sleep(2);
+                TimeUnit.MILLISECONDS.sleep(10);
                 System.out.println("point007: Update sight");
 
 

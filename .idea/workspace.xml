@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f8dce668-dfb5-47bd-bba6-3ec0536e990e" name="Changes" comment="feat : 스캔 색깔 바꾸기 완성(?)">
+    <list default="true" id="f8dce668-dfb5-47bd-bba6-3ec0536e990e" name="Changes" comment="gui 스캔한 부분 맵에서 확인 가능">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CeremonyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/CeremonyAlgorithm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/GUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Maze1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Maze1.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,6 +68,7 @@
       <workItem from="1685278548588" duration="1327000" />
       <workItem from="1685354010790" duration="506000" />
       <workItem from="1685357821516" duration="10123000" />
+      <workItem from="1685373775112" duration="3069000" />
     </task>
     <task id="LOCAL-00002" summary="feat : GUI 미로 옆 상태창 구현">
       <created>1685197893393</created>
@@ -88,7 +91,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685367866384</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="gui 스캔한 부분 맵에서 확인 가능">
+      <created>1685372564983</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1685372564983</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -105,7 +115,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="feature3/feature3" />
+                        <option value="feature3/feature5" />
                       </list>
                     </value>
                   </entry>
