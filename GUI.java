@@ -88,10 +88,10 @@ public class GUI extends JPanel {
                 for (int checkPointIndex = 0; checkPointIndex < scanArea.size(); checkPointIndex++) {
                     Point checkPoint = scanArea.get(checkPointIndex);
 
-                    Cell.State scanState = maze.getCell(checkPoint.x - 2, checkPoint.y - 2).getState();
+                    Cell.State scanState = maze.getCell(checkPoint.x - 2, checkPoint.y).getState();
                     if (scanState == Cell.State.WALL) {
                         g2d.setColor(SCAN_COLOR);
-                        g2d.fillRect((checkPoint.y-2)  * cellSize, (checkPoint.x-2) * cellSize, cellSize, cellSize);
+                        g2d.fillRect((checkPoint.y)  * cellSize, (checkPoint.x-2) * cellSize, cellSize, cellSize);
                     }
                 }
             }
