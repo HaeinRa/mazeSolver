@@ -40,9 +40,9 @@ public class CeremonyAlgorithm {
         stack = new LinkedStack<Point>();
         buffer = new LinkedStack<Point>();
         String filename = "Maze1.txt";
-        maze = new Maze(readMaze("filename")); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
-        mouseMap = new Maze(readMaze("filename")); // 쥐의 시야, maze에 영향을 받음
-        view = new Maze(readMaze("filename")); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
+        maze = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
+        mouseMap = new Maze(readMaze(filename)); // 쥐의 시야, maze에 영향을 받음
+        view = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
         mouse = new Mouse(new Point(0,1), mouseMap.getHeight()*mouseMap.getWidth(), mouseMap);
 
         maze.getCell(0,1).setState(Cell.State.VISIT);
