@@ -1,5 +1,5 @@
 public class Maze {
-    private Cell[][] cells;
+    public Cell[][] cells;
     private int width;
     private int height;
     private Point point;

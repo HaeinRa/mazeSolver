@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0402f819-fe82-411f-8bd4-de0deccbc5a4" name="Changes" comment="Changes">
-      <change afterPath="$PROJECT_DIR$/Maze2.txt" afterDir="false" />
+    <list default="true" id="0402f819-fe82-411f-8bd4-de0deccbc5a4" name="Changes" comment="스캔 추가 ㅋㅋ">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CeremonyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/CeremonyAlgorithm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Maze.java" beforeDir="false" afterPath="$PROJECT_DIR$/Maze.java" afterDir="false" />
@@ -146,7 +145,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="feature3/feature2" />
+                        <option value="origin/feature5" />
                       </list>
                     </value>
                   </entry>

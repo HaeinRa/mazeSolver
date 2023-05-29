@@ -44,13 +44,15 @@ public class CeremonyAlgorithm {
         maze = new Maze(readMaze("Maze1.txt"));
         mouse = new Mouse(new Point(0,1), maze.getHeight()*maze.getWidth(), maze);
         mouse.map.getCell(0,1).setState(Cell.State.VISIT);
-        gui = new GUI(maze,mouse);
+        gui = new GUI(mouse.map,mouse);
+        scanList = new ArrayList<>();
+
 
         // 다 벽인 미로 - 스캔한 부분 DFS 사용하려고 만듦
         Maze ra = new Maze(readMaze("Maze1.txt"));
         for (int i=0; i<ra.getHeight(); i++) {
             for (int j=0; j<ra.getWidth(); j++) {
-                ra.getCell(j, i).setState(Cell.State.NotRecommended);
+                ra.getCell(i, j).setState(Cell.State.NotRecommended);
             }
         }
 
@@ -88,7 +90,6 @@ public class CeremonyAlgorithm {
 
             if (mouse.getEnergy() > 0) {
                 System.out.println("point004: Energy condition");
-                scanPoint = null;
                 // 5x5 스캔하기 (모드에 따라)
                 if(scanMode == 0){ // 출구 찾기 전
                     System.out.println("point005: scanMode 0");
@@ -156,8 +157,6 @@ public class CeremonyAlgorithm {
 
                     // 우선순위 큐에서 우선순위가 가장 큰 녀석을 스캔 포인트로 지정
                     scanPoint = scanDistanceQueue.poll();
-
-
 
                     // something:1
                     // map 업데이트
