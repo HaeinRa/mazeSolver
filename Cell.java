@@ -109,6 +109,10 @@ public class Cell {
                 if(this.isBranch)
                     break;
                 this.isAvailable = false;
+                this.isVisited = false;
+                this.isWall = false;
+                this.isBranch = false;
+                this.isExit = false;
                 break;
             case BRANCH:
                 this.isBranch = true;

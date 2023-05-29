@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0402f819-fe82-411f-8bd4-de0deccbc5a4" name="Changes" comment="머지받음" />
+    <list default="true" id="0402f819-fe82-411f-8bd4-de0deccbc5a4" name="Changes" comment="머지받음2">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cell.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CeremonyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/CeremonyAlgorithm.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -90,7 +94,8 @@
       <workItem from="1685191142758" duration="8365000" />
       <workItem from="1685351686569" duration="1000" />
       <workItem from="1685365307105" duration="1398000" />
-      <workItem from="1685369018599" duration="474000" />
+      <workItem from="1685369018599" duration="2999000" />
+      <workItem from="1685372027838" duration="5971000" />
     </task>
     <task id="LOCAL-00001" summary="mouse">
       <created>1684562834418</created>
@@ -134,7 +139,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685369084109</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="머지받음2">
+      <created>1685369668865</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1685369668865</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -168,6 +180,18 @@
     <MESSAGE value="mouse" />
     <MESSAGE value="feat : GUI 바꾸기" />
     <MESSAGE value="머지받음" />
-    <option name="LAST_COMMIT_MESSAGE" value="머지받음" />
+    <MESSAGE value="머지받음2" />
+    <option name="LAST_COMMIT_MESSAGE" value="머지받음2" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/CeremonyAlgorithm.java</url>
+          <line>603</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

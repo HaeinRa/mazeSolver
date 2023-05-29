@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 
 public class CeremonyAlgorithm {
-    private static Maze maze, ra, view, mouseMap;
+    private static Maze maze, view, mouseMap, ra;
     private static GUI gui;
     private static List<Point> scanList;
     private static List<Double> compareList;
@@ -18,6 +18,7 @@ public class CeremonyAlgorithm {
     private static boolean isFindExit;
     private static int branchCounter;
     private static Point scanPoint;
+    private static List<Point> candidateScan;
 
     static PriorityQueue<Point> scanDistanceQueue;
 
@@ -52,16 +53,19 @@ public class CeremonyAlgorithm {
 
         mouse.setMap();
         scanList = new ArrayList<>();
-        gui = new GUI(maze, mouse, scanList);
+        scanDistanceQueue = new PriorityQueue<>(Comparator.comparingDouble(p -> calculateDistance(p))); // 거리가 짧을 수록 우선순위 높음 -> 다시 스택에 넣지 않을 거임
 
 
         // 다 벽인 미로 - 스캔한 부분 DFS 사용하려고 만듦
-        ra = new Maze(readMaze("Maze1.txt"));
+        ra = new Maze(readMaze(filename));
         for (int i=0; i<ra.getHeight(); i++) {
             for (int j=0; j<ra.getWidth(); j++) {
                 ra.getCell(i, j).setState(Cell.State.NotRecommended);
             }
         }
+
+
+        gui = new GUI(maze, mouse, scanList);
 
 
         // SetUp: GUI 띄우기 (미로, 쥐)
@@ -123,16 +127,12 @@ public class CeremonyAlgorithm {
                     // ra 업데이트 : 방 조명이 켜짐
                     ra.update(scanPoint, 5, maze, isFindExit);
 
-                    // mouse 정보 갱신
-                    mouse.scan();
-                    System.out.println("scanPoint: " + scanPoint);
-                    System.out.println("scanCount: " + mouse.getScanCount());
+
 
                     // 출구와 연결된 곳을 유망한 방면이라 하고, 그 방면들의 중점을 모아놓는 후보 리스트 : candidiateScan 리스트
                     // DFS를 이용하여 어디가 뚫려있는지 알아내기
                     // 출구를 입구로 가정하고 DFS 실행,
-                    List<Point> candidateScan = scanDFSAlgorithm(maze.getEndPoint());
-
+                    candidateScan = scanDFSAlgorithm(maze.getEndPoint());
 
                     // 뚫린 면의 중점 검사하기 : 후보 중점이 available 한가? 위의 방법에서 remove할 때 인덱스 오류 발생할 수도 있을 것 같아 뒤에서부터 앞으로 순회하여 삭제
                     for (int i = candidateScan.size() - 1; i >= 0; i--) {
@@ -142,18 +142,22 @@ public class CeremonyAlgorithm {
                         }
                     }
 
+
                     // 후보 중점의 요소들이 scanList에 있는지 검사하고 없다면 scanList에 추가하기
-                    for (int i = 0; i<candidateScan.size(); i++){
+                    for (int i = candidateScan.size() - 1; i >= 0; i--){
                         Point point = candidateScan.get(i);
                         for(int j = 0; j<scanList.size(); j++){
-                            if(point != scanList.get(j)){
-                                scanList.add(point);
+                            // scanList에 있는 (중복된) Point는 후보에서 제거
+                            if(point.x == scanList.get(j).x && point.y == scanList.get(j).y){
+                                System.out.println("채승윤님");
+                                candidateScan.remove(j);
+                                j--;
                             }
                         }
                     }
 
                     // 거리에 따라 우선순위를 두는 우선순위큐 distanceQueue를 생성한다.
-                    scanDistanceQueue = new PriorityQueue<>(Comparator.comparingDouble(p -> calculateDistance(p))); // 거리가 짧을 수록 우선순위 높음 -> 다시 스택에 넣지 않을 거임
+
                     // 이거 클래스 변수로 바꾸기
 
 
@@ -161,16 +165,26 @@ public class CeremonyAlgorithm {
                         System.out.println("null");
                     }
                     // scanList 리스트에 있는 모든 포인트 객체를 distanceQueue에 추가
-                    for(Point point : scanList){
-                        scanDistanceQueue.add(point);
+                    for(int i=0; i<candidateScan.size(); i++){
+                        System.out.println("라해인님님");
+                        scanDistanceQueue.add(candidateScan.get(i));
                     }
 
                     // 우선순위 큐에서 우선순위가 가장 큰 녀석을 스캔 포인트로 지정
-                    scanPoint = scanDistanceQueue.poll();
+                    if (scanDistanceQueue.peek() != null) {
+                        scanPoint = scanDistanceQueue.poll();
+                        scanList.add(scanPoint);
+                    }
+                    System.out.println(scanDistanceQueue.peek() == null);
+
 
                     // something:1
                     // map 업데이트
                     // 스캔 리스트에 추가
+                    // mouse 정보 갱신
+                    mouse.scan();
+                    System.out.println("scanPoint: " + scanPoint);
+                    System.out.println("scanCount: " + mouse.getScanCount());
                 }
 
                 // 현재 시야 업데이트
@@ -355,13 +369,11 @@ public class CeremonyAlgorithm {
                     // 거리에 따라 우선순위를 두는 우선순위큐 distanceQueue를 생성한다.
                     PriorityQueue<Point> distanceQueue = new PriorityQueue<>(Comparator.comparingDouble(p -> -calculateDistance(p))); // 거리가 멀수록 우선순위 높음 -> 다시 스택에 넣을 거라서 그럼
 
-                    if(distanceQueue == null){
+                    if(distanceQueue.isEmpty()){
                         System.out.println("null");
                     }
                     // point 리스트에 있는 모든 포인트 객체를 distanceQueue에 추가
-                    for(Point point : points){
-                        distanceQueue.add(point);
-                    }
+                    distanceQueue.addAll(points);
 
                     // 우선순위 큐에 있는 포인트들은 모두 스택에 넣는다.
                     while(!distanceQueue.isEmpty()){
@@ -573,12 +585,12 @@ public class CeremonyAlgorithm {
                 }
             }
             System.out.println(now);
-            if (maze.getCell(now.x, now.y).isExit()) {
+            if (ra.getCell(now.x, now.y).isExit()) {
                 System.out.println("Exit");
-                return candidateScanPoint;
+//                return candidateScanPoint;
             }
             else {
-                maze.getCell(now.x, now.y).setState(Cell.State.VISIT);
+                //ra.getCell(now.x, now.y).setState(Cell.State.VISIT);
                 if(isValidPos(now.x+1, now.y)){
                     scanStack.push(new Point(now.x+1, now.y));
                 }
@@ -586,7 +598,7 @@ public class CeremonyAlgorithm {
                     scanStack.push(new Point(now.x-1, now.y));
                 }
                 if(isValidPos(now.x, now.y+1)){
-                    scanStack.push(new Point(now.x+1, now.y+1));
+                    scanStack.push(new Point(now.x, now.y+1));
                 }
                 if(isValidPos(now.x, now.y-1)){
                     scanStack.push(new Point(now.x, now.y-1));
