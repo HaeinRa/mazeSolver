@@ -39,19 +39,18 @@ public class CeremonyAlgorithm {
         maze = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
         mouseMap = new Maze(readMaze(filename)); // 쥐의 시야, maze에 영향을 받음
         view = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
-        scanMap = new Maze(readMaze(filename));
+        scanMap = new Maze(readMaze(filename)); // 스캔한 포인트 정보를 나타내는 맵
         mouse = new Mouse(new Point(0,1), mouseMap.getHeight()*mouseMap.getWidth(), mouseMap);
 
         maze.getCell(0,1).setState(Cell.State.VISIT);
         view.getCell(0,1).setState(Cell.State.VISIT);
 
         mouse.setMap();
-        gui = new GUI(mouseMap, mouse);
+        gui = new GUI(scanMap, mouse);
         scanList = new ArrayList<>();
 
         // Todo: 스캔모드0 완전제공
-        // Todo: 쥐 시야에서 매 순간 경로검사 추가하기(입구를 찾은 경우에만)
-        // Todo: 벽을 뚫었을 때, 가능한 경로가 있는지 검사
+
         // 스캔 모드
         // SetUp: GUI 띄우기 (미로, 쥐)
         gui.repaint();
@@ -59,6 +58,12 @@ public class CeremonyAlgorithm {
 
         System.out.println("point001: setup done");
 
+        // 스캔 맵 초기화
+        for (int i = 0; i < scanMap.getHeight(); i++) {
+            for (int j = 0; j < scanMap.getWidth(); j++) {
+                scanMap.getCell(i,j).setState(Cell.State.AVAILABLE);
+            }
+        }
 
         isFindExit = false;
         scanMode = 0;
@@ -90,7 +95,7 @@ public class CeremonyAlgorithm {
                     // map 업데이트
                     System.out.println("point005-1: scanning.. 5x5");
                     scanPoint = new Point(maze.getHeight()- 5 * mouse.getScanCount() -1, maze.getWidth()-2-1);
-                    isFindExit = mouse.map.update(scanPoint,5, maze, isFindExit);
+                    isFindExit = mouse.map.update(scanPoint,5, maze, scanMap, isFindExit);
 
                     mouse.scan();
                     System.out.println("scanPoint: " + scanPoint);
