@@ -42,6 +42,40 @@ public class Maze {
         return point; // null을 반환하면 출구가 없음
     }
 
+    public boolean update(Point center, int d, Maze maze, Maze scanMap, boolean isFindExit) // 기준 미로를 참고하여 마우스의 맵을 업데이트
+    {
+        int m = d / 2;
+        int x;
+        int y;
+        x = center.x - m;
+        if (x < 0) // 계산된 x좌표가 왼쪽 벽이거나 벗어나면
+        {
+            x = 0;
+        } else if (x >= maze.getHeight()) {
+            x = maze.getHeight() - 1;
+        }
+        y = center.y - m;
+        if (y < 0) {
+            y = 0;
+        } else if (y >= maze.getWidth()) {
+            y = maze.getWidth() - 1;
+        }
+        Point startPoint = new Point(x, y);
+
+        for (int i = startPoint.x; i < Math.min(startPoint.x + d, this.cells.length); i++) {
+            for (int j = startPoint.y; j < Math.min(startPoint.y + d, this.cells[i].length); j++) {
+                this.cells[i][j] = Cell.createCopy(maze.getCell(i, j));
+                scanMap.getCell(i, j).setState(Cell.State.WALL);
+                if (!isFindExit) {
+                    if (this.cells[i][j].getState() == Cell.State.EXIT)
+                        isFindExit = true;
+                }
+            }
+        }
+
+        return isFindExit;
+    }
+
     public boolean update(Point center, int d, Maze maze, boolean isFindExit) // 기준 미로를 참고하여 마우스의 맵을 업데이트
     {
         int m = d / 2;

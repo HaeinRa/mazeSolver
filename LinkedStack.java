@@ -1,6 +1,9 @@
 
 class Point {
     int x, y;
+    int fScore;
+    int gScore; // 지금까지 소모한 비용을 계산해야하므로 가지고 있어야 함
+    Point prevPoint; // 이전 노드
     Point(){
         this.x = -99;
         this.y = -99;
@@ -9,7 +12,13 @@ class Point {
         this.x = x;
         this.y = y;
     }
-
+    Point(int x, int y, int gScore, int fScore, Point prevPoint) {
+        this.x = x;
+        this.y = y;
+        this.gScore = gScore;
+        this.fScore = fScore;
+        this.prevPoint = prevPoint;
+    }
     void printPoint(){
         System.out.printf("(%d, %d) ", this.x, this.y);
     }
@@ -31,6 +40,19 @@ class Point {
     public String toString() {
         return String.format("(%d, %d) ", this.x, this.y);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Point otherPoint = (Point) obj;
+        return this.x == otherPoint.x && this.y == otherPoint.y;
+    }
+
 }
 
 // 연결리스트를 위한 노드

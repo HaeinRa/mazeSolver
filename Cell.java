@@ -104,6 +104,7 @@ public class Cell {
                 break;
             case VISIT:
                 this.isVisited = true;
+                this.isWall = false;
                 break;
             case NotRecommended:
                 if(this.isBranch)

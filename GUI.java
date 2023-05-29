@@ -5,16 +5,17 @@ import java.util.*;
 import java.util.List;
 
 public class GUI extends JPanel {
+    private final Maze scanMap;
     private Mouse mouse;
     private Maze maze;
     private List<Point> scanList;
     private int cellSize = 17;
     private Color SCAN_COLOR = new Color(150, 130, 250, 70);
 
-    public GUI(Maze maze, Mouse mouse, List<Point> scanList) {
+    public GUI(Maze maze, Mouse mouse, Maze scanMap) {
         this.maze = maze;
         this.mouse = mouse;
-        this.scanList = scanList;
+        this.scanMap = scanMap;
 
         int width = maze.getWidth() * cellSize;
         int height = maze.getHeight() * cellSize;
@@ -71,10 +72,33 @@ public class GUI extends JPanel {
                     g2d.setColor(Color.BLUE);
                 }
                 g2d.fillRect(x, y, cellSize, cellSize);
+                /*addScanArea(scanList, scanArea);
+                fillScanArea(scanArea,g2d);*/
+                fillScanArea(maze,scanMap,g2d);
+            }
+        }
+    }
 
-                addScanArea(scanList, scanArea);
-                fillScanArea(scanArea,g2d);
-
+    private void fillScanArea(Maze maze, Maze scanMap, Graphics2D g2d){
+        for(int yIndex = 0; yIndex < scanMap.getHeight(); yIndex++){
+            for(int xIndex = 0; xIndex < scanMap.getWidth(); xIndex++){
+                if(scanMap.getCell(yIndex,xIndex).getState() == Cell.State.WALL && maze.getCell(yIndex,xIndex).getState() == Cell.State.WALL){
+                    g2d.setColor(SCAN_COLOR);
+                    g2d.fillRect(xIndex * cellSize, yIndex * cellSize, cellSize,cellSize);
+                }
+            }
+        }
+    }
+    /*private void addScanArea(List<Point> scanList, List<Point> scanArea) {
+        for (int index = 0; index < scanList.size(); index++) {
+            Point center = scanList.get(index);
+            int xScan = center.x;
+            int yScan = center.y;
+            for (int yIndex = yScan - 2; yIndex <= yScan + 2; yIndex++) {
+                for (int xIndex = xScan - 2; xIndex <= xScan + 2; xIndex++) {
+                    Point point = new Point(xIndex, yIndex);
+                    scanArea.add(point);
+                }
             }
         }
     }
@@ -89,21 +113,10 @@ public class GUI extends JPanel {
                 g2d.fillRect((checkPoint.y)  * cellSize, (checkPoint.x-2) * cellSize, cellSize, cellSize);
             }
         }
-    }
+    }*/
 
-    private void addScanArea(List<Point> scanList, List<Point> scanArea) {
-        for (int index = 0; index < scanList.size(); index++) {
-            Point center = scanList.get(index);
-            int xScan = center.x;
-            int yScan = center.y;
-            for (int yIndex = yScan - 2; yIndex <= yScan + 2; yIndex++) {
-                for (int xIndex = xScan - 2; xIndex <= xScan + 2; xIndex++) {
-                    Point point = new Point(xIndex, yIndex);
-                    scanArea.add(point);
-                }
-            }
-        }
-    }
+
+
 
 
     public void drawStatus(Graphics g, Maze maze, Mouse mouse) {
