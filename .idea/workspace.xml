@@ -7,7 +7,6 @@
     <list default="true" id="0402f819-fe82-411f-8bd4-de0deccbc5a4" name="Changes" comment="스캔 추가 ㅋㅋ">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CeremonyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/CeremonyAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Maze.java" beforeDir="false" afterPath="$PROJECT_DIR$/Maze.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,6 +91,8 @@
       <workItem from="1685176034838" duration="956000" />
       <workItem from="1685176997043" duration="5247000" />
       <workItem from="1685191142758" duration="8365000" />
+      <workItem from="1685351686569" duration="1000" />
+      <workItem from="1685365307105" duration="1398000" />
     </task>
     <task id="LOCAL-00001" summary="mouse">
       <created>1684562834418</created>

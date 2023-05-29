@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class CeremonyAlgorithm {
-    private static Maze maze;
+    private static Maze maze, ra;
     private static GUI gui;
     private static List<Point> scanList;
     private static List<Double> compareList;
@@ -49,7 +49,7 @@ public class CeremonyAlgorithm {
 
 
         // 다 벽인 미로 - 스캔한 부분 DFS 사용하려고 만듦
-        Maze ra = new Maze(readMaze("Maze1.txt"));
+        ra = new Maze(readMaze("Maze1.txt"));
         for (int i=0; i<ra.getHeight(); i++) {
             for (int j=0; j<ra.getWidth(); j++) {
                 ra.getCell(i, j).setState(Cell.State.NotRecommended);
@@ -111,12 +111,17 @@ public class CeremonyAlgorithm {
                 else if (scanMode == 1) { // 출구 찾은 후
                     System.out.println("point006: scanMode 1");
 
-                    //map 업데이트
+                    // map 업데이트
                     System.out.println("point005-1: scanning.. 5x5");
                     isFindExit = mouse.map.update(scanPoint,5, maze, isFindExit);
 
-                    //ra 업데이트 : 방 조명이 켜짐
+                    // ra 업데이트 : 방 조명이 켜짐
                     ra.update(scanPoint, 5, maze, isFindExit);
+
+                    // mouse 정보 갱신
+                    mouse.scan();
+                    System.out.println("scanPoint: " + scanPoint);
+                    System.out.println("scanCount: " + mouse.getScanCount());
 
                     // 출구와 연결된 곳을 유망한 방면이라 하고, 그 방면들의 중점을 모아놓는 후보 리스트 : candidiateScan 리스트
                     // DFS를 이용하여 어디가 뚫려있는지 알아내기
@@ -508,23 +513,23 @@ public class CeremonyAlgorithm {
             // 뽑을 때 현재 위치가 5*5에 걸쳐 있으면
             Point now = scanStack.pop();
             // 위쪽 벽으로 막혀서 dfs 진행을 못하면 위쪽 5*5의 중심점을 candidateScanPoint에 추가
-            if (maze.cells[now.x - 1][now.y].getState() == Cell.State.NotRecommended) {
+            if (ra.cells[now.x - 1][now.y].getState() == Cell.State.NotRecommended) {
                 Point up = new Point(scanPoint.x - 5, scanPoint.y);
                 candidateScanPoint.add(up);
             }
             // 아래쪽 벽으로 막혀서 dfs 진행 x
-            else if (maze.cells[now.x + 1][now.y].getState() == Cell.State.NotRecommended) {
+            else if (ra.cells[now.x + 1][now.y].getState() == Cell.State.NotRecommended) {
                 Point down = new Point(scanPoint.x + 5, scanPoint.y);
                 candidateScanPoint.add(down);
             }
             // 왼쪽
-            else if (maze.cells[now.x][now.y - 1].getState() == Cell.State.NotRecommended) {
+            else if (ra.cells[now.x][now.y - 1].getState() == Cell.State.NotRecommended) {
                 Point left = new Point(scanPoint.x, scanPoint.y - 5);
                 candidateScanPoint.add(left);
             }
             // 오른쪽은 필요한 경우에만 추가
             else {
-                if (now.x < maze.getHeight() && now.y < maze.getWidth() + 5) {
+                if (now.x < ra.getHeight() && now.y < ra.getWidth() + 5) {
                     Point right = new Point(scanPoint.x, scanPoint.y + 5);
                     candidateScanPoint.add(right);
                 }
