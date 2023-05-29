@@ -1,3 +1,5 @@
+import sun.awt.image.ImageWatched;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -173,6 +175,8 @@ public class CeremonyAlgorithm {
 
                 // 현재 시야 업데이트
                 isFindExit = mouse.map.update(mouse.getLocation(),3, maze, isFindExit);
+                gui.repaint();
+                TimeUnit.MILLISECONDS.sleep(100);
                 System.out.println("point007: Update sight");
 
 
@@ -233,6 +237,8 @@ public class CeremonyAlgorithm {
                             buffer.push(new Point(-1, -1)); // 분기라는 것을 알린다
                             buffer.push(now);
                             maze.getCell(now).setState(Cell.State.BRANCH);
+                            isFindExit = mouse.map.update(mouse.getLocation(),3, maze, isFindExit);
+
                         }
                         if(branchCounter==0){ // 현재는 갈 수 있는 곳이 없어서 이전 분기로 돌아가야한다면
                             System.out.println("point014: Can not go for now, Back to branch, Start buffer pop");
@@ -319,25 +325,29 @@ public class CeremonyAlgorithm {
                         Point up = new Point(now.x-1, now.y);
                         points.add(up);
                         System.out.println("up : " + up);
-                        branchCounter ++;
+                        if(!maze.getCell(up).isBranch())
+                            branchCounter ++;
                     }
                     if(isValidPosByWeight(now.add(0,-1))){ // 좌
                         Point left = new Point(now.x, now.y-1);
                         points.add(left);
                         System.out.println("left : " + left);
-                        branchCounter ++;
+                        if(!maze.getCell(left).isBranch())
+                            branchCounter ++;
                     }
                     if(isValidPosByWeight(now.add(0,1))){ // 우
                         Point right = new Point(now.x, now.y+1);
                         points.add(right);
                         System.out.println("right : " + right);
-                        branchCounter ++;
+                        if(!maze.getCell(right).isBranch())
+                            branchCounter ++;
                     }
                     if(isValidPosByWeight(now.add(1,0))){ // 하
                         Point down = new Point(now.x+1, now.y);
                         points.add(down);
                         System.out.println("down : " + down);
-                        branchCounter ++;
+                        if(!maze.getCell(down).isBranch())
+                            branchCounter ++;
                     }
 
 
@@ -370,7 +380,7 @@ public class CeremonyAlgorithm {
                     else{ // 스택이 비어있지 않음(갈 수 있는 곳이 있음)
                         System.out.println("point032: Stack is not empty");
 
-                        if(branchCounter>0){ // 분기점이라면
+                        if(branchCounter>=2){ // 분기점이라면
                             System.out.println("point033: Branch Set");
 
                             buffer.push(new Point(-1, -1)); // 분기라는 것을 알린다
@@ -381,16 +391,18 @@ public class CeremonyAlgorithm {
                         }
                         if(branchCounter==0){ // 현재는 갈 수 있는 곳이 없어서 이전 분기로 돌아가야한다면
                             System.out.println("point034: Can not go for now, Back to branch, Start buffer pop");
-                            Point prev = new Point();
-                            mouse.map.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
+                            //Point prev = new Point();
+                            maze.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
                             while(true){
                                 System.out.println("point035: do Buffer pop");
                                 Point back = buffer.pop(); // 돌아갈 좌표를 뽑는다
                                 System.out.println("buffer: "+buffer);
-
+                                if(back == null)
+                                    break;
                                 if(back.x == -1 && back.y == -1) { // 분기점의 끝이라면
                                     System.out.println("point036: Branch arrived");
-                                    buffer.push(prev);
+                                    //stack.pop(); // 분기점 중복 제거?
+                                    //buffer.push(prev);
                                     break;
                                 }else{
                                     System.out.println("point037: Mouse moving");

@@ -66,37 +66,45 @@ public class GUI extends JPanel {
                         break;
                 }
 
+
                 if (mouse.getLocation().x == i && mouse.getLocation().y == j) {
                     g2d.setColor(Color.BLUE);
                 }
                 g2d.fillRect(x, y, cellSize, cellSize);
 
+                addScanArea(scanList, scanArea);
+                fillScanArea(scanArea,g2d);
 
+            }
+        }
+    }
 
-                for (int index = 0; index < scanList.size(); index++) {
-                    Point center = scanList.get(index);
-                    int xScan = center.x;
-                    int yScan = center.y;
-                    for (int yIndex = yScan - 2; yIndex <= yScan + 2; yIndex++) {
-                        for (int xIndex = xScan - 2; xIndex <= xScan + 2; xIndex++) {
-                            Point point = new Point(xIndex, yIndex);
-                            scanArea.add(point);
-                        }
-                    }
-                }
+    private void fillScanArea(List<Point> scanArea, Graphics2D g2d) {
+        for (int checkPointIndex = 0; checkPointIndex < scanArea.size(); checkPointIndex++) {
+            Point checkPoint = scanArea.get(checkPointIndex);
 
-                for (int checkPointIndex = 0; checkPointIndex < scanArea.size(); checkPointIndex++) {
-                    Point checkPoint = scanArea.get(checkPointIndex);
+            Cell.State scanState = maze.getCell(checkPoint.x - 2, checkPoint.y).getState();
+            if (scanState == Cell.State.WALL) {
+                g2d.setColor(SCAN_COLOR);
+                g2d.fillRect((checkPoint.y)  * cellSize, (checkPoint.x-2) * cellSize, cellSize, cellSize);
+            }
+        }
+    }
 
-                    Cell.State scanState = maze.getCell(checkPoint.x - 2, checkPoint.y).getState();
-                    if (scanState == Cell.State.WALL) {
-                        g2d.setColor(SCAN_COLOR);
-                        g2d.fillRect((checkPoint.y)  * cellSize, (checkPoint.x-2) * cellSize, cellSize, cellSize);
-                    }
+    private void addScanArea(List<Point> scanList, List<Point> scanArea) {
+        for (int index = 0; index < scanList.size(); index++) {
+            Point center = scanList.get(index);
+            int xScan = center.x;
+            int yScan = center.y;
+            for (int yIndex = yScan - 2; yIndex <= yScan + 2; yIndex++) {
+                for (int xIndex = xScan - 2; xIndex <= xScan + 2; xIndex++) {
+                    Point point = new Point(xIndex, yIndex);
+                    scanArea.add(point);
                 }
             }
         }
     }
+
 
     public void drawStatus(Graphics g, Maze maze, Mouse mouse) {
         int statusX = getWidth() - 200; // 상태 창 위치 X 좌표
@@ -137,24 +145,26 @@ public class GUI extends JPanel {
         g.drawString(Integer.toString(mouse.getScanCount()), statusX + 100, statusY + 140);
 
         g.drawString("모드 : ", statusX + 10, statusY + 160);
+        //g.drawString(Integer.toString(mouse.getScanMode()), statusX + 60, statusY + 160);
 
         g.drawString("벽 뚫기 사용 : ", statusX + 10, statusY + 180);
+        //g.drawString(Integer.toString(mouse.getScanCount()), statusX + 110, statusY + 180);
 
         Font teamFont = new Font("Arial Rounded MT 굵게", Font.BOLD, 15);
         g.setFont(teamFont);
 
-        g.drawString("팀원", statusX + 80, statusY + 380);
-        g.drawString("2019136012 권예찬", statusX + 30, statusY + 400);
-        g.drawString("2019136131 채승윤", statusX + 30, statusY + 420);
-        g.drawString("2019136139 허준기", statusX + 30, statusY + 440);
-        g.drawString("2021136043 라해인", statusX + 30, statusY + 460);
+        g.drawString("팀원", statusX + 80, statusY + 480);
+        g.drawString("2019136012 권예찬", statusX + 30, statusY + 500);
+        g.drawString("2019136131 채승윤", statusX + 30, statusY + 520);
+        g.drawString("2019136139 허준기", statusX + 30, statusY + 540);
+        g.drawString("2021136043 라해인", statusX + 30, statusY + 560);
 
         g.setColor(Color.RED);
-        g.fillRect(statusX + 15, statusY + 370, 60, 10);
-        g.fillRect(statusX + 115, statusY + 370, 60, 10);
-        g.fillRect(statusX + 15, statusY + 380, 10, 90);
-        g.fillRect(statusX + 165, statusY + 380, 10, 90);
-        g.fillRect(statusX + 15, statusY + 470, 160, 10);
+        g.fillRect(statusX + 15, statusY + 470, 60, 10);
+        g.fillRect(statusX + 115, statusY + 470, 60, 10);
+        g.fillRect(statusX + 15, statusY + 480, 10, 90);
+        g.fillRect(statusX + 165, statusY + 480, 10, 90);
+        g.fillRect(statusX + 15, statusY + 570, 160, 10);
 
     }
 }
