@@ -192,15 +192,4 @@
     <MESSAGE value="스캔 방법 수정중" />
     <option name="LAST_COMMIT_MESSAGE" value="스캔 방법 수정중" />
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/CeremonyAlgorithm.java</url>
-          <line>134</line>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
-  </component>
 </project>
