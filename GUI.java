@@ -1,17 +1,20 @@
 import java.awt.*;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import java.util.*;
+import java.util.List;
 
 public class GUI extends JPanel {
     private Mouse mouse;
     private Maze maze;
-    private int cellSize = 15;
+    private List<Point> scanList;
+    private int cellSize = 17;
     private Color SCAN_COLOR = new Color(150, 130, 250, 70);
 
-    public GUI(Maze maze, Mouse mouse) {
+    public GUI(Maze maze, Mouse mouse, List<Point> scanList) {
         this.maze = maze;
         this.mouse = mouse;
-
+        this.scanList = scanList;
 
         int width = maze.getWidth() * cellSize;
         int height = maze.getHeight() * cellSize;
@@ -28,13 +31,15 @@ public class GUI extends JPanel {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        drawMaze((Graphics2D) g, maze, mouse);
+        drawMaze((Graphics2D) g, maze, mouse, scanList);
         drawStatus(g, maze, mouse);
     }
 
-    private void drawMaze(Graphics2D g2d, Maze maze, Mouse mouse) {
+    private void drawMaze(Graphics2D g2d, Maze maze, Mouse mouse, List<Point> scanList) {
+
 
         for (int i = 0; i < maze.getHeight(); i++) {
+            List<Point> scanArea = new ArrayList<>();
             for (int j = 0; j < maze.getWidth(); j++) {
                 int x = j * cellSize;
                 int y = i * cellSize;
@@ -57,19 +62,38 @@ public class GUI extends JPanel {
                         g2d.setColor(Color.ORANGE);
                         break;
                     case BRANCH:
-                        g2d.setColor(Color.BLUE);
+                        g2d.setColor(Color.PINK);
                         break;
-                    //case SCAN:
-                    //  g2d.setColor(SCAN_COLOR);
                 }
-                /*if(maze.){
-
-                }*/
 
                 if (mouse.getLocation().x == i && mouse.getLocation().y == j) {
                     g2d.setColor(Color.BLUE);
                 }
                 g2d.fillRect(x, y, cellSize, cellSize);
+
+
+
+                for (int index = 0; index < scanList.size(); index++) {
+                    Point center = scanList.get(index);
+                    int xScan = center.x;
+                    int yScan = center.y;
+                    for (int yIndex = yScan - 2; yIndex <= yScan + 2; yIndex++) {
+                        for (int xIndex = xScan - 2; xIndex <= xScan + 2; xIndex++) {
+                            Point point = new Point(xIndex, yIndex);
+                            scanArea.add(point);
+                        }
+                    }
+                }
+
+                for (int checkPointIndex = 0; checkPointIndex < scanArea.size(); checkPointIndex++) {
+                    Point checkPoint = scanArea.get(checkPointIndex);
+
+                    Cell.State scanState = maze.getCell(checkPoint.x - 2, checkPoint.y - 2).getState();
+                    if (scanState == Cell.State.WALL) {
+                        g2d.setColor(SCAN_COLOR);
+                        g2d.fillRect((checkPoint.y-2)  * cellSize, (checkPoint.x-2) * cellSize, cellSize, cellSize);
+                    }
+                }
             }
         }
     }
@@ -88,7 +112,7 @@ public class GUI extends JPanel {
 
         int beginEnergy = maze.getHeight() * maze.getWidth();
         int usedEnergy = beginEnergy - mouse.getEnergy();
-        String scanCount = Double.toString(mouse.getMana()).substring(0,3);
+        String manaCount = Double.toString(mouse.getMana()).substring(0, 3);
 
         g.drawString("미로     찾기", statusX + 50, statusY);
 
@@ -107,7 +131,7 @@ public class GUI extends JPanel {
         g.drawString(Integer.toString(mouse.getEnergy()), statusX + 110, statusY + 100);
 
         g.drawString("마나 : ", statusX + 10, statusY + 120);
-        g.drawString(scanCount, statusX + 60, statusY + 120);
+        g.drawString(manaCount, statusX + 60, statusY + 120);
 
         g.drawString("스캔 횟수 : ", statusX + 10, statusY + 140);
         g.drawString(Integer.toString(mouse.getScanCount()), statusX + 100, statusY + 140);
