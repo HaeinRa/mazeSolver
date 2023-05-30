@@ -36,6 +36,8 @@ public class CeremonyAlgorithm {
         int widthCount = 0;
         int heightCount = 0;
         int widthCount2 = 0;
+        int mazeWidth = 0;
+        int mazeHeight = 0;
 
         Scanner userInput = new Scanner(System.in);
         String filename;
@@ -43,9 +45,9 @@ public class CeremonyAlgorithm {
             System.out.print("로컬 미로파일 이름을 확장자까지 입력하세요: ");
             filename = userInput.next();
             System.out.print("미로의 너비를 입력하세요: ");
-            int MazeWidth = userInput.nextInt();
+            mazeWidth = userInput.nextInt();
             System.out.print("미로의 높이를 입력하세요: ");
-            int MazeHeight = userInput.nextInt();mode = userInput.nextInt();
+            mazeHeight = userInput.nextInt();
         }
         catch(InputMismatchException e){
             System.out.println("정수를 입력하세요. 프로그램을 종료합니다.");
@@ -59,11 +61,11 @@ public class CeremonyAlgorithm {
 
         stack = new LinkedStack<Point>();
         buffer = new LinkedStack<Point>();
-        maze = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
-        mouseMap = new Maze(readMaze(filename)); // 쥐의 시야, maze에 영향을 받음
-        view = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
-        scanMap = new Maze(readMaze(filename)); // 스캔한 포인트 위치만 나타내는 맵
-        dfsMap = new Maze(readMaze(filename)); // 스캔한 곳의 미로 정보를 나타내는 맵
+        maze = new Maze(readMaze(filename, mazeWidth, mazeHeight)); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
+        mouseMap = new Maze(readMaze(filename, mazeWidth, mazeHeight)); // 쥐의 시야, maze에 영향을 받음
+        view =  new Maze(readMaze(filename, mazeWidth, mazeHeight)); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
+        scanMap =  new Maze(readMaze(filename, mazeWidth, mazeHeight)); // 스캔한 포인트 위치만 나타내는 맵
+        dfsMap =  new Maze(readMaze(filename, mazeWidth, mazeHeight)); // 스캔한 곳의 미로 정보를 나타내는 맵
         mouse = new Mouse(new Point(0, 1), mouseMap.getHeight() * mouseMap.getWidth() * 2, mouseMap);
 
         System.out.println("=======================================");
@@ -75,7 +77,6 @@ public class CeremonyAlgorithm {
         System.out.println("= 4. 스캔 영역 체크 View 모드              =");
         System.out.println("=======================================");
         System.out.print("입력: ");
-
         try{
             mode = userInput.nextInt();
         }
@@ -782,6 +783,55 @@ public class CeremonyAlgorithm {
     public static boolean getIsWallBreaker(){
         return isWallBreaker;
     }
+
+    static int[][] readMaze(String filename, int width, int height) {
+        File file = new File(filename);
+        Scanner scanner;
+
+        try {
+            scanner = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + filename);
+            throw new RuntimeException(e);
+        }
+
+        int[][] maze = new int[height][width];
+
+        for (int i = 0; i < height; i++) {
+            if(!scanner.hasNextLine()){
+                break;
+            }
+            String[] line = scanner.nextLine().trim().split("\\s+");
+
+            for (int j = 0; j < width; j++) {
+                if(j >= line.length || line[j].isEmpty()){
+                    maze[i][j] = 1; // Treat missing data as wall
+                    continue;
+                }
+
+                try {
+                    int cell = Integer.parseInt(line[j]);
+                    if ((i == 0 || i == height - 1 || j == 0 || j == width - 1) && cell == 0) {
+                        maze[i][j] = 2; // Set exit to 2
+                    } else {
+                        maze[i][j] = cell;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid number format at row " + i + ", col " + j + ": " + line[j]);
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+        if (scanner.hasNextLine()) {
+            System.out.println("Warning: File has more rows than expected.");
+        }
+        maze[0][1] = 0;
+
+        scanner.close();
+        return maze;
+    }
+
 
     static int[][] readMaze(String path) {
         Scanner scanner = null;
