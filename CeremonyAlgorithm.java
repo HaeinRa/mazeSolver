@@ -45,7 +45,7 @@ public class CeremonyAlgorithm {
         // SetUp: 사용 가능한 미로로 변환 (Cell에 저장)
         stack = new LinkedStack<Point>();
         buffer = new LinkedStack<Point>();
-        String filename = "Maze2.txt";
+        String filename = "Maze1.txt";
         maze = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
         mouseMap = new Maze(readMaze(filename)); // 쥐의 시야, maze에 영향을 받음
         view = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
@@ -60,10 +60,10 @@ public class CeremonyAlgorithm {
         int widthCount2 = 0;
 
         mouse.setMap();
-        gui = new GUI(scanMap, mouse, scanMap);
-        bufferTime = 10;
-        stackTime = 10;
-        setTime = 10;
+        gui = new GUI(maze, mouse, scanMap);
+        bufferTime = 1;
+        stackTime = 1;
+        setTime = 1;
         scanList = new ArrayList<>();
         scanDistanceQueue = new PriorityQueue<>(Comparator.comparingDouble(p -> calculateDistance(p))); // 거리가 짧을 수록 우선순위 높음 -> 다시 스택에 넣지 않을 거임
 
@@ -257,12 +257,23 @@ public class CeremonyAlgorithm {
                 if (mouse.map.getCell(now.x, now.y).isExit()) {
                     System.out.println("point008: Exit state, Done");
                     System.out.println("Exit");
+                    AstarAlgorithm astarAlgorithm = new AstarAlgorithm(maze, 0, 1, maze.getEndPoint().x, maze.getEndPoint().y);
+                    int[][] bestPath = astarAlgorithm.run();
+                    // 출구 도착 후 최적 경로(최단 경로) 표시
+                    if (bestPath != null) {
+                        for (int i=0; i<bestPath.length; i++) {
+                            maze.getCell(bestPath[i][0], bestPath[i][1]).setState(Cell.State.BEST);
+                            gui.repaint();
+                            TimeUnit.MILLISECONDS.sleep(1);
+                        }
+                    }
                     System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                     gui.saveAsImage("viewResult.png", view);
                     gui.saveAsImage("scanResult.png", scanMap);
                     gui.saveAsImage("mazeResult.png", maze);
                     gui.saveAsImage("mouseMap.png", mouseMap);
                     System.out.println("프로그램 종료");
+                    System.out.println("scanList: " + scanList);
                     return;
                 }
                 // else

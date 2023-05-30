@@ -4,6 +4,7 @@ public class Cell {
     private boolean isExit; // 출구
     private boolean isVisited; // 방문한 곳
     private boolean isBranch; // 분기점인가?
+    private boolean isBest;
 
     public enum State {
         AVAILABLE,
@@ -11,7 +12,8 @@ public class Cell {
         EXIT,
         VISIT,
         NotRecommended,
-        BRANCH
+        BRANCH,
+        BEST
     }
 
     public Cell(int info) {
@@ -20,6 +22,7 @@ public class Cell {
         this.isExit = (info == 2);
         this.isVisited = (info == 3);
         this.isBranch = false;
+        this.isBest = false;
     }
 
     public Cell(Cell cell) {
@@ -28,6 +31,7 @@ public class Cell {
         this.isExit = cell.isExit;
         this.isVisited = cell.isVisited;
         this.isBranch = cell.isBranch;
+        this.isBest = cell.isBest;
     }
 
     public static Cell createCopy(Cell cell) {
@@ -53,6 +57,7 @@ public class Cell {
     public boolean isBranch(){
         return this.isBranch;
     }
+    public boolean isBest() {return this.isBest;}
 
 
     //방문 가능한데, 이미 방문했을 수도 있는거 아닌가? 상태를 딱 하나만 정하는게 맞나?
@@ -67,6 +72,9 @@ public class Cell {
         }
         else if(isBranch){
             return State.BRANCH;
+        }
+        else if(isBest) {
+            return State.BEST;
         }
         else if(isAvailable){
             if(isVisited)
@@ -118,6 +126,14 @@ public class Cell {
             case BRANCH:
                 this.isBranch = true;
                 this.isVisited = true;
+                break;
+            case BEST:
+                this.isBest = true;
+                this.isAvailable = false;
+                this.isVisited = false;
+                this.isWall = false;
+                this.isBranch = false;
+                this.isExit = false;
                 break;
             default:
                 System.out.println("That state does not exist.");
