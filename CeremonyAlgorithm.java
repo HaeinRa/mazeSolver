@@ -364,7 +364,6 @@ public class CeremonyAlgorithm {
                     System.out.println(maze.getEndPoint());
 
                     // 경로검사, a* 알고리즘을 통해 쥐가 알고있는 맵에서 출구까지 가는 길이 있는지 확인
-                    // TODO: A* + 벽뚫
                     // 벽을 뚫고 A* 썼을 때, 가능한 경로가 있는가?
                     int [][] path = isPathWithWallBreak();
                     if (path != null) {
