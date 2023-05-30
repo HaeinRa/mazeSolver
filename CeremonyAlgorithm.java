@@ -198,19 +198,20 @@ public class CeremonyAlgorithm {
             if (mouse.map.getCell(now.x, now.y).isExit()) {
                 System.out.println("point008: Exit state, Done");
                 System.out.println("Exit");
+                AstarAlgorithm astarAlgorithm = new AstarAlgorithm(maze, 0, 1, maze.getEndPoint().x, maze.getEndPoint().y);
                 int[][] bestPath = astarAlgorithm.run();
                 // 출구 도착 후 최적 경로(최단 경로) 표시
                 if (bestPath != null) {
                     for (int i=0; i<bestPath.length; i++) {
-                        maze.getCell(bestPath[i][0], bestPath[i][1]).setState(Cell.State.BEST);
+                        view.getCell(bestPath[i][0], bestPath[i][1]).setState(Cell.State.BEST);
                         gui.repaint();
                         TimeUnit.MILLISECONDS.sleep(1);
                     }
                 }
                 System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                 gui.saveAsImage("viewResult.png", view);
-                gui.saveAsImage("scanResult.png", scanMap);
                 gui.saveAsImage("mazeResult.png", maze);
+                gui.saveAsImage("scanResult.png", scanMap);
                 gui.saveAsImage("mouseMap.png", mouseMap);
                 System.out.println("프로그램 종료");
                 return;
@@ -368,8 +369,8 @@ public class CeremonyAlgorithm {
                         System.out.println("Fail");
                         System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                         gui.saveAsImage("viewResult.png", view);
-                        gui.saveAsImage("scanResult.png", scanMap);
                         gui.saveAsImage("mazeResult.png", maze);
+                        gui.saveAsImage("scanResult.png", scanMap);
                         gui.saveAsImage("mouseMap.png", mouseMap);
                         System.out.println("프로그램 종료");
 
@@ -631,9 +632,9 @@ public class CeremonyAlgorithm {
                 System.out.println("point99: No more energy, Done");
                 System.out.println("Fail: 체력 없음");
                 System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                gui.saveAsImage("viewResult.png", maze);
-                gui.saveAsImage("scanResult.png", scanMap);
+                gui.saveAsImage("viewResult.png", view);
                 gui.saveAsImage("mazeResult.png", maze);
+                gui.saveAsImage("scanResult.png", scanMap);
                 gui.saveAsImage("mouseMap.png", mouseMap);
                 System.out.println("프로그램 종료");
                 return;
