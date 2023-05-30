@@ -1,5 +1,6 @@
 import sun.awt.image.ImageWatched;
 
+import javax.management.monitor.MonitorSettingException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -20,16 +21,18 @@ public class CeremonyAlgorithm {
     private static boolean isWallBreaker;
     private static int branchCounter;
     private static List<Point> candidateScan;
-    static long bufferTime;
-    static long stackTime;
-    static long setTime;
+    static long bufferTime,stackTime,setTime,scanDFStime;
 
     static PriorityQueue<Point> scanDistanceQueue;
 
 
     public static void main(String[] args) throws InterruptedException {
 
+        // JVM 옵션 설정
+        String codeCacheSizeOption = "-XX:ReservedCodeCacheSize=256m";
 
+        // JVM에 옵션 적용
+        System.setProperty("java.vm.options", codeCacheSizeOption);
 
         /*
          * ------ SetUp 단계 ------
@@ -50,17 +53,75 @@ public class CeremonyAlgorithm {
         ra = new Maze(readMaze(filename)); // 스캔한 곳의 미로 정보를 나타내는 맵
         mouse = new Mouse(new Point(0, 1), mouseMap.getHeight() * mouseMap.getWidth() * 2, mouseMap);
 
-        maze.getCell(0, 1).setState(Cell.State.VISIT);
-        view.getCell(0, 1).setState(Cell.State.VISIT);
+
+        int mode = 0;
         int widthCount = 0;
         int heightCount = 0;
         int widthCount2 = 0;
 
+        System.out.println("=======================================");
+        System.out.println("=            모드를 선택하세요            =");
+        System.out.println("=======================================");
+        System.out.println("= 1. 사용자 View 모드                    =");
+        System.out.println("= 2. 미로 알고리즘 View 모드              =");
+        System.out.println("= 3. 쥐 View 모드                        =");
+        System.out.println("= 4. 스캔 영역 체크 View 모드             =");
+        System.out.println("=======================================");
+        System.out.print("입력: ");
+
+        try{
+            Scanner userInput = new Scanner(System.in);
+            mode = userInput.nextInt();
+        }
+        catch(InputMismatchException e){
+            System.out.println("정수를 입력하세요. 프로그램을 종료합니다.");
+            return;
+        }
+
+
+        switch (mode){
+            case 1:
+                gui = new GUI(view, mouse, scanMap);
+                bufferTime = 10;
+                stackTime = 5;
+                setTime = 2;
+                scanDFStime = 1;
+                break;
+            case 2:
+                gui = new GUI(maze, mouse, scanMap);
+                bufferTime = 1;
+                stackTime = 1;
+                setTime = 1;
+                scanDFStime = 1;
+                break;
+            case 3:
+                gui = new GUI(mouseMap, mouse, scanMap);
+                bufferTime = 1;
+                stackTime = 1;
+                setTime = 1;
+                scanDFStime = 1;
+                break;
+            case 4:
+                gui = new GUI(scanMap, mouse, scanMap);
+                bufferTime = 1;
+                stackTime = 1;
+                setTime = 1;
+                scanDFStime = 1;
+                break;
+            default:
+                System.out.println("다른 값을 입력하셨습니다. 시스템을 종료합니다.");
+                return;
+        }
+
+
         mouse.setMap();
-        gui = new GUI(mouseMap, mouse, scanMap);
-        bufferTime = 1;
-        stackTime = 1;
-        setTime = 1;
+        maze.getCell(0, 1).setState(Cell.State.VISIT);
+        view.getCell(0, 1).setState(Cell.State.VISIT);
+
+
+
+
+
         scanList = new ArrayList<>();
         scanDistanceQueue = new PriorityQueue<>(Comparator.comparingDouble(p -> calculateDistance(p))); // 거리가 짧을 수록 우선순위 높음 -> 다시 스택에 넣지 않을 거임
 
@@ -242,7 +303,7 @@ public class CeremonyAlgorithm {
                 // 현재 시야 업데이트
                 isFindExit = mouse.map.update(mouse.getLocation(), 3, maze, isFindExit);
                 gui.repaint();
-                TimeUnit.MILLISECONDS.sleep(stackTime);
+                TimeUnit.MILLISECONDS.sleep(setTime);
                 System.out.println("point007: Update sight");
 
 
@@ -254,7 +315,12 @@ public class CeremonyAlgorithm {
                 if (mouse.map.getCell(now.x, now.y).isExit()) {
                     System.out.println("point008: Exit state, Done");
                     System.out.println("Exit");
-                    System.out.println("scanList: " + scanList);
+                    System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
+                    gui.saveAsImage("viewResult.png", view);
+                    gui.saveAsImage("scanResult.png", scanMap);
+                    gui.saveAsImage("mazeResult.png", maze);
+                    gui.saveAsImage("mouseMap.png", mouseMap);
+                    System.out.println("프로그램 종료");
                     return;
                 }
                 // else
@@ -284,6 +350,13 @@ public class CeremonyAlgorithm {
                     if (stack.isEmpty()) { // 스택이 완전히 비어있음(더 이상 갈 수 있는 곳이 없음)
                         System.out.println("point011: Stack is totally empty, Done");
                         System.out.println("Fail");
+                        System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
+                        gui.saveAsImage("viewResult.png", view);
+                        gui.saveAsImage("scanResult.png", scanMap);
+                        gui.saveAsImage("mazeResult.png", maze);
+                        gui.saveAsImage("mouseMap.png", mouseMap);
+                        System.out.println("프로그램 종료");
+
                         return;
                     } else { // 스택이 비어있지 않음(갈 수 있는 곳이 있음)
                         System.out.println("point012: Stack is not empty");
@@ -314,6 +387,13 @@ public class CeremonyAlgorithm {
                                 System.out.println("buffer: " + buffer);
                                 if (back == null && stack.isEmpty()) {
                                     System.out.println("point015-1: buffer empty, stack empty, Fail, Done");
+                                    System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
+                                    gui.saveAsImage("viewResult.png", view);
+                                    gui.saveAsImage("scanResult.png", scanMap);
+                                    gui.saveAsImage("mazeResult.png", maze);
+                                    gui.saveAsImage("mouseMap.png", mouseMap);
+                                    System.out.println("프로그램 종료");
+
                                     return;
                                 }
                                 if (back.x == -1 && back.y == -1) { // 분기점의 끝이라면
@@ -454,6 +534,13 @@ public class CeremonyAlgorithm {
                     if (stack.isEmpty()) { // 스택이 완전히 비어있음(더 이상 갈 수 있는 곳이 없음)
                         System.out.println("point031: Stack is totally empty, Done");
                         System.out.println("Fail");
+                        System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
+                        gui.saveAsImage("viewResult.png", view);
+                        gui.saveAsImage("scanResult.png", scanMap);
+                        gui.saveAsImage("mazeResult.png", maze);
+                        gui.saveAsImage("mouseMap.png", mouseMap);
+                        System.out.println("프로그램 종료");
+
                         return;
                     } else { // 스택이 비어있지 않음(갈 수 있는 곳이 있음)
                         System.out.println("point032: Stack is not empty");
@@ -477,6 +564,14 @@ public class CeremonyAlgorithm {
                                 System.out.println("buffer: " + buffer);
                                 if (back == null && stack.isEmpty()) {
                                     System.out.println("point015-1: buffer empty, stack empty, Fail, Done");
+                                    System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
+
+                                    gui.saveAsImage("viewResult.png", view);
+                                    gui.saveAsImage("scanResult.png", scanMap);
+                                    gui.saveAsImage("mazeResult.png", maze);
+                                    gui.saveAsImage("mouseMap.png", mouseMap);
+                                    System.out.println("프로그램 종료");
+
                                     return;
                                 }
                                 if (back.x == -1 && back.y == -1) { // 분기점의 끝이라면
@@ -524,6 +619,12 @@ public class CeremonyAlgorithm {
             } else { // 체력이 남아있지 않다면
                 System.out.println("point99: No more energy, Done");
                 System.out.println("Fail: 체력 없음");
+                System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
+                gui.saveAsImage("viewResult.png", maze);
+                gui.saveAsImage("scanResult.png", scanMap);
+                gui.saveAsImage("mazeResult.png", maze);
+                gui.saveAsImage("mouseMap.png", mouseMap);
+                System.out.println("프로그램 종료");
                 return;
             }
         }
@@ -741,7 +842,7 @@ public class CeremonyAlgorithm {
             System.out.println(now);
             ra.getCell(now).setState(Cell.State.VISIT);
             gui.repaint();
-            TimeUnit.MILLISECONDS.sleep(setTime + 100);
+            TimeUnit.MILLISECONDS.sleep(scanDFStime);
             //하
             if (isScanValidPos(now.x + 1, now.y)) {
                 scanStack.push(new Point(now.x + 1, now.y));

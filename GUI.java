@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 public class GUI extends JPanel {
     private final Maze scanMap;
@@ -72,6 +73,24 @@ public class GUI extends JPanel {
                 g2d.fillRect(x, y, cellSize, cellSize);
                 fillScanArea(maze, scanMap, g2d);
             }
+        }
+    }
+
+    public void saveAsImage(String filename, Maze modelImage) {
+        maze = modelImage;
+        // 컴포넌트 크기로 BufferedImage 생성
+        BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = image.createGraphics();
+        // 컴포넌트를 BufferedImage에 그림
+        paint(graphics);
+        graphics.dispose();
+
+        // 이미지 파일로 저장
+        try {
+            ImageIO.write(image, "png", new File(filename));
+            System.out.println(filename+" 이미지 저장 완료");
+        } catch (IOException e) {
+            System.out.println("파일 저장 실패: " + e.getMessage());
         }
     }
 
