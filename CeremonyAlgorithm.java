@@ -42,7 +42,7 @@ public class CeremonyAlgorithm {
         // SetUp: 사용 가능한 미로로 변환 (Cell에 저장)
         stack = new LinkedStack<Point>();
         buffer = new LinkedStack<Point>();
-        String filename = "Maze2.txt";
+        String filename = "Maze1.txt";
         maze = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
         mouseMap = new Maze(readMaze(filename)); // 쥐의 시야, maze에 영향을 받음
         view = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
@@ -125,24 +125,24 @@ public class CeremonyAlgorithm {
                     // map 업데이트
                     System.out.println("point005-1: scanning.. 5x5");
                     if (maze.getHeight() - 5 * mouse.getScanCount() > -3) { // 높이 변화, x고정
-                        scanPoint = new Point(maze.getHeight()- 5 * mouse.getScanCount(), maze.getWidth()-2-1);
+                        scanPoint = new Point(maze.getHeight()- 5 * mouse.getScanCount()-3, maze.getWidth()-3);
                         if (scanPoint.x < 0) {
                             scanPoint = new Point(2, maze.getWidth()-2-1);
                         }
                     } else if (maze.getHeight() - 5 * mouse.getScanCount()  < -3 && maze.getWidth() - 5 * widthCount > -3) { // 너비 변화, y고정
-                        scanPoint = new Point(maze.getHeight() - 2, maze.getWidth() - 5 * widthCount);
+                        scanPoint = new Point(maze.getHeight() - 3, maze.getWidth() - 5 * widthCount -3);
                         if (scanPoint.y < 0) {
                             scanPoint = new Point(maze.getHeight() - 2, maze.getWidth() - 5 * widthCount);
                         }
                         widthCount += 1;
                     } else if (maze.getHeight() - 5 * heightCount > -3) { // 높이 변화, x고정
-                        scanPoint = new Point(maze.getHeight() - 5 * heightCount , 2);
+                        scanPoint = new Point(maze.getHeight() - 5 * heightCount -3 , 2);
                         if (scanPoint.x < 0) {
                             scanPoint = new Point(2,2);
                         }
                         heightCount += 1;
                     } else if (maze.getWidth() -5 * widthCount2 > -3){
-                        scanPoint = new Point(2 , maze.getWidth() - 5 * widthCount2);
+                        scanPoint = new Point(2 , maze.getWidth() - 5 * widthCount2-3);
                         if (scanPoint.x < 0) {
                             scanPoint = new Point(2,2);
                         }
@@ -180,53 +180,58 @@ public class CeremonyAlgorithm {
                     // DFS를 이용하여 어디가 뚫려있는지 알아내기
                     // 출구를 입구로 가정하고 DFS 실행,
                     candidateScan = scanDFSAlgorithm(maze.getEndPoint());
-
-                    // 뚫린 면의 중점 검사하기 : 후보 중점이 available 한가? 위의 방법에서 remove할 때 인덱스 오류 발생할 수도 있을 것 같아 뒤에서부터 앞으로 순회하여 삭제
-                    for (int i = candidateScan.size() - 1; i >= 0; i--) {
-                        Point point = candidateScan.get(i);
-                        if (point.x > maze.getHeight() -1 || point.y > maze.getWidth() -1 || point.x < 0 || point.y < 0) {
-                            candidateScan.remove(i);// available하지 않으면 현재 인덱스에 해당하는 요소 삭제 -> candidate에 available한 중점들만 남음
-                        }
-                    }
-
-
-                    // 후보 중점의 요소들이 scanList에 있는지 검사하고 없다면 scanList에 추가하기
-                    for (int i = 0; i< candidateScan.size(); i++){
-                        boolean isRemoved = false;
-                        Point point = candidateScan.get(i);
-                        for(int j = 0; j<scanList.size(); j++){
-                            // scanList에 있는 (중복된) Point는 후보에서 제거
-                            if(point.x == scanList.get(j).x && point.y == scanList.get(j).y){
-                                //System.out.println("채승윤님");
-                                candidateScan.remove(i);
-                                isRemoved = true;
+                    if(candidateScan.isEmpty()){
+                        System.out.println("point005-3: 후보군 존재하지 않음");
+                        scanPoint = scanWithoutDFSAlgoritm();
+                    }else{
+                        // 뚫린 면의 중점 검사하기 : 후보 중점이 available 한가? 위의 방법에서 remove할 때 인덱스 오류 발생할 수도 있을 것 같아 뒤에서부터 앞으로 순회하여 삭제
+                        for (int i = candidateScan.size() - 1; i >= 0; i--) {
+                            Point point = candidateScan.get(i);
+                            if (point.x > maze.getHeight() -1 || point.y > maze.getWidth() -1 || point.x < 0 || point.y < 0) {
+                                candidateScan.remove(i);// available하지 않으면 현재 인덱스에 해당하는 요소 삭제 -> candidate에 available한 중점들만 남음
                             }
                         }
-                        if(isRemoved){
-                            i--;
+
+
+                        // 후보 중점의 요소들이 scanList에 있는지 검사하고 없다면 scanList에 추가하기
+                        for (int i = 0; i< candidateScan.size(); i++){
+                            boolean isRemoved = false;
+                            Point point = candidateScan.get(i);
+                            for(int j = 0; j<scanList.size(); j++){
+                                // scanList에 있는 (중복된) Point는 후보에서 제거
+                                if(point.x == scanList.get(j).x && point.y == scanList.get(j).y){
+                                    //System.out.println("채승윤님");
+                                    candidateScan.remove(i);
+                                    isRemoved = true;
+                                }
+                            }
+                            if(isRemoved){
+                                i--;
+                            }
                         }
+
+                        // 거리에 따라 우선순위를 두는 우선순위큐 distanceQueue를 생성한다.
+
+                        // 이거 클래스 변수로 바꾸기
+
+
+                        if(scanDistanceQueue == null){
+                            System.out.println("null");
+                        }
+                        // scanList 리스트에 있는 모든 포인트 객체를 distanceQueue에 추가
+                        for(int i=0; i<candidateScan.size(); i++){
+                            //System.out.println("라해인님님");
+                            scanDistanceQueue.add(candidateScan.get(i));
+                        }
+
+                        // 우선순위 큐에서 우선순위가 가장 큰 녀석을 스캔 포인트로 지정
+                        if (scanDistanceQueue.peek() != null) {
+                            scanPoint = scanDistanceQueue.poll();
+                            scanList.add(scanPoint);
+                        }
+                        System.out.println(scanDistanceQueue.peek() == null);
                     }
 
-                    // 거리에 따라 우선순위를 두는 우선순위큐 distanceQueue를 생성한다.
-
-                    // 이거 클래스 변수로 바꾸기
-
-
-                    if(scanDistanceQueue == null){
-                        System.out.println("null");
-                    }
-                    // scanList 리스트에 있는 모든 포인트 객체를 distanceQueue에 추가
-                    for(int i=0; i<candidateScan.size(); i++){
-                        //System.out.println("라해인님님");
-                        scanDistanceQueue.add(candidateScan.get(i));
-                    }
-
-                    // 우선순위 큐에서 우선순위가 가장 큰 녀석을 스캔 포인트로 지정
-                    if (scanDistanceQueue.peek() != null) {
-                        scanPoint = scanDistanceQueue.poll();
-                        scanList.add(scanPoint);
-                    }
-                    System.out.println(scanDistanceQueue.peek() == null);
 
 
                     // something:1
@@ -235,6 +240,7 @@ public class CeremonyAlgorithm {
                     // mouse 정보 갱신
                     ra.update(scanPoint, 5, maze, scanMap, isFindExit);
                     mouse.scan();
+                    scanList.add(scanPoint);
                     System.out.println("scanPoint: " + scanPoint);
                     System.out.println("scanCount: " + mouse.getScanCount());
                 }
@@ -254,6 +260,7 @@ public class CeremonyAlgorithm {
                 if (mouse.map.getCell(now.x, now.y).isExit()){
                     System.out.println("point008: Exit state, Done");
                     System.out.println("Exit");
+                    System.out.println("scanList: " + scanList);
                     return;
                 }
                 // else
@@ -669,15 +676,23 @@ public class CeremonyAlgorithm {
                 i += 1;
                 j = 0;
             }
-            if (j!=1 && i!=0) {
+
+            if (j!=1 || i!=0) {
                 if ((i==0 || i==row-1 || j==0 || j==column-1) && c==0) {
-                    maze[i][j] = 2;
-                } else maze[i][j] = c;
-            } else maze[i][j] = c;
+                    maze[i][j] = 2; // 출구를 2로 설정
+                } else {
+                    maze[i][j] = c;
+                }
+            } else {
+                maze[i][j] = c;
+            }
+
             j += 1;
         }
+
         return maze;
     }
+
 
     public static double calculateDistance(Point p) {
         Point exit = maze.getEndPoint();
@@ -757,6 +772,53 @@ public class CeremonyAlgorithm {
 
         return candidateScanPoint;
     }
+
+    static Point scanWithoutDFSAlgoritm(){
+        List<Point> candidateList = new ArrayList<>();
+        List<Point> closestExitCandidates = new ArrayList<>();
+        Point exitCenter = findClosestPoint(maze.getEndPoint());
+
+        // 중점들로부터 상하좌우로 5칸 떨어져있는 중점들을 후보군에 추가
+        for(Point center : scanList){
+            candidateList.add(new Point(center.x - 5, center.y)); // 상
+            candidateList.add(new Point(center.x + 5, center.y)); // 하
+            candidateList.add(new Point(center.x, center.y - 5)); // 좌
+            candidateList.add(new Point(center.x, center.y + 5)); // 우
+        }
+
+        candidateList.removeAll(scanList);
+
+        double minExitDistance = Double.MAX_VALUE;
+
+        // 출구 중점과 가장 가까운 후보군들을 뽑기
+        for(Point candidate : candidateList){
+            if(candidate.x >= 0 && candidate.x < maze.getHeight() && candidate.y >= 0 && candidate.y < maze.getWidth()) {
+                double exitDistance = Math.sqrt(Math.pow(exitCenter.x - candidate.x, 2) + Math.pow(exitCenter.y - candidate.y, 2));
+                if(exitDistance < minExitDistance){
+                    minExitDistance = exitDistance;
+                    closestExitCandidates.clear(); // 새로운 최소 거리가 발견되면 기존 리스트를 비움
+                    closestExitCandidates.add(candidate);
+                } else if(exitDistance == minExitDistance) {
+                    closestExitCandidates.add(candidate); // 거리가 같은 후보군이 있으면 추가
+                }
+            }
+        }
+
+        Point nearestValidPoint = null;
+        double minMouseDistance = Double.MAX_VALUE;
+
+        // 쥐와 가장 가까운 거리인 중점을 찾기
+        for(Point candidate : closestExitCandidates){
+            double mouseDistance = Math.sqrt(Math.pow(mouse.getLocation().x - candidate.x, 2) + Math.pow(mouse.getLocation().y - candidate.y, 2));
+            if(mouseDistance < minMouseDistance){
+                minMouseDistance = mouseDistance;
+                nearestValidPoint = candidate;
+            }
+        }
+
+        return nearestValidPoint;
+    }
+
 
 
     public static Point findClosestPoint(Point point) {
