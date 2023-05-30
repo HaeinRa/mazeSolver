@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0402f819-fe82-411f-8bd4-de0deccbc5a4" name="Changes" comment="scanmode1 수정">
+    <list default="true" id="f8dce668-dfb5-47bd-bba6-3ec0536e990e" name="Changes" comment="feat : 스캔 색깔 바꾸기 완성(?)">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CeremonyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/CeremonyAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Maze1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Maze1.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +47,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="애플리케이션.CeremonyAlgorithm">
+  <component name="RunManager" selected="Application.CeremonyAlgorithm">
     <configuration name="CeremonyAlgorithm" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="CeremonyAlgorithm" />
       <module name="mazeSolver" />
@@ -68,8 +71,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="애플리케이션.CeremonyAlgorithm" />
-        <item itemvalue="애플리케이션.Main" />
+        <item itemvalue="Application.CeremonyAlgorithm" />
       </list>
     </recent_temporary>
   </component>
@@ -153,14 +155,7 @@
       <option name="project" value="LOCAL" />
       <updated>1685378125531</updated>
     </task>
-    <task id="LOCAL-00009" summary="scanmode0 수정">
-      <created>1685394395842</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1685394395842</updated>
-    </task>
-    <option name="localTasksCounter" value="10" />
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -177,7 +172,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/feature3" />
+                        <option value="feature3/feature3" />
                       </list>
                     </value>
                   </entry>
@@ -195,9 +190,6 @@
     <MESSAGE value="feat : GUI 바꾸기" />
     <MESSAGE value="머지받음" />
     <MESSAGE value="머지받음2" />
-    <MESSAGE value="스캔 방법 수정중" />
-    <MESSAGE value="scanmode1 수정" />
-    <MESSAGE value="scanmode0 수정" />
-    <option name="LAST_COMMIT_MESSAGE" value="scanmode0 수정" />
+    <option name="LAST_COMMIT_MESSAGE" value="머지받음2" />
   </component>
 </project>
