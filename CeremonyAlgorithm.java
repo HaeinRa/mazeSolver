@@ -30,13 +30,6 @@ public class CeremonyAlgorithm {
         // JVM에 옵션 적용
         System.setProperty("java.vm.options", codeCacheSizeOption);
 
-        /*
-         * ------ SetUp 단계 ------
-         * - 미로 txt 파일 읽기 (출구, 벽)
-         * - 사용 가능한 미로로 변환 (Cell에 저장)
-         * - GUI 띄우기 (미로, 쥐)
-         * */
-
         // SetUp: 미로 txt 파일 읽기 (출구, 벽)
         // SetUp: 사용 가능한 미로로 변환 (Cell에 저장)
         int mode = 0;
@@ -45,8 +38,24 @@ public class CeremonyAlgorithm {
         int widthCount2 = 0;
 
         Scanner userInput = new Scanner(System.in);
-        System.out.print("로컬 미로파일 이름을 확장자까지 입력하세요: ");
-        String filename = userInput.next();
+        String filename;
+        try{
+            System.out.print("로컬 미로파일 이름을 확장자까지 입력하세요: ");
+            filename = userInput.next();
+            System.out.print("미로의 너비를 입력하세요: ");
+            int MazeWidth = userInput.nextInt();
+            System.out.print("미로의 높이를 입력하세요: ");
+            int MazeHeight = userInput.nextInt();mode = userInput.nextInt();
+        }
+        catch(InputMismatchException e){
+            System.out.println("정수를 입력하세요. 프로그램을 종료합니다.");
+            return;
+        }catch(Exception e){
+            System.out.println("입력 도중 오류 발생. 프로그램을 종료합니다.");
+            return;
+        }
+
+
 
         stack = new LinkedStack<Point>();
         buffer = new LinkedStack<Point>();
@@ -210,8 +219,11 @@ public class CeremonyAlgorithm {
                 }
                 System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                 gui.saveAsImage("viewResult.png", view);
+                System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                 gui.saveAsImage("mazeResult.png", maze);
+                System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                 gui.saveAsImage("scanResult.png", scanMap);
+                System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                 gui.saveAsImage("mouseMap.png", mouseMap);
                 System.out.println("프로그램 종료");
                 return;
@@ -369,8 +381,11 @@ public class CeremonyAlgorithm {
                         System.out.println("Fail");
                         System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                         gui.saveAsImage("viewResult.png", view);
+                        System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                         gui.saveAsImage("mazeResult.png", maze);
+                        System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                         gui.saveAsImage("scanResult.png", scanMap);
+                        System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                         gui.saveAsImage("mouseMap.png", mouseMap);
                         System.out.println("프로그램 종료");
 
@@ -405,8 +420,11 @@ public class CeremonyAlgorithm {
                                     System.out.println("point015-1: buffer empty, stack empty, Fail, Done");
                                     System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                                     gui.saveAsImage("viewResult.png", view);
+                                    System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                                     gui.saveAsImage("scanResult.png", scanMap);
+                                    System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                                     gui.saveAsImage("mazeResult.png", maze);
+                                    System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                                     gui.saveAsImage("mouseMap.png", mouseMap);
                                     System.out.println("프로그램 종료");
                                     return;
@@ -548,8 +566,11 @@ public class CeremonyAlgorithm {
                         System.out.println("Fail");
                         System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                         gui.saveAsImage("viewResult.png", view);
+                        System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                         gui.saveAsImage("scanResult.png", scanMap);
+                        System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                         gui.saveAsImage("mazeResult.png", maze);
+                        System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                         gui.saveAsImage("mouseMap.png", mouseMap);
                         System.out.println("프로그램 종료");
 
@@ -577,10 +598,12 @@ public class CeremonyAlgorithm {
                                 if (back == null && stack.isEmpty()) {
                                     System.out.println("point015-1: buffer empty, stack empty, Fail, Done");
                                     System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-
                                     gui.saveAsImage("viewResult.png", view);
+                                    System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                                     gui.saveAsImage("scanResult.png", scanMap);
+                                    System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                                     gui.saveAsImage("mazeResult.png", maze);
+                                    System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                                     gui.saveAsImage("mouseMap.png", mouseMap);
                                     System.out.println("프로그램 종료");
 
@@ -633,8 +656,11 @@ public class CeremonyAlgorithm {
                 System.out.println("Fail: 체력 없음");
                 System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                 gui.saveAsImage("viewResult.png", view);
+                System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                 gui.saveAsImage("mazeResult.png", maze);
+                System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                 gui.saveAsImage("scanResult.png", scanMap);
+                System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                 gui.saveAsImage("mouseMap.png", mouseMap);
                 System.out.println("프로그램 종료");
                 return;
