@@ -42,7 +42,7 @@ public class CeremonyAlgorithm {
         // SetUp: 사용 가능한 미로로 변환 (Cell에 저장)
         stack = new LinkedStack<Point>();
         buffer = new LinkedStack<Point>();
-        String filename = "Maze1.txt";
+        String filename = "Maze2.txt";
         maze = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
         mouseMap = new Maze(readMaze(filename)); // 쥐의 시야, maze에 영향을 받음
         view = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
@@ -52,6 +52,9 @@ public class CeremonyAlgorithm {
 
         maze.getCell(0,1).setState(Cell.State.VISIT);
         view.getCell(0,1).setState(Cell.State.VISIT);
+        int widthCount=0;
+        int heightCount=0;
+        int widthCount2 = 0;
 
         mouse.setMap();
         gui = new GUI(mouseMap, mouse, scanMap);
@@ -121,7 +124,32 @@ public class CeremonyAlgorithm {
                     System.out.println("point005: scanMode 0");
                     // map 업데이트
                     System.out.println("point005-1: scanning.. 5x5");
-                    scanPoint = new Point(maze.getHeight()- 5 * mouse.getScanCount() -1, maze.getWidth()-2-1);
+                    if (maze.getHeight() - 5 * mouse.getScanCount() > -3) { // 높이 변화, x고정
+                        scanPoint = new Point(maze.getHeight()- 5 * mouse.getScanCount(), maze.getWidth()-2-1);
+                        if (scanPoint.x < 0) {
+                            scanPoint = new Point(2, maze.getWidth()-2-1);
+                        }
+                    } else if (maze.getHeight() - 5 * mouse.getScanCount()  < -3 && maze.getWidth() - 5 * widthCount > -3) { // 너비 변화, y고정
+                        scanPoint = new Point(maze.getHeight() - 2, maze.getWidth() - 5 * widthCount);
+                        if (scanPoint.y < 0) {
+                            scanPoint = new Point(maze.getHeight() - 2, maze.getWidth() - 5 * widthCount);
+                        }
+                        widthCount += 1;
+                    } else if (maze.getHeight() - 5 * heightCount > -3) { // 높이 변화, x고정
+                        scanPoint = new Point(maze.getHeight() - 5 * heightCount , 2);
+                        if (scanPoint.x < 0) {
+                            scanPoint = new Point(2,2);
+                        }
+                        heightCount += 1;
+                    } else if (maze.getWidth() -5 * widthCount2 > -3){
+                        scanPoint = new Point(2 , maze.getWidth() - 5 * widthCount2);
+                        if (scanPoint.x < 0) {
+                            scanPoint = new Point(2,2);
+                        }
+                        widthCount2 += 1;
+                    }
+
+
                     isFindExit = mouse.map.update(scanPoint,5, maze, scanMap, isFindExit);
 
                     mouse.scan();
