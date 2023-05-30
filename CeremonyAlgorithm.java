@@ -8,7 +8,6 @@ public class CeremonyAlgorithm {
     private static Maze maze, mouseMap, view, scanMap, dfsMap;
     private static GUI gui;
     private static List<Point> scanList;
-    private static List<Double> compareList;
     private static Point scanPoint;
     private static Mouse mouse;
     private static LinkedStack<Point> stack, buffer;
@@ -17,7 +16,7 @@ public class CeremonyAlgorithm {
     private static boolean isWallBreaker;
     private static int branchCounter;
     private static List<Point> candidateScan;
-    static long bufferTime,stackTime,setTime,scanDFStime;
+    static long bufferTime, stackTime, setTime, scanDFStime;
 
     static PriorityQueue<Point> scanDistanceQueue;
 
@@ -76,10 +75,9 @@ public class CeremonyAlgorithm {
         System.out.println("=======================================");
         System.out.print("입력: ");
 
-        try{
+        try {
             mode = userInput.nextInt();
-        }
-        catch(InputMismatchException e){
+        } catch (InputMismatchException e) {
             System.out.println("정수를 입력하세요. 프로그램을 종료합니다.");
             return;
         }
@@ -91,7 +89,7 @@ public class CeremonyAlgorithm {
 
 
 
-        switch (mode){
+        switch (mode) {
             case 1:
                 gui = new GUI(view, mouse, scanMap);
                 bufferTime = 20;
@@ -668,11 +666,13 @@ public class CeremonyAlgorithm {
         }
 
     }
-    public static String getScanMode(){
-        if(scanMode == 0){
+
+    public static String getScanMode() {
+        if (scanMode == 0) {
             return "ScanMode 0";
-        }else return "ScanMode 1";
+        } else return "ScanMode 1";
     }
+
     static boolean isScanValidPos(int x, int y) {
 
         if (x < 0 || y < 0 || x >= maze.getHeight() || y >= maze.getWidth())
@@ -779,7 +779,8 @@ public class CeremonyAlgorithm {
         return path1;
     }
 
-    public static boolean getIsWallBreaker(){
+
+    public static boolean getIsWallBreaker() {
         return isWallBreaker;
     }
 

@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f8dce668-dfb5-47bd-bba6-3ec0536e990e" name="Changes" comment="왼쪽 아래에서 위로 스캔할 때 스캔 범위가 잘리는 현상 수정">
+    <list default="true" id="f8dce668-dfb5-47bd-bba6-3ec0536e990e" name="Changes" comment="쥐 에너지 2배, GUI 스캔모드, 벽뚥기 여부 추가">
+      <change afterPath="$PROJECT_DIR$/Class.puml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cell.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cell.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CeremonyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/CeremonyAlgorithm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/GUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Maze1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Maze1.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Maze2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Maze2.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/exMaze.txt" beforeDir="false" afterPath="$PROJECT_DIR$/exMaze.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mazeResult.png" beforeDir="false" afterPath="$PROJECT_DIR$/mazeResult.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mouseMap.png" beforeDir="false" afterPath="$PROJECT_DIR$/mouseMap.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scanResult.png" beforeDir="false" afterPath="$PROJECT_DIR$/scanResult.png" afterDir="false" />
@@ -20,6 +20,14 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="UML Sequence" />
+        <option value="UML Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
