@@ -1,11 +1,10 @@
-import javax.swing.text.StyledEditorKit;
-
 public class Cell {
     private boolean isAvailable; // 지나갈 수 있음
     private boolean isWall; // 벽
     private boolean isExit; // 출구
     private boolean isVisited; // 방문한 곳
     private boolean isBranch; // 분기점인가?
+    private boolean isBest;
     private boolean isBroken; // 뚫려진 벽인가?
     private boolean isUnknown;
 
@@ -17,6 +16,7 @@ public class Cell {
         VISIT,
         NotRecommended,
         BRANCH,
+        BEST,
         BROKEN,
         UNKNOWN
     }
@@ -27,6 +27,7 @@ public class Cell {
         this.isExit = (info == 2);
         this.isVisited = (info == 3);
         this.isBranch = false;
+        this.isBest = false;
         this.isBroken = false;
         this.isUnknown = false;
     }
@@ -37,6 +38,7 @@ public class Cell {
         this.isExit = cell.isExit;
         this.isVisited = cell.isVisited;
         this.isBranch = cell.isBranch;
+        this.isBest = cell.isBest;
         this.isBroken = cell.isBroken;
         this.isUnknown = cell.isUnknown;
 
@@ -65,6 +67,7 @@ public class Cell {
     public boolean isBranch(){
         return this.isBranch;
     }
+    public boolean isBest() {return this.isBest;}
     public boolean isUnknown() {return this.isUnknown;}
     public boolean isBroken() {return this.isBroken;}
 
@@ -87,6 +90,9 @@ public class Cell {
         }
         else if(isBranch){
             return State.BRANCH;
+        }
+        else if(isBest) {
+            return State.BEST;
         }
         else if(isAvailable){
             if(isVisited)
@@ -149,6 +155,14 @@ public class Cell {
             case BRANCH:
                 this.isBranch = true;
                 this.isVisited = true;
+                break;
+            case BEST:
+                this.isBest = true;
+                this.isAvailable = false;
+                this.isVisited = false;
+                this.isWall = false;
+                this.isBranch = false;
+                this.isExit = false;
                 break;
             default:
                 System.out.println("That state does not exist.");

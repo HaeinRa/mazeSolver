@@ -198,6 +198,15 @@ public class CeremonyAlgorithm {
             if (mouse.map.getCell(now.x, now.y).isExit()) {
                 System.out.println("point008: Exit state, Done");
                 System.out.println("Exit");
+                int[][] bestPath = astarAlgorithm.run();
+                // 출구 도착 후 최적 경로(최단 경로) 표시
+                if (bestPath != null) {
+                    for (int i=0; i<bestPath.length; i++) {
+                        maze.getCell(bestPath[i][0], bestPath[i][1]).setState(Cell.State.BEST);
+                        gui.repaint();
+                        TimeUnit.MILLISECONDS.sleep(1);
+                    }
+                }
                 System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
                 gui.saveAsImage("viewResult.png", view);
                 gui.saveAsImage("scanResult.png", scanMap);
@@ -239,6 +248,7 @@ public class CeremonyAlgorithm {
                         widthCount2 += 1;
                     }
 
+                    // 스캔 리스트에 추가
                     if (scanPoint != null) {
                         isFindExit = mouse.map.update(scanPoint, 5, maze, scanMap, isFindExit);
                         mouse.scan();

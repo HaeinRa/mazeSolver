@@ -71,6 +71,9 @@ public class GUI extends JPanel {
                     case UNKNOWN:
                         g2d.setColor(Color.BLACK);
                         break;
+                    case BEST:
+                        g2d.setColor(Color.red);
+                        break;
                 }
 
                 if (mouse.getLocation().x == i && mouse.getLocation().y == j) {

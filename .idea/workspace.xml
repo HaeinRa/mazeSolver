@@ -4,11 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f8dce668-dfb5-47bd-bba6-3ec0536e990e" name="Changes" comment="feat : 스캔 모드 0에서 모서리를 중복 스캔하는 부분 수정">
+    <list default="true" id="f8dce668-dfb5-47bd-bba6-3ec0536e990e" name="Changes" comment="왼쪽 아래에서 위로 스캔할 때 스캔 범위가 잘리는 현상 수정">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cell.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cell.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CeremonyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/CeremonyAlgorithm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/GUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Maze1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Maze1.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Maze2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Maze2.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazeResult.png" beforeDir="false" afterPath="$PROJECT_DIR$/mazeResult.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mouseMap.png" beforeDir="false" afterPath="$PROJECT_DIR$/mouseMap.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scanResult.png" beforeDir="false" afterPath="$PROJECT_DIR$/scanResult.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/viewResult.png" beforeDir="false" afterPath="$PROJECT_DIR$/viewResult.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -163,7 +169,21 @@
       <option name="project" value="LOCAL" />
       <updated>1685420368401</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="feat : scanCount가 불필요하게 증가하는 현상 수정">
+      <created>1685428646509</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1685428646509</updated>
+    </task>
+    <task id="LOCAL-00011" summary="왼쪽 아래에서 위로 스캔할 때 스캔 범위가 잘리는 현상 수정">
+      <created>1685432893677</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1685432893677</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -199,17 +219,8 @@
     <MESSAGE value="머지받음" />
     <MESSAGE value="머지받음2" />
     <MESSAGE value="feat : 스캔 모드 0에서 모서리를 중복 스캔하는 부분 수정" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat : 스캔 모드 0에서 모서리를 중복 스캔하는 부분 수정" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/CeremonyAlgorithm.java</url>
-          <line>148</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="feat : scanCount가 불필요하게 증가하는 현상 수정" />
+    <MESSAGE value="왼쪽 아래에서 위로 스캔할 때 스캔 범위가 잘리는 현상 수정" />
+    <option name="LAST_COMMIT_MESSAGE" value="왼쪽 아래에서 위로 스캔할 때 스캔 범위가 잘리는 현상 수정" />
   </component>
 </project>
