@@ -1,15 +1,11 @@
-import sun.awt.image.ImageWatched;
-
-import javax.management.monitor.MonitorSettingException;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
 public class CeremonyAlgorithm {
-    private static Maze maze, mouseMap, view, scanMap, ra;
+    private static Maze maze, mouseMap, view, scanMap, dfsMap;
     private static GUI gui;
     private static List<Point> scanList;
     private static List<Double> compareList;
@@ -43,34 +39,35 @@ public class CeremonyAlgorithm {
 
         // SetUp: 미로 txt 파일 읽기 (출구, 벽)
         // SetUp: 사용 가능한 미로로 변환 (Cell에 저장)
-        stack = new LinkedStack<Point>();
-        buffer = new LinkedStack<Point>();
-        String filename = "Maze1.txt";
-        maze = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
-        mouseMap = new Maze(readMaze(filename)); // 쥐의 시야, maze에 영향을 받음
-        view = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
-        scanMap = new Maze(readMaze(filename)); // 스캔한 포인트 위치만 나타내는 맵
-        ra = new Maze(readMaze(filename)); // 스캔한 곳의 미로 정보를 나타내는 맵
-        mouse = new Mouse(new Point(0, 1), mouseMap.getHeight() * mouseMap.getWidth() * 2, mouseMap);
-
-
         int mode = 0;
         int widthCount = 0;
         int heightCount = 0;
         int widthCount2 = 0;
 
+        Scanner userInput = new Scanner(System.in);
+        System.out.print("로컬 미로파일 이름을 확장자까지 입력하세요: ");
+        String filename = userInput.next();
+
+        stack = new LinkedStack<Point>();
+        buffer = new LinkedStack<Point>();
+        maze = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
+        mouseMap = new Maze(readMaze(filename)); // 쥐의 시야, maze에 영향을 받음
+        view = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
+        scanMap = new Maze(readMaze(filename)); // 스캔한 포인트 위치만 나타내는 맵
+        dfsMap = new Maze(readMaze(filename)); // 스캔한 곳의 미로 정보를 나타내는 맵
+        mouse = new Mouse(new Point(0, 1), mouseMap.getHeight() * mouseMap.getWidth() * 2, mouseMap);
+
         System.out.println("=======================================");
-        System.out.println("=            모드를 선택하세요            =");
+        System.out.println("=             모드를 선택하세요            =");
         System.out.println("=======================================");
         System.out.println("= 1. 사용자 View 모드                    =");
-        System.out.println("= 2. 미로 알고리즘 View 모드              =");
-        System.out.println("= 3. 쥐 View 모드                        =");
-        System.out.println("= 4. 스캔 영역 체크 View 모드             =");
+        System.out.println("= 2. 미로 알고리즘 View 모드               =");
+        System.out.println("= 3. 쥐 View 모드                       =");
+        System.out.println("= 4. 스캔 영역 체크 View 모드              =");
         System.out.println("=======================================");
         System.out.print("입력: ");
 
         try{
-            Scanner userInput = new Scanner(System.in);
             mode = userInput.nextInt();
         }
         catch(InputMismatchException e){
@@ -79,34 +76,48 @@ public class CeremonyAlgorithm {
         }
 
 
+
+        scanList = new ArrayList<>();
+        scanDistanceQueue = new PriorityQueue<>(Comparator.comparingDouble(p -> calculateDistance(p))); // 거리가 짧을 수록 우선순위 높음 -> 다시 스택에 넣지 않을 거임
+
+
+
         switch (mode){
             case 1:
                 gui = new GUI(view, mouse, scanMap);
-                bufferTime = 10;
-                stackTime = 5;
+                bufferTime = 20;
+                stackTime = 10;
                 setTime = 2;
                 scanDFStime = 1;
                 break;
             case 2:
                 gui = new GUI(maze, mouse, scanMap);
-                bufferTime = 1;
-                stackTime = 1;
-                setTime = 1;
+                bufferTime = 20;
+                stackTime = 10;
+                setTime = 5;
                 scanDFStime = 1;
                 break;
             case 3:
                 gui = new GUI(mouseMap, mouse, scanMap);
-                bufferTime = 1;
-                stackTime = 1;
-                setTime = 1;
+                bufferTime = 20;
+                stackTime = 10;
+                setTime = 5;
                 scanDFStime = 1;
                 break;
             case 4:
                 gui = new GUI(scanMap, mouse, scanMap);
-                bufferTime = 1;
-                stackTime = 1;
-                setTime = 1;
+                bufferTime = 20;
+                stackTime = 10;
+                setTime = 5;
                 scanDFStime = 1;
+                break;
+            case 5:
+                System.out.println("관리자 히든 메뉴: dfsMap");
+                gui = new GUI(dfsMap, mouse, scanMap);
+                bufferTime = 20;
+                stackTime = 10;
+                setTime = 10;
+                scanDFStime = 200;
                 break;
             default:
                 System.out.println("다른 값을 입력하셨습니다. 시스템을 종료합니다.");
@@ -119,18 +130,10 @@ public class CeremonyAlgorithm {
         view.getCell(0, 1).setState(Cell.State.VISIT);
 
 
-
-
-
-        scanList = new ArrayList<>();
-        scanDistanceQueue = new PriorityQueue<>(Comparator.comparingDouble(p -> calculateDistance(p))); // 거리가 짧을 수록 우선순위 높음 -> 다시 스택에 넣지 않을 거임
-
-
         // 다 벽인 미로 - 스캔한 부분 DFS 사용하려고 만듦
-
-        for (int i = 0; i < ra.getHeight(); i++) {
-            for (int j = 0; j < ra.getWidth(); j++) {
-                ra.getCell(i, j).setState(Cell.State.NotRecommended);
+        for (int i = 0; i < dfsMap.getHeight(); i++) {
+            for (int j = 0; j < dfsMap.getWidth(); j++) {
+                dfsMap.getCell(i, j).setState(Cell.State.NotRecommended);
             }
         }
 
@@ -163,21 +166,41 @@ public class CeremonyAlgorithm {
         // 현재 쥐의 상태를 확인 (체력과 마나)
         // 체력이 남아 있다면
         while (true) {
+            System.out.println("point003: Enter while loop");
             gui.repaint();
             TimeUnit.MILLISECONDS.sleep(setTime);
+            System.out.println("point003-1: gui repaint");
+
             branchCounter = 0; // 분기점 카운터 초기화
             System.out.println("stack: " + stack);
             System.out.println("mouse: " + mouse.getLocation());
 
-            System.out.println("point003: Enter while loop");
 
-            System.out.println("point003-1: gui repaint");
+            // 현재 시야 업데이트
+            isFindExit = mouse.map.update(mouse.getLocation(), 3, maze, isFindExit);
+            gui.repaint();
+            TimeUnit.MILLISECONDS.sleep(setTime);
+            System.out.println("point007: Update sight");
+
+            // 현재 위치를 확인한다.
+            Point now = mouse.getLocation();
+
+            // 현재 위치가 출구라면 Exit
+            if (mouse.map.getCell(now.x, now.y).isExit()) {
+                System.out.println("point008: Exit state, Done");
+                System.out.println("Exit");
+                System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
+                gui.saveAsImage("viewResult.png", view);
+                gui.saveAsImage("scanResult.png", scanMap);
+                gui.saveAsImage("mazeResult.png", maze);
+                gui.saveAsImage("mouseMap.png", mouseMap);
+                System.out.println("프로그램 종료");
+                return;
+            }
 
             if (mouse.getEnergy() > 0) {
                 System.out.println("point004: Energy condition");
 
-                //TODO: 스캔모드 1 일 때, 출구로부터 dfs 할 수 없으면 스캔을 안함
-//                // 5x5 스캔하기 (모드에 따라)
                 if (mouse.getMana() >= 3 && scanMode == 0) {
                     System.out.println("point005: scanMode 0");
                     // map 업데이트
@@ -207,7 +230,6 @@ public class CeremonyAlgorithm {
                         widthCount2 += 1;
                     }
 
-                    // 스캔 리스트에 추가
                     if (scanPoint != null) {
                         isFindExit = mouse.map.update(scanPoint, 5, maze, scanMap, isFindExit);
                         mouse.scan();
@@ -227,7 +249,7 @@ public class CeremonyAlgorithm {
                     isFindExit = mouse.map.update(scanPoint, 5, maze, isFindExit);
 
                     // ra 업데이트 : 방 조명이 켜짐
-                    ra.update(scanPoint, 5, maze, isFindExit);
+                    dfsMap.update(scanPoint, 5, maze, isFindExit);
                     gui.repaint();
                     TimeUnit.MILLISECONDS.sleep(setTime);
 
@@ -256,7 +278,6 @@ public class CeremonyAlgorithm {
                             for (int j = 0; j < scanList.size(); j++) {
                                 // scanList에 있는 (중복된) Point는 후보에서 제거
                                 if (point.x == scanList.get(j).x && point.y == scanList.get(j).y) {
-                                    //System.out.println("채승윤님");
                                     candidateScan.remove(i);
                                     isRemoved = true;
                                 }
@@ -276,7 +297,6 @@ public class CeremonyAlgorithm {
                         }
                         // scanList 리스트에 있는 모든 포인트 객체를 distanceQueue에 추가
                         for (int i = 0; i < candidateScan.size(); i++) {
-                            //System.out.println("라해인님님");
                             scanDistanceQueue.add(candidateScan.get(i));
                         }
 
@@ -289,40 +309,17 @@ public class CeremonyAlgorithm {
                     }
 
 
-                    // something:1
                     // map 업데이트
                     // 스캔 리스트에 추가
                     // mouse 정보 갱신
-                    ra.update(scanPoint, 5, maze, scanMap, isFindExit);
+                    dfsMap.update(scanPoint, 5, maze, scanMap, isFindExit);
                     mouse.scan();
                     scanList.add(scanPoint);
                     System.out.println("scanPoint: " + scanPoint);
                     System.out.println("scanCount: " + mouse.getScanCount());
                 }
 
-                // 현재 시야 업데이트
-                isFindExit = mouse.map.update(mouse.getLocation(), 3, maze, isFindExit);
-                gui.repaint();
-                TimeUnit.MILLISECONDS.sleep(setTime);
-                System.out.println("point007: Update sight");
 
-
-                // 현재 위치를 확인한다.
-                Point now = mouse.getLocation();
-
-
-                // 현재 위치가 출구라면 Exit
-                if (mouse.map.getCell(now.x, now.y).isExit()) {
-                    System.out.println("point008: Exit state, Done");
-                    System.out.println("Exit");
-                    System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                    gui.saveAsImage("viewResult.png", view);
-                    gui.saveAsImage("scanResult.png", scanMap);
-                    gui.saveAsImage("mazeResult.png", maze);
-                    gui.saveAsImage("mouseMap.png", mouseMap);
-                    System.out.println("프로그램 종료");
-                    return;
-                }
                 // else
                 if (!isFindExit) { // 출구를 모르고 있다면
                     System.out.println("point009: no Exit info");
@@ -379,7 +376,6 @@ public class CeremonyAlgorithm {
                         }
                         if (branchCounter == 0) { // 현재는 갈 수 있는 곳이 없어서 이전 분기로 돌아가야한다면
                             System.out.println("point014: Can not go for now, Back to branch, Start buffer pop");
-                            //Point prev = new Point();
                             maze.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
                             while (true) {
                                 System.out.println("point015: do Buffer pop");
@@ -393,13 +389,11 @@ public class CeremonyAlgorithm {
                                     gui.saveAsImage("mazeResult.png", maze);
                                     gui.saveAsImage("mouseMap.png", mouseMap);
                                     System.out.println("프로그램 종료");
-
                                     return;
                                 }
                                 if (back.x == -1 && back.y == -1) { // 분기점의 끝이라면
                                     System.out.println("point016: Branch arrived");
                                     stack.pop(); // 분기점 중복 제거?
-                                    //buffer.push(prev);
                                     break;
                                 } else {
                                     System.out.println("point017: Mouse moving");
@@ -408,7 +402,6 @@ public class CeremonyAlgorithm {
                                     gui.repaint();
                                     TimeUnit.MILLISECONDS.sleep(bufferTime);
                                     maze.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
-                                    //prev = back;
                                 }
                                 isFindExit = mouse.map.update(mouse.getLocation(), 3, maze, isFindExit);
                             }
@@ -429,7 +422,6 @@ public class CeremonyAlgorithm {
                             TimeUnit.MILLISECONDS.sleep(stackTime);
                             maze.getCell(now).setState(Cell.State.VISIT); // 해당 위치 VISIT state로 변경
                             view.getCell(now).setState(Cell.State.VISIT);
-
                             buffer.push(now); // 버퍼에 집어넣는다
                         }
                     }
@@ -438,7 +430,7 @@ public class CeremonyAlgorithm {
                 } else { // 출구를 알고 있다면
                     System.out.println("point019: Exit already found");
                     System.out.println(maze.getEndPoint());
-
+                    isFindExit = mouse.map.update(mouse.getLocation(), 3, maze, isFindExit);
                     // 경로검사, a* 알고리즘을 통해 쥐가 알고있는 맵에서 출구까지 가는 길이 있는지 확인
                     // 벽을 뚫고 A* 썼을 때, 가능한 경로가 있는가?
                     int[][] path = isPathWithWallBreak();
@@ -470,7 +462,7 @@ public class CeremonyAlgorithm {
                         maze.resetVisitedInfo();
                         for (int i = 0; i < scanList.size(); i++) {
                             Point tmp = scanList.get(i);
-                            ra.update(tmp, 5, maze, isFindExit);
+                            dfsMap.update(tmp, 5, maze, isFindExit);
                         }
                     }
                     gui.repaint();
@@ -612,9 +604,9 @@ public class CeremonyAlgorithm {
                             buffer.push(now); // 버퍼에 집어넣는다
                         }
                     }
-                    gui.repaint();
-                    TimeUnit.MILLISECONDS.sleep(setTime);
                 }
+                gui.repaint();
+                TimeUnit.MILLISECONDS.sleep(setTime);
 
             } else { // 체력이 남아있지 않다면
                 System.out.println("point99: No more energy, Done");
@@ -640,7 +632,7 @@ public class CeremonyAlgorithm {
         if (x < 0 || y < 0 || x >= maze.getHeight() || y >= maze.getWidth())
             return false;
         else
-            return ra.getCell(x, y).isAvailable() && !ra.getCell(x, y).isVisited() && ra.getCell(x, y).getState() != Cell.State.NotRecommended;
+            return dfsMap.getCell(x, y).isAvailable() && !dfsMap.getCell(x, y).isVisited() && dfsMap.getCell(x, y).getState() != Cell.State.NotRecommended;
         // 이미 지나간 자리도 추가 해야하나?
     }
 
@@ -691,6 +683,17 @@ public class CeremonyAlgorithm {
     static int[][] isPathWithWallBreak() throws InterruptedException {
         AstarAlgorithm Astar;
         Cell prevCell;
+        Astar = new AstarAlgorithm(mouseMap, mouse.getLocation().x, mouse.getLocation().y,
+                maze.getEndPoint().x, maze.getEndPoint().y);
+        int[][] path1 = Astar.run();
+        int[][] path2;
+        int[][] minPath = null;
+        if(path1 != null){
+            minPath = path1.clone();
+        }
+        Point wallBreakPoint = new Point();
+        // 경로가 존재하면
+
         if (!isWallBreaker) {
             for (int i = 0; i < mouseMap.getHeight(); i++) {
                 for (int j = 0; j < mouseMap.getWidth(); j++) {
@@ -700,31 +703,36 @@ public class CeremonyAlgorithm {
 
                         Astar = new AstarAlgorithm(mouseMap, mouse.getLocation().x, mouse.getLocation().y,
                                 maze.getEndPoint().x, maze.getEndPoint().y);
-                        int[][] path = Astar.run();
+                        path2 = Astar.run();
                         // 경로가 존재하면
-                        if (path != null) {
-                            System.out.println("벽 부순 위치: " + new Point(i, j));
-                            isWallBreaker = true;
-                            // maze.getCell(new Point(i,j)).setState(Cell.State.VISIT);
-                            // view.getCell(new Point(i,j)).setState(Cell.State.VISIT);
-                            return path;
-                        } else {
-                            //System.out.println("현재 경로 없음");
-                            prevCell.setState(Cell.State.WALL);
+                        if(path2 != null){
+                            // 최단 경로 업데이트
+                            if(minPath == null || path2.length < minPath.length){
+                                minPath = path2.clone();
+                                wallBreakPoint = new Point(i,j); // 벽이 부숴진 위치 업데이트
+                            }
                         }
+                        // 벽을 원래 상태로 되돌림
+                        prevCell.setState(Cell.State.WALL);
                     }
                 }
             }
-        } else {
-            Astar = new AstarAlgorithm(mouseMap, mouse.getLocation().x, mouse.getLocation().y,
-                    maze.getEndPoint().x, maze.getEndPoint().y);
-            int[][] path = Astar.run();
-            // 경로가 존재하면
-            return path;
         }
 
-        return null;
+
+
+        if(minPath != null){
+            System.out.println("벽 부순 위치: " + wallBreakPoint);
+            mouseMap.getCell(wallBreakPoint).setState(Cell.State.BROKEN);
+            maze.getCell(wallBreakPoint).setState(Cell.State.BROKEN);
+            isWallBreaker = true;
+            return minPath;
+        }
+
+        // 벽을 부수지 않은 상태에서의 경로 반환
+        return path1;
     }
+
     public static boolean getIsWallBreaker(){
         return isWallBreaker;
     }
@@ -812,7 +820,7 @@ public class CeremonyAlgorithm {
 
             // 위쪽 벽으로 막혀서 dfs 진행을 못하면 위쪽 5*5의 중심점을 candidateScanPoint에 추가
             if (!(now.x - 1 < 0 || now.y < 0 || now.x - 1 >= maze.getHeight() || now.y >= maze.getWidth())) {
-                if (ra.getCell(now.x - 1, now.y).getState() == Cell.State.NotRecommended) {
+                if (dfsMap.getCell(now.x - 1, now.y).getState() == Cell.State.NotRecommended) {
                     Point up = findClosestPoint(now);
                     candidateScanPoint.add(up.add(-5));
                 }
@@ -820,27 +828,27 @@ public class CeremonyAlgorithm {
 
             // 아래쪽 벽으로 막혀서 dfs 진행 x
             if (!(now.x + 1 < 0 || now.y < 0 || now.x + 1 >= maze.getHeight() || now.y >= maze.getWidth())) {
-                if (ra.getCell(now.x + 1, now.y).getState() == Cell.State.NotRecommended) {
+                if (dfsMap.getCell(now.x + 1, now.y).getState() == Cell.State.NotRecommended) {
                     Point up = findClosestPoint(now);
                     candidateScanPoint.add(up.add(5));
                 }
             }
             // 왼쪽
             if (!(now.x < 0 || now.y - 1 < 0 || now.x >= maze.getHeight() || now.y - 1 >= maze.getWidth())) {
-                if (ra.getCell(now.x, now.y - 1).getState() == Cell.State.NotRecommended) {
+                if (dfsMap.getCell(now.x, now.y - 1).getState() == Cell.State.NotRecommended) {
                     Point up = findClosestPoint(now);
                     candidateScanPoint.add(up.add(0, -5));
                 }
             }
             // 오른쪽은 필요한 경우에만 추가
             if (!(now.x < 0 || now.y + 1 < 0 || now.x >= maze.getHeight() || now.y + 1 >= maze.getWidth())) {
-                if (ra.getCell(now.x, now.y + 1).getState() == Cell.State.NotRecommended) {
+                if (dfsMap.getCell(now.x, now.y + 1).getState() == Cell.State.NotRecommended) {
                     Point up = findClosestPoint(now);
                     candidateScanPoint.add(up.add(0, 5));
                 }
             }
             System.out.println(now);
-            ra.getCell(now).setState(Cell.State.VISIT);
+            dfsMap.getCell(now).setState(Cell.State.VISIT);
             gui.repaint();
             TimeUnit.MILLISECONDS.sleep(scanDFStime);
             //하
@@ -860,7 +868,7 @@ public class CeremonyAlgorithm {
                 scanStack.push(new Point(now.x, now.y - 1));
             }
         }
-        ra.resetVisitedInfo();
+        dfsMap.resetVisitedInfo();
 
         return candidateScanPoint;
     }

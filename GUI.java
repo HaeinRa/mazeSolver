@@ -65,6 +65,9 @@ public class GUI extends JPanel {
                     case BRANCH:
                         g2d.setColor(Color.PINK);
                         break;
+                    case BROKEN:
+                        g2d.setColor(Color.BLACK);
+                        break;
                 }
 
                 if (mouse.getLocation().x == i && mouse.getLocation().y == j) {

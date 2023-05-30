@@ -4,6 +4,8 @@ public class Cell {
     private boolean isExit; // 출구
     private boolean isVisited; // 방문한 곳
     private boolean isBranch; // 분기점인가?
+    private boolean isBroken; // 뚫려진 벽인가?
+
 
     public enum State {
         AVAILABLE,
@@ -11,7 +13,8 @@ public class Cell {
         EXIT,
         VISIT,
         NotRecommended,
-        BRANCH
+        BRANCH,
+        BROKEN
     }
 
     public Cell(int info) {
@@ -20,6 +23,7 @@ public class Cell {
         this.isExit = (info == 2);
         this.isVisited = (info == 3);
         this.isBranch = false;
+        this.isBroken = false;
     }
 
     public Cell(Cell cell) {
@@ -28,6 +32,7 @@ public class Cell {
         this.isExit = cell.isExit;
         this.isVisited = cell.isVisited;
         this.isBranch = cell.isBranch;
+        this.isBroken = cell.isBroken;
     }
 
     public static Cell createCopy(Cell cell) {
@@ -59,7 +64,10 @@ public class Cell {
     //다시 되돌아갈 때, 방문 했던 곳을 가야하잖아.
     //각 변수들이 있는데 getState가 필요한가?
     public State getState() {
-        if(isWall) {
+        if(isBroken){
+            return State.BROKEN;
+        }
+        else if(isWall) {
             return State.WALL;
         }
         else if(isExit){
@@ -84,6 +92,8 @@ public class Cell {
 //  }
     public void setState(State state) {
         switch(state){
+            case BROKEN:
+                this.isBroken = true;
             case WALL:
                 this.isAvailable = false;
                 this.isWall = true;
