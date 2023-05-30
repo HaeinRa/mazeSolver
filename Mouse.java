@@ -49,13 +49,7 @@ public class Mouse {
         return scanCount;
     }
 
-    public void setMap(){
-        for (int i=0; i<map.getHeight(); i++) {
-            for (int j=0; j<map.getWidth(); j++) {
-                map.getCell(i,j).setState(Cell.State.WALL);
-            }
-        }
-    }
+
 
 
 

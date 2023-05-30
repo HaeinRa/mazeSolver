@@ -66,6 +66,9 @@ public class GUI extends JPanel {
                         g2d.setColor(Color.PINK);
                         break;
                     case BROKEN:
+                        g2d.setColor(Color.CYAN);
+                        break;
+                    case UNKNOWN:
                         g2d.setColor(Color.BLACK);
                         break;
                 }

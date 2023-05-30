@@ -125,7 +125,7 @@ public class CeremonyAlgorithm {
         }
 
 
-        mouse.setMap();
+
         maze.getCell(0, 1).setState(Cell.State.VISIT);
         view.getCell(0, 1).setState(Cell.State.VISIT);
 
@@ -134,6 +134,20 @@ public class CeremonyAlgorithm {
         for (int i = 0; i < dfsMap.getHeight(); i++) {
             for (int j = 0; j < dfsMap.getWidth(); j++) {
                 dfsMap.getCell(i, j).setState(Cell.State.NotRecommended);
+            }
+        }
+
+        // 스캔 맵 초기화
+        for (int i = 0; i < scanMap.getHeight(); i++) {
+            for (int j = 0; j < scanMap.getWidth(); j++) {
+                scanMap.getCell(i, j).setState(Cell.State.AVAILABLE);
+            }
+        }
+
+        // 마우스 맵 초기화
+        for (int i=0; i<mouseMap.getHeight(); i++) {
+            for (int j=0; j<mouseMap.getWidth(); j++) {
+                mouseMap.getCell(i,j).setState(Cell.State.UNKNOWN);
             }
         }
 
@@ -147,12 +161,7 @@ public class CeremonyAlgorithm {
 
         System.out.println("point001: setup done");
 
-        // 스캔 맵 초기화
-        for (int i = 0; i < scanMap.getHeight(); i++) {
-            for (int j = 0; j < scanMap.getWidth(); j++) {
-                scanMap.getCell(i, j).setState(Cell.State.AVAILABLE);
-            }
-        }
+
 
         isFindExit = false;
         isWallBreaker = false;
