@@ -17,6 +17,7 @@ public class CeremonyAlgorithm {
     private static LinkedStack<Point> stack, buffer;
     private static int scanMode;
     private static boolean isFindExit;
+    private static boolean isWallBreaker;
     private static int branchCounter;
     private static List<Point> candidateScan;
     static long bufferTime;
@@ -41,7 +42,7 @@ public class CeremonyAlgorithm {
         // SetUp: 사용 가능한 미로로 변환 (Cell에 저장)
         stack = new LinkedStack<Point>();
         buffer = new LinkedStack<Point>();
-        String filename = "Maze1.txt";
+        String filename = "exMaze.txt";
         maze = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
         mouseMap = new Maze(readMaze(filename)); // 쥐의 시야, maze에 영향을 받음
         view = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
@@ -71,6 +72,8 @@ public class CeremonyAlgorithm {
 
 
 
+
+
         // Todo: 스캔모드0 완전제공
 
         // 스캔 모드
@@ -88,6 +91,7 @@ public class CeremonyAlgorithm {
         }
 
         isFindExit = false;
+        isWallBreaker = false;
         scanMode = 0;
         branchCounter = 0; // 분기점인지 체크하는 카운터
         boolean isInitBranch = false;
@@ -164,7 +168,7 @@ public class CeremonyAlgorithm {
                         for(int j = 0; j<scanList.size(); j++){
                             // scanList에 있는 (중복된) Point는 후보에서 제거
                             if(point.x == scanList.get(j).x && point.y == scanList.get(j).y){
-                                System.out.println("채승윤님");
+                                //System.out.println("채승윤님");
                                 candidateScan.remove(i);
                                 isRemoved = true;
                             }
@@ -184,7 +188,7 @@ public class CeremonyAlgorithm {
                     }
                     // scanList 리스트에 있는 모든 포인트 객체를 distanceQueue에 추가
                     for(int i=0; i<candidateScan.size(); i++){
-                        System.out.println("라해인님님");
+                        //System.out.println("라해인님님");
                         scanDistanceQueue.add(candidateScan.get(i));
                     }
 
@@ -342,6 +346,7 @@ public class CeremonyAlgorithm {
                             // 출구까지 곧바로 이동
                             mouse.move();
                             now = new Point(path[i][0], path[i][1]);
+                            System.out.println("최단경로: "+now);
                             mouse.changeLocation(now);
                             mouseMap.getCell(now).setState(Cell.State.VISIT);
                             maze.getCell(now).setState(Cell.State.VISIT);
@@ -359,6 +364,10 @@ public class CeremonyAlgorithm {
                         buffer.clear();
                         mouse.map.resetVisitedInfo();
                         maze.resetVisitedInfo();
+                        for (int i=0; i<scanList.size(); i++) {
+                            Point tmp = scanList.get(i);
+                            ra.update(tmp, 5, maze, isFindExit );
+                        }
                     }
                     gui.repaint();
                     TimeUnit.MILLISECONDS.sleep(setTime);
@@ -555,29 +564,35 @@ public class CeremonyAlgorithm {
     static int[][] isPathWithWallBreak() throws InterruptedException {
         AstarAlgorithm Astar;
         Cell prevCell;
+        if(!isWallBreaker){
+            for(int i =0; i< mouseMap.getHeight(); i++){
+                for(int j=0; j<mouseMap.getWidth(); j++){
+                    prevCell = mouseMap.getCell(new Point(i, j));
+                    if (prevCell.isWall()){
+                        prevCell.setState(Cell.State.AVAILABLE);
 
-        for(int i =0; i< mouseMap.getHeight(); i++){
-            for(int j=0; j<mouseMap.getWidth(); j++){
-                prevCell = mouseMap.getCell(new Point(i, j));
-                if (prevCell.isWall()){
-                    prevCell.setState(Cell.State.AVAILABLE);
-
-                    Astar = new AstarAlgorithm(mouseMap, mouse.getLocation().x, mouse.getLocation().y,
-                            maze.getEndPoint().x, maze.getEndPoint().y);
-                    int[][] path = Astar.run();
-                    // 경로가 존재하면
-                    if (path != null) {
-                        System.out.println("벽 부순 위치: " + new Point(i,j));
-                        maze.getCell(new Point(i,j)).setState(Cell.State.VISIT);
-                        view.getCell(new Point(i,j)).setState(Cell.State.VISIT);
-                        return path;
-                    } else {
-                        System.out.println("현재 경로 없음");
-                        prevCell.setState(Cell.State.WALL);
+                        Astar = new AstarAlgorithm(mouseMap, mouse.getLocation().x, mouse.getLocation().y,
+                                maze.getEndPoint().x, maze.getEndPoint().y);
+                        int[][] path = Astar.run();
+                        // 경로가 존재하면
+                        if (path != null) {
+                            System.out.println("벽 부순 위치: " + new Point(i,j));
+                            isWallBreaker = true;
+                            maze.getCell(new Point(i,j)).setState(Cell.State.VISIT);
+                            view.getCell(new Point(i,j)).setState(Cell.State.VISIT);
+                            return path;
+                        } else {
+                            //System.out.println("현재 경로 없음");
+                            prevCell.setState(Cell.State.WALL);
+                        }
                     }
                 }
             }
         }
+        else{
+
+        }
+
         return null;
     }
 
@@ -688,7 +703,7 @@ public class CeremonyAlgorithm {
             System.out.println(now);
             ra.getCell(now).setState(Cell.State.VISIT);
             gui.repaint();
-            TimeUnit.MILLISECONDS.sleep(setTime+10);
+            TimeUnit.MILLISECONDS.sleep(setTime+100);
             //하
             if(isScanValidPos(now.x+1, now.y)){
                 scanStack.push(new Point(now.x+1, now.y));
@@ -732,5 +747,7 @@ public class CeremonyAlgorithm {
         return closestPoint;
     }
 
+
+    public static boolean getBreakCount(){ return isWallBreaker;}
 }
 

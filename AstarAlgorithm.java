@@ -79,6 +79,7 @@ public class AstarAlgorithm
           int tentative_g_score = g_score[current[0]][current[1]] + 1;
 
           if (tentative_g_score < g_score[x][y]) {
+            //System.out.println(current[0] * maze.getHeight() + current[1]);
             came_from[x][y] = current[0] * maze.getHeight() + current[1];
             g_score[x][y] = tentative_g_score;
             f_score[x][y] = g_score[x][y] + heuristic(x, y);
@@ -96,10 +97,17 @@ public class AstarAlgorithm
   private int[][] reconstructPath(int[] current) {
     int[][] path = new int[g_score[current[0]][current[1]] + 1][2];
     int index = path.length - 1;
-    while (current[0] != start_x || current[1] != start_y) {
+
+    while (!(current[0] == start_x && current[1] == start_y)) {
+      int prev_x = came_from[current[0]][current[1]] / maze.getHeight();
+      int prev_y = came_from[current[0]][current[1]] % maze.getHeight();
+      if (prev_x == -1 || prev_y == -1) {
+        break; // 시작 지점에 도달하면 반복문 종료
+      }
       path[index--] = new int[]{current[0], current[1]};
-      current = new int[]{came_from[current[0]][current[1]] / maze.getHeight(), came_from[current[0]][current[1]] % maze.getHeight()};
+      current = new int[]{prev_x, prev_y};
     }
+
     path[index] = new int[]{start_x, start_y};
     return path;
   }
