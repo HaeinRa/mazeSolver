@@ -40,6 +40,19 @@ class Point {
     public String toString() {
         return String.format("(%d, %d) ", this.x, this.y);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Point otherPoint = (Point) obj;
+        return this.x == otherPoint.x && this.y == otherPoint.y;
+    }
+
 }
 
 // 연결리스트를 위한 노드
