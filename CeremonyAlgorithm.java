@@ -42,7 +42,7 @@ public class CeremonyAlgorithm {
         // SetUp: 사용 가능한 미로로 변환 (Cell에 저장)
         stack = new LinkedStack<Point>();
         buffer = new LinkedStack<Point>();
-        String filename = "Maze1.txt";
+        String filename = "Maze2.txt";
         maze = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
         mouseMap = new Maze(readMaze(filename)); // 쥐의 시야, maze에 영향을 받음
         view = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
@@ -133,7 +133,7 @@ public class CeremonyAlgorithm {
                         }
                         widthCount += 1;
                     } else if (maze.getHeight() - 5 * heightCount > -3) { // 높이 변화, x고정
-                        scanPoint = new Point(maze.getHeight() - 5 * heightCount - 7 , 2);
+                        scanPoint = new Point(maze.getHeight() - 5 * heightCount - 7 - 1 , 2);
                         if (scanPoint.x < 0) {
                             scanPoint = new Point(2,2);
                         }

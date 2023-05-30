@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f8dce668-dfb5-47bd-bba6-3ec0536e990e" name="Changes" comment="feat : 스캔 모드 0에서 모서리를 중복 스캔하는 부분 수정">
+    <list default="true" id="f8dce668-dfb5-47bd-bba6-3ec0536e990e" name="Changes" comment="feat : scanCount가 불필요하게 증가하는 현상 수정">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CeremonyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/CeremonyAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Maze2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Maze2.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -161,7 +162,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685420368401</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="feat : scanCount가 불필요하게 증가하는 현상 수정">
+      <created>1685428646509</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1685428646509</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -197,17 +205,7 @@
     <MESSAGE value="머지받음" />
     <MESSAGE value="머지받음2" />
     <MESSAGE value="feat : 스캔 모드 0에서 모서리를 중복 스캔하는 부분 수정" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat : 스캔 모드 0에서 모서리를 중복 스캔하는 부분 수정" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/CeremonyAlgorithm.java</url>
-          <line>156</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="feat : scanCount가 불필요하게 증가하는 현상 수정" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat : scanCount가 불필요하게 증가하는 현상 수정" />
   </component>
 </project>
