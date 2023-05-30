@@ -7,6 +7,8 @@
     <list default="true" id="f8dce668-dfb5-47bd-bba6-3ec0536e990e" name="Changes" comment="feat : 스캔 모드 0에서 모서리를 중복 스캔하는 부분 수정">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CeremonyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/CeremonyAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/GUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Maze1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Maze1.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,8 +71,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="애플리케이션.CeremonyAlgorithm" />
-        <item itemvalue="애플리케이션.Main" />
+        <item itemvalue="Application.CeremonyAlgorithm" />
       </list>
     </recent_temporary>
   </component>
@@ -179,7 +180,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="feature3/feature3" />
+                        <option value="feature3/feature1" />
                       </list>
                     </value>
                   </entry>
@@ -205,7 +206,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/CeremonyAlgorithm.java</url>
-          <line>156</line>
+          <line>148</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
