@@ -42,7 +42,7 @@ public class CeremonyAlgorithm {
         // SetUp: 사용 가능한 미로로 변환 (Cell에 저장)
         stack = new LinkedStack<Point>();
         buffer = new LinkedStack<Point>();
-        String filename = "exMaze.txt";
+        String filename = "Maze1.txt";
         maze = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
         mouseMap = new Maze(readMaze(filename)); // 쥐의 시야, maze에 영향을 받음
         view = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
@@ -115,6 +115,7 @@ public class CeremonyAlgorithm {
             if (mouse.getEnergy() > 0) {
                 System.out.println("point004: Energy condition");
 
+                //TODO: 스캔모드 1 일 때, 출구로부터 dfs 할 수 없으면 스캔을 안함
 //                // 5x5 스캔하기 (모드에 따라)
                 if(mouse.getMana() >= 3 && scanMode == 0){
                     System.out.println("point005: scanMode 0");
@@ -578,8 +579,8 @@ public class CeremonyAlgorithm {
                         if (path != null) {
                             System.out.println("벽 부순 위치: " + new Point(i,j));
                             isWallBreaker = true;
-                            maze.getCell(new Point(i,j)).setState(Cell.State.VISIT);
-                            view.getCell(new Point(i,j)).setState(Cell.State.VISIT);
+                            // maze.getCell(new Point(i,j)).setState(Cell.State.VISIT);
+                            // view.getCell(new Point(i,j)).setState(Cell.State.VISIT);
                             return path;
                         } else {
                             //System.out.println("현재 경로 없음");
@@ -590,7 +591,11 @@ public class CeremonyAlgorithm {
             }
         }
         else{
-
+            Astar = new AstarAlgorithm(mouseMap, mouse.getLocation().x, mouse.getLocation().y,
+                    maze.getEndPoint().x, maze.getEndPoint().y);
+            int[][] path = Astar.run();
+            // 경로가 존재하면
+            return path;
         }
 
         return null;
