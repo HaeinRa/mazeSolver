@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0402f819-fe82-411f-8bd4-de0deccbc5a4" name="Changes" comment="스캔 방법 수정중">
+    <list default="true" id="0402f819-fe82-411f-8bd4-de0deccbc5a4" name="Changes" comment="scanmode1 수정">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CeremonyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/CeremonyAlgorithm.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -154,7 +153,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685378125531</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="scanmode0 수정">
+      <created>1685394395842</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1685394395842</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -190,6 +196,8 @@
     <MESSAGE value="머지받음" />
     <MESSAGE value="머지받음2" />
     <MESSAGE value="스캔 방법 수정중" />
-    <option name="LAST_COMMIT_MESSAGE" value="스캔 방법 수정중" />
+    <MESSAGE value="scanmode1 수정" />
+    <MESSAGE value="scanmode0 수정" />
+    <option name="LAST_COMMIT_MESSAGE" value="scanmode0 수정" />
   </component>
 </project>
