@@ -1,15 +1,15 @@
 import java.util.Arrays;
 import java.util.PriorityQueue;
 
-public class AstarAlgorithm
-{
+public class AstarAlgorithm {
   private Maze maze;
   private int start_x;
   private int start_y;
   private int end_x;
   private int end_y;
   private boolean[][] closed_set;
-  private int[][] came_from;
+  private int[][] came_from_x;
+  private int[][] came_from_y;
   private int[][] g_score;
   private int[][] f_score;
   private PriorityQueue<int[]> open_set;
@@ -21,7 +21,8 @@ public class AstarAlgorithm
     this.end_x = end_x; // 목표 지점
     this.end_y = end_y;
     this.closed_set = new boolean[maze.getHeight()][maze.getWidth()]; // 닫힌 목록
-    this.came_from = new int[maze.getHeight()][maze.getWidth()];
+    this.came_from_x = new int[maze.getHeight()][maze.getWidth()];
+    this.came_from_y = new int[maze.getHeight()][maze.getWidth()];
     this.g_score = new int[maze.getHeight()][maze.getWidth()]; // 시작점에서부터 가중치
     this.f_score = new int[maze.getHeight()][maze.getWidth()]; // g score + h score, f_score가 큰 것을 먼저 탐색
     this.open_set = new PriorityQueue<>((a, b) -> f_score[a[0]][a[1]] - f_score[b[0]][b[1]]); // 열린 목록
@@ -31,7 +32,8 @@ public class AstarAlgorithm
   private void init() {
     for (int i = 0; i < maze.getHeight(); i++) {
       Arrays.fill(closed_set[i], false);
-      Arrays.fill(came_from[i], -1);
+      Arrays.fill(came_from_x[i], -1);
+      Arrays.fill(came_from_y[i], -1);
       Arrays.fill(g_score[i], Integer.MAX_VALUE);
       Arrays.fill(f_score[i], Integer.MAX_VALUE);
     }
@@ -40,22 +42,19 @@ public class AstarAlgorithm
     open_set.offer(new int[]{start_x, start_y});
   }
 
-  // 맨하탄 거리로 휴리스틱 값을 구한다.
   private int heuristic(int x, int y) {
     return Math.abs(x - end_x) + Math.abs(y - end_y);
   }
 
   public int[][] run() {
-    while (!open_set.isEmpty()) // 열린 목록이 비어있지 않을 동안 반복
-    {
+    while (!open_set.isEmpty()) {
       int[] current = open_set.poll();
 
-      if (current[0] == end_x && current[1] == end_y) // 목표 지점 탐색에 성공하면
-      {
-        return reconstructPath(current); // 시작점부터 목표지점까지의 좌표를 저장한 배열을 반환
+      if (current[0] == end_x && current[1] == end_y) {
+        return reconstructPath(current);
       }
 
-      closed_set[current[0]][current[1]] = true; // 현재 위치를 닫힌 목록에 추가
+      closed_set[current[0]][current[1]] = true;
 
       for (int i = -1; i <= 1; i++) {
         for (int j = -1; j <= 1; j++) {
@@ -63,24 +62,21 @@ public class AstarAlgorithm
             continue;
           }
           if (i != 0 && j != 0) {
-            continue; // 대각선 이동은 제외
+            continue;
           }
 
           int x = current[0] + i;
           int y = current[1] + j;
 
-          // 미로 범위 밖을 벗어나거나 벽 또는 닫힌 목록에 있는 아이템은 고려하지 않음
-          if (x < 0 || x >= maze.getHeight() || y < 0 || y >= maze.getWidth() || maze.getCell(x,y).getState() == Cell.State.WALL || closed_set[x][y])
-          {
+          if (x < 0 || x >= maze.getHeight() || y < 0 || y >= maze.getWidth() || maze.getCell(x, y).getState() == Cell.State.WALL || closed_set[x][y]) {
             continue;
           }
-          
-          // currnet[0]는 x좌표, current[1]은 y좌표
+
           int tentative_g_score = g_score[current[0]][current[1]] + 1;
 
           if (tentative_g_score < g_score[x][y]) {
-            //System.out.println(current[0] * maze.getHeight() + current[1]);
-            came_from[x][y] = current[0] * maze.getHeight() + current[1];
+            came_from_x[x][y] = current[0];
+            came_from_y[x][y] = current[1];
             g_score[x][y] = tentative_g_score;
             f_score[x][y] = g_score[x][y] + heuristic(x, y);
 
@@ -91,19 +87,21 @@ public class AstarAlgorithm
         }
       }
     }
-
     return null;
   }
+
   private int[][] reconstructPath(int[] current) {
     int[][] path = new int[g_score[current[0]][current[1]] + 1][2];
     int index = path.length - 1;
 
     while (!(current[0] == start_x && current[1] == start_y)) {
-      int prev_x = came_from[current[0]][current[1]] / maze.getHeight();
-      int prev_y = came_from[current[0]][current[1]] % maze.getHeight();
+      int prev_x = came_from_x[current[0]][current[1]];
+      int prev_y = came_from_y[current[0]][current[1]];
+
       if (prev_x == -1 || prev_y == -1) {
-        break; // 시작 지점에 도달하면 반복문 종료
+        break;
       }
+
       path[index--] = new int[]{current[0], current[1]};
       current = new int[]{prev_x, prev_y};
     }
