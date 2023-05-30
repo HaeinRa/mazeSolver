@@ -57,7 +57,7 @@ public class CeremonyAlgorithm {
         int widthCount2 = 0;
 
         mouse.setMap();
-        gui = new GUI(mouseMap, mouse, scanMap);
+        gui = new GUI(scanMap, mouse, scanMap);
         bufferTime = 10;
         stackTime = 10;
         setTime = 10;
@@ -133,30 +133,29 @@ public class CeremonyAlgorithm {
                         }
                         widthCount += 1;
                     } else if (maze.getHeight() - 5 * heightCount > -3) { // 높이 변화, x고정
-                        scanPoint = new Point(maze.getHeight() - 5 * heightCount -3 , 2);
+                        scanPoint = new Point(maze.getHeight() - 5 * heightCount - 7 , 2);
                         if (scanPoint.x < 0) {
                             scanPoint = new Point(2,2);
                         }
                         heightCount += 1;
                     } else if (maze.getWidth() -5 * widthCount2 > -3){
                         scanPoint = new Point(2 , maze.getWidth() - 5 * widthCount2 - 7 - 1);
-                        if (scanPoint.x < 0) {
-                            scanPoint = new Point(2,2);
+                        if (scanPoint.y < 0) {
+                            scanPoint = null;
                         }
                         widthCount2 += 1;
                     }
 
-
-                    isFindExit = mouse.map.update(scanPoint,5, maze, scanMap, isFindExit);
-
-                    mouse.scan();
-                    System.out.println("scanPoint: " + scanPoint);
-                    System.out.println("scanCount: " + mouse.getScanCount());
-
                     // 스캔 리스트에 추가
-                    scanList.add(scanPoint);
-                    System.out.println("point005-2: add Point to scanList");
-
+                    if (scanPoint != null) {
+                        isFindExit = mouse.map.update(scanPoint,5, maze, scanMap, isFindExit);
+                        mouse.scan();
+                        System.out.println("scanPoint: " + scanPoint);
+                        System.out.println("scanCount: " + mouse.getScanCount());
+                        scanList.add(scanPoint);
+                        System.out.println("point005-2: add Point to scanList");
+                        System.out.println(mouse.getScanCount() + ", " +  scanList.size());
+                    }
 
                 }
                 else if (mouse.getMana() >= 3 && scanMode == 1) { // 출구 찾은 후
