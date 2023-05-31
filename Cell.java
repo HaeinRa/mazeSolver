@@ -7,6 +7,7 @@ public class Cell {
     private boolean isBest;
     private boolean isBroken; // 뚫려진 벽인가?
     private boolean isUnknown;
+    private boolean isNotRecommend;
 
 
     public enum State {
@@ -30,6 +31,7 @@ public class Cell {
         this.isBest = false;
         this.isBroken = false;
         this.isUnknown = false;
+        this.isNotRecommend = false;
     }
 
     public Cell(Cell cell) {
@@ -41,6 +43,7 @@ public class Cell {
         this.isBest = cell.isBest;
         this.isBroken = cell.isBroken;
         this.isUnknown = cell.isUnknown;
+        this.isNotRecommend = cell.isNotRecommend;
 
     }
 
@@ -70,7 +73,7 @@ public class Cell {
     public boolean isBest() {return this.isBest;}
     public boolean isUnknown() {return this.isUnknown;}
     public boolean isBroken() {return this.isBroken;}
-
+    public boolean isNotRecommend(){return this.isNotRecommend;}
 
     //방문 가능한데, 이미 방문했을 수도 있는거 아닌가? 상태를 딱 하나만 정하는게 맞나?
     //다시 되돌아갈 때, 방문 했던 곳을 가야하잖아.
@@ -133,6 +136,7 @@ public class Cell {
                 this.isExit = false;
                 this.isVisited = false;
                 this.isBranch = false;
+                this.isNotRecommend = false;
                 break;
             case EXIT:
                 this.isAvailable = true;
@@ -151,6 +155,7 @@ public class Cell {
                 this.isWall = false;
                 this.isBranch = false;
                 this.isExit = false;
+                this.isNotRecommend = true;
                 break;
             case BRANCH:
                 this.isBranch = true;
