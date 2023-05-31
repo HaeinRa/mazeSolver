@@ -290,12 +290,19 @@ public class CeremonyAlgorithm {
 
                     // map 업데이트
 //                    System.out.println("point005-1: scanning.. 5x5");
-                    isFindExit = mouse.map.update(scanPoint, 5, maze, isFindExit);
 
-                    // ra 업데이트 : 방 조명이 켜짐
+                    // dfsMap 업데이트 : 방 조명이 켜짐
+                    isFindExit = mouse.map.update(scanPoint, 5, maze, isFindExit);
                     dfsMap.update(scanPoint, 5, maze, isFindExit);
                     gui.repaint();
                     TimeUnit.MILLISECONDS.sleep(setTime);
+
+                    if(!canEscapeFromMaze(dfsMap, maze.getEndPoint())){
+                        gui.repaint();
+                        TimeUnit.MILLISECONDS.sleep(setTime);
+                        System.out.println("Fail: 탈출할 수 없는 미로");
+                        return;
+                    }
 
 
                     // 출구와 연결된 곳을 유망한 방면이라 하고, 그 방면들의 중점을 모아놓는 후보 리스트 : candidiateScan 리스트
@@ -1042,16 +1049,9 @@ public class CeremonyAlgorithm {
         System.out.println("***** Warning이 떠도 잠시 기다려주세요 *****");
 
         gui.saveAsImage("6viewResult.png", view);
-        System.out.println("= 완료: '6viewResult.png' 이미지 저장");
-
         gui.saveAsImage("6mazeResult.png", maze);
-        System.out.println("= 완료: '6mazeResult.png' 이미지 저장");
-
         gui.saveAsImage("6scanResult.png", scanMap);
-        System.out.println("= 완료: '6scanResult.png' 이미지 저장");
-
         gui.saveAsImage("6mouseMap.png", mouseMap);
-        System.out.println("= 완료: '6mouseMap.png' 이미지 저장");
         System.out.println();
 
         System.out.println("= 모든 프로세스가 완료되었습니다. 프로그램을 종료합니다.");
@@ -1060,8 +1060,62 @@ public class CeremonyAlgorithm {
 
     }
 
-    public static boolean getBreakCount() {
-        return isWallBreaker;
+    // 방향을 정의합니다. (상, 하, 좌, 우)
+
+
+    public static boolean canEscapeFromMaze(Maze dfsMap, Point exit) {
+        // 방문 여부를 저장할 배열을 선언합니다.
+        boolean[][] visited = new boolean[dfsMap.getHeight()][dfsMap.getWidth()];
+        return dfs(dfsMap, visited, exit.x, exit.y, true);
     }
+
+    public static boolean dfs(Maze dfsMap, boolean[][] visited, int x, int y, boolean canBreak) {
+        int[] dx = {-1, 1, 0, 0};
+        int[] dy = {0, 0, -1, 1};
+        // 현재 위치 방문.
+        visited[x][y] = true;
+
+        // 모든 방향 탐색
+        for (int i = 0; i < 4; i++) {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+
+            // 범위 검사
+            if (nx < 0 || ny < 0 || nx >= dfsMap.getHeight() || ny >= dfsMap.getWidth()) {
+                continue;
+            }
+
+            Cell nextCell = dfsMap.getCell(nx, ny);
+
+            // NotRecommended 상태의 셀을 만나면 true
+            if (nextCell.getState() == Cell.State.NotRecommended) {
+                return true;
+            }
+
+            // 이미 방문한 셀이거나 벽이면서 벽을 뚫을 수 없는 상태일 경우 건너뜀.
+            if (visited[nx][ny] || (nextCell.isWall() && !canBreak)) {
+                continue;
+            }
+
+            // 다음 셀이 벽인 경우 벽을 뚫을 수 있는지 검사하고 dfs를 재귀 호출
+            if (nextCell.isWall() && canBreak) {
+                if (dfs(dfsMap, visited, nx, ny, false)) {
+                    return true;
+                }
+            }
+            // 다음 셀이 이동 가능한 경우 dfs를 재귀 호출
+            else if (!nextCell.isWall()) {
+                if (dfs(dfsMap, visited, nx, ny, canBreak)) {
+                    return true;
+                }
+            }
+        }
+
+        // 모든 방향에 대하여 탐색을 마친 후 탈출 불가능하다면 false를 반환
+        return false;
+    }
+
+
+
 }
 
