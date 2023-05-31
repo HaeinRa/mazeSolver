@@ -5,6 +5,9 @@ public class Cell {
     private boolean isVisited; // 방문한 곳
     private boolean isBranch; // 분기점인가?
     private boolean isBest;
+    private boolean isBroken; // 뚫려진 벽인가?
+    private boolean isUnknown;
+
 
     public enum State {
         AVAILABLE,
@@ -13,7 +16,9 @@ public class Cell {
         VISIT,
         NotRecommended,
         BRANCH,
-        BEST
+        BEST,
+        BROKEN,
+        UNKNOWN
     }
 
     public Cell(int info) {
@@ -23,6 +28,8 @@ public class Cell {
         this.isVisited = (info == 3);
         this.isBranch = false;
         this.isBest = false;
+        this.isBroken = false;
+        this.isUnknown = false;
     }
 
     public Cell(Cell cell) {
@@ -32,6 +39,9 @@ public class Cell {
         this.isVisited = cell.isVisited;
         this.isBranch = cell.isBranch;
         this.isBest = cell.isBest;
+        this.isBroken = cell.isBroken;
+        this.isUnknown = cell.isUnknown;
+
     }
 
     public static Cell createCopy(Cell cell) {
@@ -58,13 +68,21 @@ public class Cell {
         return this.isBranch;
     }
     public boolean isBest() {return this.isBest;}
+    public boolean isUnknown() {return this.isUnknown;}
+    public boolean isBroken() {return this.isBroken;}
 
 
     //방문 가능한데, 이미 방문했을 수도 있는거 아닌가? 상태를 딱 하나만 정하는게 맞나?
     //다시 되돌아갈 때, 방문 했던 곳을 가야하잖아.
     //각 변수들이 있는데 getState가 필요한가?
     public State getState() {
-        if(isWall) {
+        if(isUnknown){
+            return State.UNKNOWN;
+        }
+        else if(isBroken){
+            return State.BROKEN;
+        }
+        else if(isWall) {
             return State.WALL;
         }
         else if(isExit){
@@ -92,6 +110,17 @@ public class Cell {
 //  }
     public void setState(State state) {
         switch(state){
+            case UNKNOWN:
+                this.isAvailable = false;
+                this.isWall = false;
+                this.isExit = false;
+                this.isVisited = false;
+                this.isBranch = false;
+                this.isBroken = false;
+                this.isUnknown = true;
+                break;
+            case BROKEN:
+                this.isBroken = true;
             case WALL:
                 this.isAvailable = false;
                 this.isWall = true;

@@ -10,7 +10,7 @@ public class GUI extends JPanel {
     private Mouse mouse;
     private Maze maze;
     private int cellSize = 15;
-    private Color SCAN_COLOR = new Color(150, 130, 250, 70);
+    private Color SCAN_COLOR = new Color(150, 130, 250, 250);
 
     public GUI(Maze maze, Mouse mouse, Maze scanMap) {
         this.maze = maze;
@@ -20,16 +20,14 @@ public class GUI extends JPanel {
         int width = maze.getWidth() * cellSize;
         int height = maze.getHeight() * cellSize;
 
-        System.out.println(width);
-        System.out.println(height);
+        //System.out.println(width);
+        //System.out.println(height);
 
         JFrame contentFrame = new JFrame("Maze");
         contentFrame.setSize(width + 220, height + 50);
         contentFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         contentFrame.add(this);
         contentFrame.setVisible(true);
-
-        /*saveImage(contentFrame);*/
     }
 
     public void paintComponent(Graphics g) {
@@ -64,6 +62,12 @@ public class GUI extends JPanel {
                         break;
                     case BRANCH:
                         g2d.setColor(Color.PINK);
+                        break;
+                    case BROKEN:
+                        g2d.setColor(Color.CYAN);
+                        break;
+                    case UNKNOWN:
+                        g2d.setColor(Color.BLACK);
                         break;
                     case BEST:
                         g2d.setColor(Color.red);
@@ -112,7 +116,7 @@ public class GUI extends JPanel {
         int statusX = getWidth() - 200; // 상태 창 위치 X 좌표
         int statusY = 20; // 상태 창 위치 Y 좌표
 
-        g.setColor(Color.CYAN);
+        g.setColor(Color.WHITE);
         g.fillRect(statusX, 1, 400, maze.getHeight() * cellSize);
         g.setColor(Color.BLACK);
         g.drawRect(statusX - 1, 0, 400, maze.getHeight() * cellSize + 1);
@@ -160,28 +164,18 @@ public class GUI extends JPanel {
         Font teamFont = new Font("Arial Rounded MT 굵게", Font.BOLD, 15);
         g.setFont(teamFont);
 
-        g.drawString("팀원", statusX + 80, statusY + 480);
-        g.drawString("2019136012 권예찬", statusX + 30, statusY + 500);
-        g.drawString("2019136131 채승윤", statusX + 30, statusY + 520);
-        g.drawString("2019136139 허준기", statusX + 30, statusY + 540);
-        g.drawString("2021136043 라해인", statusX + 30, statusY + 560);
+        g.drawString("팀원", statusX + 80, statusY + 280);
+        g.drawString("2019136012 권예찬", statusX + 30, statusY + 300);
+        g.drawString("2019136131 채승윤", statusX + 30, statusY + 320);
+        g.drawString("2019136139 허준기", statusX + 30, statusY + 340);
+        g.drawString("2021136043 라해인", statusX + 30, statusY + 360);
 
         g.setColor(Color.RED);
-        g.fillRect(statusX + 15, statusY + 470, 60, 10);
-        g.fillRect(statusX + 115, statusY + 470, 60, 10);
-        g.fillRect(statusX + 15, statusY + 480, 10, 90);
-        g.fillRect(statusX + 165, statusY + 480, 10, 90);
-        g.fillRect(statusX + 15, statusY + 570, 160, 10);
+        g.fillRect(statusX + 15, statusY + 270, 60, 10);
+        g.fillRect(statusX + 115, statusY + 270, 60, 10);
+        g.fillRect(statusX + 15, statusY + 280, 10, 90);
+        g.fillRect(statusX + 165, statusY + 280, 10, 90);
+        g.fillRect(statusX + 15, statusY + 365, 160, 10);
     }
-    /*private void saveImage(JFrame panel) {
-        BufferedImage img = new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_RGB);
-        panel.paint(img.getGraphics());
-        try {
-            ImageIO.write(img, "jpg", new File("C:\\사진"));
-            System.out.println("panel saved as image");
 
-        } catch (Exception e) {
-            System.out.println("panel not saved" + e.getMessage());
-        }
-    }*/
 }

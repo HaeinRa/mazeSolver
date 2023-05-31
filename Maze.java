@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.io.PrintWriter;
+
 public class Maze {
     public Cell[][] cells;
     private int width;
@@ -128,5 +131,31 @@ public class Maze {
         }
     }
 
+
+    public void printMazeToFile(String filename) {
+        try (PrintWriter out = new PrintWriter(filename)) {
+            for (Cell[] row : cells) {
+                for (Cell cell : row) {
+                    // Cell 상태에 따라 숫자를 할당
+                    if (cell.isWall()) {
+                        out.print("1 ");
+                    } else if (cell.isBroken()) {
+                        out.print("4 ");
+                    } else if (cell.isBest()) {
+                        out.print("3 ");
+                    } else if (cell.isVisited()) {
+                        out.print("2 ");
+                    } else {
+                        out.print("0 ");
+                    }
+                }
+                out.println();
+            }
+            System.out.println(filename + "저장 완료");
+        } catch (IOException e) {
+            System.out.println("텍스트 파일 저장 중 오류 발생: " + filename);
+            e.printStackTrace();
+        }
+    }
 
 }

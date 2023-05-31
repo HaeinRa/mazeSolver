@@ -104,7 +104,7 @@ public class LinkedStack<T> {
             this.size -= 1;
             return n.data;
         } else { // 비어있을 때 pop 시도
-            System.out.println("Empty Stack: Can't do pop function");
+            //System.out.println("Empty Stack: Can't do pop function");
             return null;
         }
     }
@@ -113,7 +113,7 @@ public class LinkedStack<T> {
     T peek() {
         if (!this.isEmpty()) return this.top.data;
         else {
-            System.out.println("Empty Stack: Can't do peek function");
+            //System.out.println("Empty Stack: Can't do peek function");
             return null;
         }
     }

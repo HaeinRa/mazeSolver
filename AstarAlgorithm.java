@@ -68,7 +68,7 @@ public class AstarAlgorithm {
           int x = current[0] + i;
           int y = current[1] + j;
 
-          if (x < 0 || x >= maze.getHeight() || y < 0 || y >= maze.getWidth() || maze.getCell(x, y).getState() == Cell.State.WALL || closed_set[x][y]) {
+          if (x < 0 || x >= maze.getHeight() || y < 0 || y >= maze.getWidth() || maze.getCell(x, y).getState() == Cell.State.WALL || closed_set[x][y] || maze.getCell(x, y).getState() == Cell.State.UNKNOWN) {
             continue;
           }
 
