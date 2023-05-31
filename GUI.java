@@ -20,8 +20,8 @@ public class GUI extends JPanel {
         int width = maze.getWidth() * cellSize;
         int height = maze.getHeight() * cellSize;
 
-        System.out.println(width);
-        System.out.println(height);
+        //System.out.println(width);
+        //System.out.println(height);
 
         JFrame contentFrame = new JFrame("Maze");
         contentFrame.setSize(width + 220, height + 50);

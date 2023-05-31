@@ -32,7 +32,8 @@ public class CeremonyAlgorithm {
 
         // SetUp: 미로 txt 파일 읽기 (출구, 벽)
         // SetUp: 사용 가능한 미로로 변환 (Cell에 저장)
-        int mode = 0;
+        int mode1 = 0;
+        int mode2 = 0;
         int widthCount = 0;
         int heightCount = 0;
         int widthCount2 = 0;
@@ -44,10 +45,14 @@ public class CeremonyAlgorithm {
         try{
             System.out.print("로컬 미로파일 이름을 확장자까지 입력하세요: ");
             filename = userInput.next();
-            System.out.print("미로의 너비를 입력하세요: ");
-            mazeWidth = userInput.nextInt();
-            System.out.print("미로의 높이를 입력하세요: ");
-            mazeHeight = userInput.nextInt();
+            System.out.print("미로의 너비와 높이를 직접 입력하시겠습니까? (1. 예 / 2. 아니오) ");
+            mode1 = userInput.nextInt();
+            if(mode1==1){
+                System.out.print("미로의 너비를 입력하세요: ");
+                mazeWidth = userInput.nextInt();
+                System.out.print("미로의 높이를 입력하세요: ");
+                mazeHeight = userInput.nextInt();
+            }
         }
         catch(InputMismatchException e){
             System.out.println("정수를 입력하세요. 프로그램을 종료합니다.");
@@ -61,12 +66,26 @@ public class CeremonyAlgorithm {
 
         stack = new LinkedStack<Point>();
         buffer = new LinkedStack<Point>();
-        maze = new Maze(readMaze(filename, mazeWidth, mazeHeight)); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
-        mouseMap = new Maze(readMaze(filename, mazeWidth, mazeHeight)); // 쥐의 시야, maze에 영향을 받음
-        view =  new Maze(readMaze(filename, mazeWidth, mazeHeight)); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
-        scanMap =  new Maze(readMaze(filename, mazeWidth, mazeHeight)); // 스캔한 포인트 위치만 나타내는 맵
-        dfsMap =  new Maze(readMaze(filename, mazeWidth, mazeHeight)); // 스캔한 곳의 미로 정보를 나타내는 맵
-        mouse = new Mouse(new Point(0, 1), mouseMap.getHeight() * mouseMap.getWidth() * 2, mouseMap);
+        if(mode1==1){
+            maze = new Maze(readMaze(filename, mazeWidth, mazeHeight)); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
+            mouseMap = new Maze(readMaze(filename, mazeWidth, mazeHeight)); // 쥐의 시야, maze에 영향을 받음
+            view =  new Maze(readMaze(filename, mazeWidth, mazeHeight)); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
+            scanMap =  new Maze(readMaze(filename, mazeWidth, mazeHeight)); // 스캔한 포인트 위치만 나타내는 맵
+            dfsMap =  new Maze(readMaze(filename, mazeWidth, mazeHeight)); // 스캔한 곳의 미로 정보를 나타내는 맵
+        }else if(mode1==2){
+            maze = new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
+            mouseMap = new Maze(readMaze(filename)); // 쥐의 시야, maze에 영향을 받음
+            view =  new Maze(readMaze(filename)); // 처음 그대로의 원본 미로 + 쥐가 간 길만 표시 (visit)
+            scanMap =  new Maze(readMaze(filename)); // 스캔한 포인트 위치만 나타내는 맵
+            dfsMap =  new Maze(readMaze(filename)); // 스캔한 곳의 미로 정보를 나타내는 맵
+        }else{
+            System.out.println("1과 2중에 입력하셔야 합니다. 프로그램을 종료합니다.");
+            return;
+        }
+
+
+        int initialEnergy = mouseMap.getHeight() * mouseMap.getWidth() * 2;
+        mouse = new Mouse(new Point(0, 1), initialEnergy, mouseMap);
 
         System.out.println("=======================================");
         System.out.println("=             모드를 선택하세요            =");
@@ -78,7 +97,7 @@ public class CeremonyAlgorithm {
         System.out.println("=======================================");
         System.out.print("입력: ");
         try{
-            mode = userInput.nextInt();
+            mode2 = userInput.nextInt();
         }
         catch(InputMismatchException e){
             System.out.println("정수를 입력하세요. 프로그램을 종료합니다.");
@@ -92,7 +111,7 @@ public class CeremonyAlgorithm {
 
 
 
-        switch (mode){
+        switch (mode2){
             case 1:
                 gui = new GUI(view, mouse, scanMap);
                 bufferTime = 20;
@@ -162,14 +181,13 @@ public class CeremonyAlgorithm {
         }
 
 
-        // Todo: 스캔모드0 완전제공
 
         // 스캔 모드
         // SetUp: GUI 띄우기 (미로, 쥐)
         gui.repaint();
         TimeUnit.SECONDS.sleep(3);
 
-        System.out.println("point001: setup done");
+        //System.out.println("point001: setup done");
 
 
 
@@ -180,34 +198,35 @@ public class CeremonyAlgorithm {
         boolean isInitBranch = false;
 
         // Run 단계 시작 (반복시켜야함)
-        System.out.println("point002: Run state start");
+        //System.out.println("point002: Run state start");
+        System.out.println("프로세싱을 시작합니다");
 
         // 현재 쥐의 상태를 확인 (체력과 마나)
         // 체력이 남아 있다면
         while (true) {
-            System.out.println("point003: Enter while loop");
+//            System.out.println("point003: Enter while loop");
             gui.repaint();
             TimeUnit.MILLISECONDS.sleep(setTime);
-            System.out.println("point003-1: gui repaint");
+//            System.out.println("point003-1: gui repaint");
 
             branchCounter = 0; // 분기점 카운터 초기화
-            System.out.println("stack: " + stack);
-            System.out.println("mouse: " + mouse.getLocation());
+            //System.out.println("stack: " + stack);
+            //System.out.println("mouse: " + mouse.getLocation());
 
 
             // 현재 시야 업데이트
             isFindExit = mouse.map.update(mouse.getLocation(), 3, maze, isFindExit);
             gui.repaint();
             TimeUnit.MILLISECONDS.sleep(setTime);
-            System.out.println("point007: Update sight");
+//            System.out.println("point007: Update sight");
 
             // 현재 위치를 확인한다.
             Point now = mouse.getLocation();
 
             // 현재 위치가 출구라면 Exit
             if (mouse.map.getCell(now.x, now.y).isExit()) {
-                System.out.println("point008: Exit state, Done");
-                System.out.println("Exit");
+                //System.out.println("point008: Exit state, Done");
+                System.out.println("Success: 탈출 완료");
                 AstarAlgorithm astarAlgorithm = new AstarAlgorithm(maze, 0, 1, maze.getEndPoint().x, maze.getEndPoint().y);
                 int[][] bestPath = astarAlgorithm.run();
                 // 출구 도착 후 최적 경로(최단 경로) 표시
@@ -218,25 +237,17 @@ public class CeremonyAlgorithm {
                         TimeUnit.MILLISECONDS.sleep(1);
                     }
                 }
-                System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                gui.saveAsImage("viewResult.png", view);
-                System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                gui.saveAsImage("mazeResult.png", maze);
-                System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                gui.saveAsImage("scanResult.png", scanMap);
-                System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                gui.saveAsImage("mouseMap.png", mouseMap);
-                System.out.println("프로그램 종료");
+                outputResult();
                 return;
             }
 
             if (mouse.getEnergy() > 0) {
-                System.out.println("point004: Energy condition");
+                //System.out.println("point004: Energy condition");
 
                 if (mouse.getMana() >= 3 && scanMode == 0) {
-                    System.out.println("point005: scanMode 0");
+                    //System.out.println("point005: scanMode 0");
                     // map 업데이트
-                    System.out.println("point005-1: scanning.. 5x5");
+                    //System.out.println("point005-1: scanning.. 5x5");
                     if (maze.getHeight() - 5 * mouse.getScanCount() > -3) { // 높이 변화, x고정
                         scanPoint = new Point(maze.getHeight() - 5 * mouse.getScanCount() - 3, maze.getWidth() - 3);
                         if (scanPoint.x < 0) {
@@ -266,19 +277,19 @@ public class CeremonyAlgorithm {
                     if (scanPoint != null) {
                         isFindExit = mouse.map.update(scanPoint, 5, maze, scanMap, isFindExit);
                         mouse.scan();
-                        System.out.println("scanPoint: " + scanPoint);
-                        System.out.println("scanCount: " + mouse.getScanCount());
+                        //System.out.println("scanPoint: " + scanPoint);
+                        //System.out.println("scanCount: " + mouse.getScanCount());
                         scanList.add(scanPoint);
-                        System.out.println("point005-2: add Point to scanList");
-                        System.out.println(mouse.getScanCount() + ", " + scanList.size());
+                        //System.out.println("point005-2: add Point to scanList");
+                        //System.out.println(mouse.getScanCount() + ", " + scanList.size());
                     }
 
                 } else if (mouse.getMana() >= 3 && scanMode == 1) { // 출구 찾은 후
-                    System.out.println("point006: scanMode 1");
+//                    System.out.println("point006: scanMode 1");
                     scanDistanceQueue.clear();
 
                     // map 업데이트
-                    System.out.println("point005-1: scanning.. 5x5");
+//                    System.out.println("point005-1: scanning.. 5x5");
                     isFindExit = mouse.map.update(scanPoint, 5, maze, isFindExit);
 
                     // ra 업데이트 : 방 조명이 켜짐
@@ -292,7 +303,7 @@ public class CeremonyAlgorithm {
                     // 출구를 입구로 가정하고 DFS 실행,
                     candidateScan = scanDFSAlgorithm(maze.getEndPoint());
                     if (candidateScan.isEmpty()) {
-                        System.out.println("point005-3: 후보군 존재하지 않음");
+//                        System.out.println("point005-3: 후보군 존재하지 않음");
                         scanPoint = scanWithoutDFSAlgoritm();
                     } else {
                         // 뚫린 면의 중점 검사하기 : 후보 중점이 available 한가? 위의 방법에서 remove할 때 인덱스 오류 발생할 수도 있을 것 같아 뒤에서부터 앞으로 순회하여 삭제
@@ -326,7 +337,7 @@ public class CeremonyAlgorithm {
 
 
                         if (scanDistanceQueue == null) {
-                            System.out.println("null");
+                            //System.out.println("null");
                         }
                         // scanList 리스트에 있는 모든 포인트 객체를 distanceQueue에 추가
                         for (int i = 0; i < candidateScan.size(); i++) {
@@ -338,7 +349,7 @@ public class CeremonyAlgorithm {
                             scanPoint = scanDistanceQueue.poll();
                             scanList.add(scanPoint);
                         }
-                        System.out.println(scanDistanceQueue.peek() == null);
+                        //System.out.println(scanDistanceQueue.peek() == null);
                     }
 
 
@@ -348,14 +359,14 @@ public class CeremonyAlgorithm {
                     dfsMap.update(scanPoint, 5, maze, scanMap, isFindExit);
                     mouse.scan();
                     scanList.add(scanPoint);
-                    System.out.println("scanPoint: " + scanPoint);
-                    System.out.println("scanCount: " + mouse.getScanCount());
+                    //System.out.println("scanPoint: " + scanPoint);
+                    //System.out.println("scanCount: " + mouse.getScanCount());
                 }
 
 
                 // else
                 if (!isFindExit) { // 출구를 모르고 있다면
-                    System.out.println("point009: no Exit info");
+//                    System.out.println("point009: no Exit info");
 
                     // 갈 곳이 있나 체크
                     if (isValidPos(now.add(-1, 0))) {
@@ -374,28 +385,20 @@ public class CeremonyAlgorithm {
                         stack.push(now.add(1, 0));
                         branchCounter++;
                     }
-                    System.out.println("point010: isValidPos Done ");
-                    System.out.println("test3: " + stack);
+//                    System.out.println("point010: isValidPos Done ");
+                    //System.out.println("test3: " + stack);
 
                     if (stack.isEmpty()) { // 스택이 완전히 비어있음(더 이상 갈 수 있는 곳이 없음)
-                        System.out.println("point011: Stack is totally empty, Done");
-                        System.out.println("Fail");
-                        System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                        gui.saveAsImage("viewResult.png", view);
-                        System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                        gui.saveAsImage("mazeResult.png", maze);
-                        System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                        gui.saveAsImage("scanResult.png", scanMap);
-                        System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                        gui.saveAsImage("mouseMap.png", mouseMap);
-                        System.out.println("프로그램 종료");
+//                        System.out.println("point011: Stack is totally empty, Done");
+                        System.out.println("Fail: 더 이상 갈 수 있는 곳이 없");
+                        outputResult();
 
                         return;
                     } else { // 스택이 비어있지 않음(갈 수 있는 곳이 있음)
-                        System.out.println("point012: Stack is not empty");
+//                        System.out.println("point012: Stack is not empty");
 
                         if (branchCounter >= 2) { // 분기점이라면
-                            System.out.println("point013: Branch Set");
+//                            System.out.println("point013: Branch Set");
                             if (!isInitBranch) { // 출구부터 최조 분기점 이전의 경로를 추천하지 않는다.
                                 while (!buffer.isEmpty()) {
                                     Point tmp = buffer.pop();
@@ -411,31 +414,24 @@ public class CeremonyAlgorithm {
 
                         }
                         if (branchCounter == 0) { // 현재는 갈 수 있는 곳이 없어서 이전 분기로 돌아가야한다면
-                            System.out.println("point014: Can not go for now, Back to branch, Start buffer pop");
+//                            System.out.println("point014: Can not go for now, Back to branch, Start buffer pop");
                             maze.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
                             while (true) {
-                                System.out.println("point015: do Buffer pop");
+//                                System.out.println("point015: do Buffer pop");
                                 Point back = buffer.pop(); // 돌아갈 좌표를 뽑는다
-                                System.out.println("buffer: " + buffer);
+                                //System.out.println("buffer: " + buffer);
                                 if (back == null && stack.isEmpty()) {
-                                    System.out.println("point015-1: buffer empty, stack empty, Fail, Done");
-                                    System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                                    gui.saveAsImage("viewResult.png", view);
-                                    System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                                    gui.saveAsImage("scanResult.png", scanMap);
-                                    System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                                    gui.saveAsImage("mazeResult.png", maze);
-                                    System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                                    gui.saveAsImage("mouseMap.png", mouseMap);
-                                    System.out.println("프로그램 종료");
+//                                    System.out.println("point015-1: buffer empty, stack empty, Fail, Done");
+                                    System.out.println("Fail: 더 이상 갈 수 있는 곳이 없");
+                                    outputResult();
                                     return;
                                 }
                                 if (back.x == -1 && back.y == -1) { // 분기점의 끝이라면
-                                    System.out.println("point016: Branch arrived");
+//                                    System.out.println("point016: Branch arrived");
                                     stack.pop(); // 분기점 중복 제거?
                                     break;
                                 } else {
-                                    System.out.println("point017: Mouse moving");
+//                                    System.out.println("point017: Mouse moving");
                                     mouse.move();
                                     mouse.changeLocation(back);
                                     gui.repaint();
@@ -445,10 +441,10 @@ public class CeremonyAlgorithm {
                                 isFindExit = mouse.map.update(mouse.getLocation(), 3, maze, isFindExit);
                             }
                         } else { // 현재 갈 수 있는 곳이 있다면
-                            System.out.println("point018: Can go for now, Keep going");
+//                            System.out.println("point018: Can go for now, Keep going");
                             while (true) {
                                 now = stack.pop(); // 현재 위치를 결정
-                                System.out.println("test2: " + now + stack.peek() + mouse.getLocation());
+                                //System.out.println("test2: " + now + stack.peek() + mouse.getLocation());
                                 if (stack.peek() == null)
                                     break;
                                 if (!now.equals(stack.peek()))
@@ -467,21 +463,21 @@ public class CeremonyAlgorithm {
 
 
                 } else { // 출구를 알고 있다면
-                    System.out.println("point019: Exit already found");
-                    System.out.println(maze.getEndPoint());
+//                    System.out.println("point019: Exit already found");
+                    //System.out.println(maze.getEndPoint());
                     isFindExit = mouse.map.update(mouse.getLocation(), 3, maze, isFindExit);
                     // 경로검사, a* 알고리즘을 통해 쥐가 알고있는 맵에서 출구까지 가는 길이 있는지 확인
                     // 벽을 뚫고 A* 썼을 때, 가능한 경로가 있는가?
                     int[][] path = isPathWithWallBreak();
                     if (path != null) {
-                        System.out.println("경로가 존재합니다. 출구로 이동합니다");
-                        System.out.println("출구 위치 : " + maze.getEndPoint().x + ", " + maze.getEndPoint().y);
-                        System.out.println("경로의 마지막 위치 : " + path[path.length - 1][0] + ", " + path[path.length - 1][1]);
+                        //System.out.println("경로가 존재합니다. 출구로 이동합니다");
+                        //System.out.println("출구 위치 : " + maze.getEndPoint().x + ", " + maze.getEndPoint().y);
+                        //System.out.println("경로의 마지막 위치 : " + path[path.length - 1][0] + ", " + path[path.length - 1][1]);
                         for (int i = 0; i < path.length; i++) {
                             // 출구까지 곧바로 이동
                             mouse.move();
                             now = new Point(path[i][0], path[i][1]);
-                            System.out.println("최단경로: " + now);
+                            //System.out.println("최단경로: " + now);
                             mouse.changeLocation(now);
                             mouseMap.getCell(now).setState(Cell.State.VISIT);
                             maze.getCell(now).setState(Cell.State.VISIT);
@@ -494,7 +490,7 @@ public class CeremonyAlgorithm {
 
                     // 버퍼랑 리스트 다 비우기
                     if (scanMode != 1) {
-                        System.out.println("point029: clear stack and buffer");
+//                        System.out.println("point029: clear stack and buffer");
                         stack.clear();
                         buffer.clear();
                         mouse.map.resetVisitedInfo();
@@ -508,38 +504,38 @@ public class CeremonyAlgorithm {
                     TimeUnit.MILLISECONDS.sleep(setTime);
 
                     scanMode = 1; // 스캔모드를 바꾼다
-                    System.out.println("point020: change scanMode to 1");
+//                    System.out.println("point020: change scanMode to 1");
 
                     List<Point> points = new ArrayList<>();
                     // 네 가지 방향의 좌표
 
-                    System.out.println("point030: check distance from exit");
+//                    System.out.println("point030: check distance from exit");
                     // 리스트로 거리 먼저 계산하기
                     if (isValidPosByWeight(now.add(-1, 0))) { // 상
                         Point up = new Point(now.x - 1, now.y);
                         points.add(up);
-                        System.out.println("up : " + up);
+                        //System.out.println("up : " + up);
                         if (!maze.getCell(up).isBranch())
                             branchCounter++;
                     }
                     if (isValidPosByWeight(now.add(0, -1))) { // 좌
                         Point left = new Point(now.x, now.y - 1);
                         points.add(left);
-                        System.out.println("left : " + left);
+                        //System.out.println("left : " + left);
                         if (!maze.getCell(left).isBranch())
                             branchCounter++;
                     }
                     if (isValidPosByWeight(now.add(0, 1))) { // 우
                         Point right = new Point(now.x, now.y + 1);
                         points.add(right);
-                        System.out.println("right : " + right);
+                        //System.out.println("right : " + right);
                         if (!maze.getCell(right).isBranch())
                             branchCounter++;
                     }
                     if (isValidPosByWeight(now.add(1, 0))) { // 하
                         Point down = new Point(now.x + 1, now.y);
                         points.add(down);
-                        System.out.println("down : " + down);
+                        //System.out.println("down : " + down);
                         if (!maze.getCell(down).isBranch())
                             branchCounter++;
                     }
@@ -550,7 +546,7 @@ public class CeremonyAlgorithm {
                     PriorityQueue<Point> distanceQueue = new PriorityQueue<>(Comparator.comparingDouble(p -> -calculateDistance(p))); // 거리가 멀수록 우선순위 높음 -> 다시 스택에 넣을 거라서 그럼
 
                     if (distanceQueue.isEmpty()) {
-                        System.out.println("null");
+                        //System.out.println("null");
                     }
                     // point 리스트에 있는 모든 포인트 객체를 distanceQueue에 추가
                     distanceQueue.addAll(points);
@@ -561,26 +557,18 @@ public class CeremonyAlgorithm {
                         stack.push(point);
                     }
 
-                    System.out.println(stack);
+                    //System.out.println(stack);
                     if (stack.isEmpty()) { // 스택이 완전히 비어있음(더 이상 갈 수 있는 곳이 없음)
-                        System.out.println("point031: Stack is totally empty, Done");
-                        System.out.println("Fail");
-                        System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                        gui.saveAsImage("viewResult.png", view);
-                        System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                        gui.saveAsImage("scanResult.png", scanMap);
-                        System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                        gui.saveAsImage("mazeResult.png", maze);
-                        System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                        gui.saveAsImage("mouseMap.png", mouseMap);
-                        System.out.println("프로그램 종료");
+//                        System.out.println("point031: Stack is totally empty, Done");
+                        System.out.println("Fail: 더 이상 갈 수 있는 곳이 없음");
+                        outputResult();
 
                         return;
                     } else { // 스택이 비어있지 않음(갈 수 있는 곳이 있음)
-                        System.out.println("point032: Stack is not empty");
+//                        System.out.println("point032: Stack is not empty");
 
                         if (branchCounter >= 2) { // 분기점이라면
-                            System.out.println("point033: Branch Set");
+//                            System.out.println("point033: Branch Set");
 
                             buffer.push(new Point(-1, -1)); // 분기라는 것을 알린다
                             buffer.push(now);
@@ -589,34 +577,26 @@ public class CeremonyAlgorithm {
 
                         }
                         if (branchCounter == 0) { // 현재는 갈 수 있는 곳이 없어서 이전 분기로 돌아가야한다면
-                            System.out.println("point034: Can not go for now, Back to branch, Start buffer pop");
+//                            System.out.println("point034: Can not go for now, Back to branch, Start buffer pop");
                             //Point prev = new Point();
                             maze.getCell(mouse.getLocation()).setState(Cell.State.NotRecommended); // 현재 위치 추천하지 않음
                             while (true) {
-                                System.out.println("point035: do Buffer pop");
+//                                System.out.println("point035: do Buffer pop");
                                 Point back = buffer.pop(); // 돌아갈 좌표를 뽑는다
-                                System.out.println("buffer: " + buffer);
+                                //System.out.println("buffer: " + buffer);
                                 if (back == null && stack.isEmpty()) {
-                                    System.out.println("point015-1: buffer empty, stack empty, Fail, Done");
-                                    System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                                    gui.saveAsImage("viewResult.png", view);
-                                    System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                                    gui.saveAsImage("scanResult.png", scanMap);
-                                    System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                                    gui.saveAsImage("mazeResult.png", maze);
-                                    System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                                    gui.saveAsImage("mouseMap.png", mouseMap);
-                                    System.out.println("프로그램 종료");
-
+//                                    System.out.println("point015-1: buffer empty, stack empty, Fail, Done");
+                                    System.out.println("Fail: 더 이상 갈 수 있는 곳이 없음");
+                                    outputResult();
                                     return;
                                 }
                                 if (back.x == -1 && back.y == -1) { // 분기점의 끝이라면
-                                    System.out.println("point036: Branch arrived");
+//                                    System.out.println("point036: Branch arrived");
                                     stack.pop(); // 분기점 중복 제거?
                                     //buffer.push(prev);
                                     break;
                                 } else {
-                                    System.out.println("point037: Mouse moving");
+//                                    System.out.println("point037: Mouse moving");
                                     mouse.move();
                                     mouse.changeLocation(back);
                                     gui.repaint();
@@ -629,10 +609,10 @@ public class CeremonyAlgorithm {
 
                             }
                         } else { // 현재 갈 수 있는 곳이 있다면
-                            System.out.println("point038: Can go for now, Keep going");
+//                            System.out.println("point038: Can go for now, Keep going");
                             while (true) {
                                 now = stack.pop(); // 현재 위치를 결정
-                                System.out.println("test2: " + now + stack.peek() + mouse.getLocation());
+                                //System.out.println("test2: " + now + stack.peek() + mouse.getLocation());
                                 if (stack.peek() == null)
                                     break;
                                 if (!now.equals(stack.peek()))
@@ -653,17 +633,9 @@ public class CeremonyAlgorithm {
                 TimeUnit.MILLISECONDS.sleep(setTime);
 
             } else { // 체력이 남아있지 않다면
-                System.out.println("point99: No more energy, Done");
+//                System.out.println("point99: No more energy, Done");
                 System.out.println("Fail: 체력 없음");
-                System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                gui.saveAsImage("viewResult.png", view);
-                System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                gui.saveAsImage("mazeResult.png", maze);
-                System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                gui.saveAsImage("scanResult.png", scanMap);
-                System.out.println("이미지를 저장 중입니다. 프로그램을 절대 종료하지 마세요!!");
-                gui.saveAsImage("mouseMap.png", mouseMap);
-                System.out.println("프로그램 종료");
+                outputResult();
                 return;
             }
         }
@@ -769,8 +741,9 @@ public class CeremonyAlgorithm {
 
 
         if(minPath != null){
-            System.out.println("벽 부순 위치: " + wallBreakPoint);
+            //System.out.println("벽 부순 위치: " + wallBreakPoint);
             mouseMap.getCell(wallBreakPoint).setState(Cell.State.BROKEN);
+            view.getCell(wallBreakPoint).setState(Cell.State.BROKEN);
             maze.getCell(wallBreakPoint).setState(Cell.State.BROKEN);
             isWallBreaker = true;
             return minPath;
@@ -791,7 +764,7 @@ public class CeremonyAlgorithm {
         try {
             scanner = new Scanner(file);
         } catch (FileNotFoundException e) {
-            System.out.println("File not found: " + filename);
+            System.out.println("파일을 여는 도중 오류 발생_1: " + filename);
             throw new RuntimeException(e);
         }
 
@@ -817,14 +790,17 @@ public class CeremonyAlgorithm {
                         maze[i][j] = cell;
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("Invalid number format at row " + i + ", col " + j + ": " + line[j]);
+                    System.out.println("파일을 여는 도중 오류 발생_2 " + i + ", col " + j + ": " + line[j]);
                     throw new RuntimeException(e);
                 }
             }
         }
 
         if (scanner.hasNextLine()) {
-            System.out.println("Warning: File has more rows than expected.");
+            System.out.println("====================WARNING====================");
+            System.out.println("파일이 입력되었지만, 입력하신 너비와 높이랑 맞지 않는 것을 감지했습니다. 결과가 이상하면 다시 실행하세요");
+            System.out.println("==========================G====================");
+
         }
         maze[0][1] = 0;
 
@@ -910,7 +886,7 @@ public class CeremonyAlgorithm {
         scanStack.push(exit); // 시작 지점 지정
 
         while (!scanStack.isEmpty()) {
-            System.out.println("스캔 가중치 스택: " + scanStack);
+            //System.out.println("스캔 가중치 스택: " + scanStack);
             // 뽑을 때 현재 위치가 5*5에 걸쳐 있으면
             Point now = scanStack.pop();
 
@@ -943,7 +919,7 @@ public class CeremonyAlgorithm {
                     candidateScanPoint.add(up.add(0, 5));
                 }
             }
-            System.out.println(now);
+           // System.out.println(now);
             dfsMap.getCell(now).setState(Cell.State.VISIT);
             gui.repaint();
             TimeUnit.MILLISECONDS.sleep(scanDFStime);
@@ -1036,6 +1012,53 @@ public class CeremonyAlgorithm {
         return closestPoint;
     }
 
+    public static void clearScreen() {
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                Runtime.getRuntime().exec("clear");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void outputResult(){
+        clearScreen();
+        System.out.println("=================== 결과 ===================");
+        System.out.println("= 초기 체력: "+mouseMap.getWidth()*mouseMap.getHeight()*2);
+        System.out.println("= 사용한 체력: "+(mouseMap.getWidth()*mouseMap.getHeight()*2 - mouse.getEnergy()));
+        System.out.println("= 남은 체력: "+mouse.getEnergy());
+
+        System.out.println();
+
+        System.out.println("= 결과를 텍스트 파일로 저장하고 있습니다...");
+        view.printMazeToFile("6filepathOutput.txt");
+        System.out.println("= 완료: '6filepathOutput.txt' 파일 저장");
+        System.out.println();
+
+        System.out.println("= 미로의 시각화 이미지를 생성하고 있습니다...");
+        System.out.println("***** Warning이 떠도 잠시 기다려주세요 *****");
+
+        gui.saveAsImage("6viewResult.png", view);
+        System.out.println("= 완료: '6viewResult.png' 이미지 저장");
+
+        gui.saveAsImage("6mazeResult.png", maze);
+        System.out.println("= 완료: '6mazeResult.png' 이미지 저장");
+
+        gui.saveAsImage("6scanResult.png", scanMap);
+        System.out.println("= 완료: '6scanResult.png' 이미지 저장");
+
+        gui.saveAsImage("6mouseMap.png", mouseMap);
+        System.out.println("= 완료: '6mouseMap.png' 이미지 저장");
+        System.out.println();
+
+        System.out.println("= 모든 프로세스가 완료되었습니다. 프로그램을 종료합니다.");
+        System.out.println("===========================================");
+
+
+    }
 
     public static boolean getBreakCount() {
         return isWallBreaker;
