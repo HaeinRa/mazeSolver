@@ -391,6 +391,10 @@ public class CeremonyAlgorithm {
                 } else { // 출구를 알고 있다면
                     System.out.println("point019: Exit already found");
                     System.out.println(maze.getEndPoint());
+                    if(!isCanEscape()) {
+                        System.out.println("탈출 실패");
+                        return;
+                    }
 
                     // 경로검사, a* 알고리즘을 통해 쥐가 알고있는 맵에서 출구까지 가는 길이 있는지 확인
                     // 벽을 뚫고 A* 썼을 때, 가능한 경로가 있는가?
@@ -888,6 +892,35 @@ public class CeremonyAlgorithm {
 
     public static boolean getBreakCount() {
         return isWallBreaker;
+    }
+
+    public static boolean isCanEscape() {
+        Point endPoint = maze.getEndPoint();
+        boolean wall = false;
+
+        // 출구를 기준으로 상하좌우 두칸, 대각선이 벽이면 탈출 불가(무조건 탈출 불가)
+        for (int i = -2; i <= 2; i++) {
+            for (int j = -2; j <= 2; j++) {
+                if (Math.abs(i) <= 1 && Math.abs(j) <= 1 && (i != 0 || j != 0)) { // 상하좌우 두 칸인 경우
+                    int x = endPoint.x + i;
+                    int y = endPoint.y + j;
+                    if (x < 0 || x > maze.getHeight() - 1 || y < 0 || y > maze.getWidth() - 1) continue;
+                    if (maze.getCell(x, y).getState() != Cell.State.WALL) wall = false;
+                }
+            }
+        }
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (i != 0 || j != 0) { // 기준 정점은 제외
+                    int x = endPoint.x + i;
+                    int y = endPoint.y + j;
+                    if (x < 0 || x > maze.getHeight() - 1 || y <0 || y> maze.getWidth()-1) continue;
+                    if (maze.getCell(x,y).getState() != Cell.State.WALL) wall =true;
+                }
+            }
+        }
+
+        return wall;
     }
 }
 
