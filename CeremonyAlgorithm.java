@@ -1,3 +1,5 @@
+import jdk.nashorn.internal.codegen.MapCreator;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -277,9 +279,11 @@ public class CeremonyAlgorithm {
                     if (scanPoint != null) {
                         isFindExit = mouse.map.update(scanPoint, 5, maze, scanMap, isFindExit);
                         mouse.scan();
-                        //System.out.println("scanPoint: " + scanPoint);
-                        //System.out.println("scanCount: " + mouse.getScanCount());
+                        gui.repaint();
+                        TimeUnit.MILLISECONDS.sleep(setTime);
                         scanList.add(scanPoint);
+
+
                         //System.out.println("point005-2: add Point to scanList");
                         //System.out.println(mouse.getScanCount() + ", " + scanList.size());
                     }
@@ -300,7 +304,8 @@ public class CeremonyAlgorithm {
                     if(!canEscapeFromMaze(dfsMap, maze.getEndPoint())){
                         gui.repaint();
                         TimeUnit.MILLISECONDS.sleep(setTime);
-                        System.out.println("Fail: 탈출할 수 없는 미로");
+                        System.out.println("Fail: 탈출할 수 없는 미로2");
+                        outputResult();
                         return;
                     }
 
@@ -364,10 +369,22 @@ public class CeremonyAlgorithm {
                     // 스캔 리스트에 추가
                     // mouse 정보 갱신
                     dfsMap.update(scanPoint, 5, maze, scanMap, isFindExit);
+                    mouseMap.update(scanPoint, 5, maze, scanMap, isFindExit);
+
                     mouse.scan();
                     scanList.add(scanPoint);
-                    //System.out.println("scanPoint: " + scanPoint);
-                    //System.out.println("scanCount: " + mouse.getScanCount());
+                    gui.repaint();
+                    TimeUnit.MILLISECONDS.sleep(setTime);
+
+                    if(!canEscapeFromMaze(dfsMap, maze.getEndPoint())){
+                        gui.repaint();
+                        TimeUnit.MILLISECONDS.sleep(setTime);
+                        System.out.println("Fail: 탈출할 수 없는 미로3");
+                        outputResult();
+                        return;
+                    }
+                    // System.out.println("scanPoint: " + scanPoint);
+                    // System.out.println("scanCount: " + mouse.getScanCount());
                 }
 
 
@@ -397,7 +414,7 @@ public class CeremonyAlgorithm {
 
                     if (stack.isEmpty()) { // 스택이 완전히 비어있음(더 이상 갈 수 있는 곳이 없음)
 //                        System.out.println("point011: Stack is totally empty, Done");
-                        System.out.println("Fail: 더 이상 갈 수 있는 곳이 없");
+                        System.out.println("Fail: 더 이상 갈 수 있는 곳이 없습니다.");
                         outputResult();
 
                         return;
@@ -472,6 +489,7 @@ public class CeremonyAlgorithm {
                 } else { // 출구를 알고 있다면
 //                    System.out.println("point019: Exit already found");
                     //System.out.println(maze.getEndPoint());
+
                     isFindExit = mouse.map.update(mouse.getLocation(), 3, maze, isFindExit);
                     // 경로검사, a* 알고리즘을 통해 쥐가 알고있는 맵에서 출구까지 가는 길이 있는지 확인
                     // 벽을 뚫고 A* 썼을 때, 가능한 경로가 있는가?
@@ -504,11 +522,19 @@ public class CeremonyAlgorithm {
                         maze.resetVisitedInfo();
                         for (int i = 0; i < scanList.size(); i++) {
                             Point tmp = scanList.get(i);
-                            dfsMap.update(tmp, 5, maze, isFindExit);
+                            dfsMap.update(tmp, 5, maze, scanMap, isFindExit);
                         }
                     }
                     gui.repaint();
-                    TimeUnit.MILLISECONDS.sleep(setTime);
+                    TimeUnit.MILLISECONDS.sleep(setTime+100);
+                    if(!canEscapeFromMaze(dfsMap, maze.getEndPoint())){
+                        gui.repaint();
+                        TimeUnit.MILLISECONDS.sleep(setTime);
+                        System.out.println("Fail: 탈출할 수 없는 미로1");
+                        outputResult();
+                        return;
+                    }
+
 
                     scanMode = 1; // 스캔모드를 바꾼다
 //                    System.out.println("point020: change scanMode to 1");
@@ -518,28 +544,28 @@ public class CeremonyAlgorithm {
 
 //                    System.out.println("point030: check distance from exit");
                     // 리스트로 거리 먼저 계산하기
-                    if (isValidPosByWeight(now.add(-1, 0))) { // 상
+                    if (isValidPos(now.add(-1, 0))) { // 상
                         Point up = new Point(now.x - 1, now.y);
                         points.add(up);
                         //System.out.println("up : " + up);
                         if (!maze.getCell(up).isBranch())
                             branchCounter++;
                     }
-                    if (isValidPosByWeight(now.add(0, -1))) { // 좌
+                    if (isValidPos(now.add(0, -1))) { // 좌
                         Point left = new Point(now.x, now.y - 1);
                         points.add(left);
                         //System.out.println("left : " + left);
                         if (!maze.getCell(left).isBranch())
                             branchCounter++;
                     }
-                    if (isValidPosByWeight(now.add(0, 1))) { // 우
+                    if (isValidPos(now.add(0, 1))) { // 우
                         Point right = new Point(now.x, now.y + 1);
                         points.add(right);
                         //System.out.println("right : " + right);
                         if (!maze.getCell(right).isBranch())
                             branchCounter++;
                     }
-                    if (isValidPosByWeight(now.add(1, 0))) { // 하
+                    if (isValidPos(now.add(1, 0))) { // 하
                         Point down = new Point(now.x + 1, now.y);
                         points.add(down);
                         //System.out.println("down : " + down);
@@ -672,31 +698,6 @@ public class CeremonyAlgorithm {
     }
 
     static boolean isValidPos(Point p) {
-
-        if (p.x < 0 || p.y < 0 || p.x >= maze.getHeight() || p.y >= maze.getWidth())
-            return false;
-        else
-            return mouse.map.getCell(p.x, p.y).isAvailable() && !mouse.map.getCell(p.x, p.y).isVisited();
-        // 이미 지나간 자리도 추가 해야하나?
-    }
-
-    static boolean isPointOverlap(Point mouse, List<Point> scanList) {
-        for (Point scanCenter : scanList) {
-            for (int i = -2; i <= 2; i++) {
-                for (int j = -2; j <= 2; j++) {
-                    Point currentScanPoint = new Point(scanCenter.x + i, scanCenter.y + j);
-                    // 현재 스캔 중인 포인트가 쥐의 시야 범위 내에 있는지 확인
-                    if (Math.abs(currentScanPoint.x - mouse.x) <= 1 && Math.abs(currentScanPoint.y - mouse.y) <= 1) {
-                        return true;  // 겹치는 부분 발견
-                    }
-                }
-            }
-        }
-        return false;  // 겹치는 부분이 없음
-    }
-
-    // TODO: 이거 이제 isValidPos랑 같아졌는데 쓸모 있는지?
-    static boolean isValidPosByWeight(Point p) {
 
         if (p.x < 0 || p.y < 0 || p.x >= maze.getHeight() || p.y >= maze.getWidth())
             return false;
@@ -926,7 +927,7 @@ public class CeremonyAlgorithm {
                     candidateScanPoint.add(up.add(0, 5));
                 }
             }
-           // System.out.println(now);
+            // System.out.println(now);
             dfsMap.getCell(now).setState(Cell.State.VISIT);
             gui.repaint();
             TimeUnit.MILLISECONDS.sleep(scanDFStime);
@@ -1052,6 +1053,8 @@ public class CeremonyAlgorithm {
         gui.saveAsImage("6mazeResult.png", maze);
         gui.saveAsImage("6scanResult.png", scanMap);
         gui.saveAsImage("6mouseMap.png", mouseMap);
+        gui.saveAsImage("6dfsMap.png", dfsMap);
+
         System.out.println();
 
         System.out.println("= 모든 프로세스가 완료되었습니다. 프로그램을 종료합니다.");
@@ -1062,60 +1065,83 @@ public class CeremonyAlgorithm {
 
     // 방향을 정의합니다. (상, 하, 좌, 우)
 
+    public static boolean canEscapeFromMaze(Maze dfsMap, Point exit) throws InterruptedException {
+        LinkedStack<Point> scanStack = new LinkedStack<>();
 
-    public static boolean canEscapeFromMaze(Maze dfsMap, Point exit) {
-        // 방문 여부를 저장할 배열을 선언합니다.
-        boolean[][] visited = new boolean[dfsMap.getHeight()][dfsMap.getWidth()];
-        return dfs(dfsMap, visited, exit.x, exit.y, true);
-    }
+        Cell prevCell;
 
-    public static boolean dfs(Maze dfsMap, boolean[][] visited, int x, int y, boolean canBreak) {
-        int[] dx = {-1, 1, 0, 0};
-        int[] dy = {0, 0, -1, 1};
-        // 현재 위치 방문.
-        visited[x][y] = true;
+        for (int i = 0; i < dfsMap.getHeight(); i++) {
+            for (int j = 0; j < dfsMap.getWidth(); j++) {
+                prevCell = dfsMap.getCell(new Point(i, j));
+                if (prevCell.isWall()) {
+                    prevCell.setState(Cell.State.AVAILABLE);
+                    scanStack.push(exit); // 시작 지점 지정
+                    while (!scanStack.isEmpty()) {
+                        Point now = scanStack.pop();
 
-        // 모든 방향 탐색
-        for (int i = 0; i < 4; i++) {
-            int nx = x + dx[i];
-            int ny = y + dy[i];
+                        // 위쪽 벽으로 막혀서 dfs 진행을 못하면 위쪽 5*5의 중심점을 candidateScanPoint에 추가
+                        if (!(now.x - 1 < 0 || now.y < 0 || now.x - 1 >= maze.getHeight() || now.y >= maze.getWidth())) {
+                            if (dfsMap.getCell(now.x - 1, now.y).getState() == Cell.State.NotRecommended) {
+                                // 벽을 원래 상태로 되돌림
+                                prevCell.setState(Cell.State.WALL);
+                                return true;
+                            }
+                        }
 
-            // 범위 검사
-            if (nx < 0 || ny < 0 || nx >= dfsMap.getHeight() || ny >= dfsMap.getWidth()) {
-                continue;
-            }
+                        // 아래쪽 벽으로 막혀서 dfs 진행 x
+                        if (!(now.x + 1 < 0 || now.y < 0 || now.x + 1 >= maze.getHeight() || now.y >= maze.getWidth())) {
+                            if (dfsMap.getCell(now.x + 1, now.y).getState() == Cell.State.NotRecommended) {
+                                // 벽을 원래 상태로 되돌림
+                                prevCell.setState(Cell.State.WALL);
+                                return true;
+                            }
+                        }
+                        // 왼쪽
+                        if (!(now.x < 0 || now.y - 1 < 0 || now.x >= maze.getHeight() || now.y - 1 >= maze.getWidth())) {
+                            if (dfsMap.getCell(now.x, now.y - 1).getState() == Cell.State.NotRecommended) {
+                                // 벽을 원래 상태로 되돌림
+                                prevCell.setState(Cell.State.WALL);
+                                return true;
+                            }
+                        }
+                        // 오른쪽
+                        if (!(now.x < 0 || now.y + 1 < 0 || now.x >= maze.getHeight() || now.y + 1 >= maze.getWidth())) {
+                            if (dfsMap.getCell(now.x, now.y + 1).getState() == Cell.State.NotRecommended) {
+                                // 벽을 원래 상태로 되돌림
+                                prevCell.setState(Cell.State.WALL);
+                                return true;
+                            }
+                        }
+                        dfsMap.getCell(now).setState(Cell.State.VISIT);
+                        gui.repaint();
+                        TimeUnit.MILLISECONDS.sleep(scanDFStime);
+                        //하
+                        if (isScanValidPos(now.x + 1, now.y)) {
+                            scanStack.push(new Point(now.x + 1, now.y));
+                        }
+                        //상
+                        if (isScanValidPos(now.x - 1, now.y)) {
+                            scanStack.push(new Point(now.x - 1, now.y));
+                        }
+                        //우
+                        if (isScanValidPos(now.x, now.y + 1)) {
+                            scanStack.push(new Point(now.x, now.y + 1));
+                        }
+                        //좌
+                        if (isScanValidPos(now.x, now.y - 1)) {
+                            scanStack.push(new Point(now.x, now.y - 1));
+                        }
+                    }
+                    dfsMap.resetVisitedInfo();
 
-            Cell nextCell = dfsMap.getCell(nx, ny);
-
-            // NotRecommended 상태의 셀을 만나면 true
-            if (nextCell.getState() == Cell.State.NotRecommended) {
-                return true;
-            }
-
-            // 이미 방문한 셀이거나 벽이면서 벽을 뚫을 수 없는 상태일 경우 건너뜀.
-            if (visited[nx][ny] || (nextCell.isWall() && !canBreak)) {
-                continue;
-            }
-
-            // 다음 셀이 벽인 경우 벽을 뚫을 수 있는지 검사하고 dfs를 재귀 호출
-            if (nextCell.isWall() && canBreak) {
-                if (dfs(dfsMap, visited, nx, ny, false)) {
-                    return true;
-                }
-            }
-            // 다음 셀이 이동 가능한 경우 dfs를 재귀 호출
-            else if (!nextCell.isWall()) {
-                if (dfs(dfsMap, visited, nx, ny, canBreak)) {
-                    return true;
+                    // 벽을 원래 상태로 되돌림
+                    prevCell.setState(Cell.State.WALL);
                 }
             }
         }
 
-        // 모든 방향에 대하여 탐색을 마친 후 탈출 불가능하다면 false를 반환
+
         return false;
     }
-
-
-
 }
 
