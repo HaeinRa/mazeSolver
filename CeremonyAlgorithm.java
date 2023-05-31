@@ -13,7 +13,7 @@ public class CeremonyAlgorithm {
     private static List<Double> compareList;
     private static Point scanPoint;
     private static Mouse mouse;
-    private static LinkedStack<Point> stack, buffer;
+    private static LinkedStack<Point> stack, buffer, lastbuffer;
     private static int scanMode;
     private static boolean isFindExit;
     private static boolean isWallBreaker;
@@ -64,10 +64,10 @@ public class CeremonyAlgorithm {
             return;
         }
 
-
-
         stack = new LinkedStack<Point>();
         buffer = new LinkedStack<Point>();
+        lastbuffer = new LinkedStack<Point>();
+
         if(mode1==1){
             maze = new Maze(readMaze(filename, mazeWidth, mazeHeight)); // 처음 그대로의 원본 미로 + 쥐로 인해 변경된 정보
             mouseMap = new Maze(readMaze(filename, mazeWidth, mazeHeight)); // 쥐의 시야, maze에 영향을 받음
@@ -414,13 +414,49 @@ public class CeremonyAlgorithm {
 
                     if (stack.isEmpty()) { // 스택이 완전히 비어있음(더 이상 갈 수 있는 곳이 없음)
 //                        System.out.println("point011: Stack is totally empty, Done");
-                        System.out.println("Fail: 더 이상 갈 수 있는 곳이 없습니다.");
-                        outputResult();
-
-                        return;
+                        if (isWallBreaker) {
+                            System.out.println("Fail: 더 이상 갈 수 있는 곳이 없음");
+                            outputResult();
+                            return;
+                        } else {
+                            System.out.println("else문으로 들어옴");
+                            // 스택이 비었지만 벽을 뚫을 수 있을 때
+                            // 현재 위치에서 왼쪽, 위쪽, 아래쪽, 오른쪽 순서로(dfs와 마찬가지로) 벽이면 뚫음
+                            if (mouseMap.getCell(mouse.getLocation().x, mouse.getLocation().y-1).getState() == Cell.State.WALL) {
+                                Point left = new Point(mouse.getLocation().x, mouse.getLocation().y-1);
+                                mouseMap.getCell(mouse.getLocation().x, mouse.getLocation().y-1).setState(Cell.State.AVAILABLE);
+                                stack.push(left);
+                                buffer.clear();
+                                mouseMap.update(left, 3, maze, isFindExit);
+                            } else if (mouseMap.getCell(mouse.getLocation().x-1, mouse.getLocation().y).getState() == Cell.State.WALL) {
+                                Point up = new Point(mouse.getLocation().x-1, mouse.getLocation().y);
+                                mouseMap.getCell(mouse.getLocation().x-1, mouse.getLocation().y).setState(Cell.State.AVAILABLE);
+                                stack.push(up);
+                                buffer.clear();
+                                mouseMap.update(up, 3, maze, isFindExit);
+                            } else if (mouseMap.getCell(mouse.getLocation().x+1, mouse.getLocation().y).getState() == Cell.State.WALL) {
+                                Point down = new Point(mouse.getLocation().x+1, mouse.getLocation().y);
+                                mouseMap.getCell(mouse.getLocation().x+1, mouse.getLocation().y).setState(Cell.State.AVAILABLE);
+                                stack.push(down);
+                                mouseMap.update(down, 3, maze, isFindExit);
+                                buffer.clear();
+                            } else {
+                                mouseMap.getCell(mouse.getLocation().x, mouse.getLocation().y+1).setState(Cell.State.AVAILABLE);
+                                Point right = new Point(mouse.getLocation().x, mouse.getLocation().y+1);
+                                stack.push(right);
+                                mouseMap.update(right, 3, maze, isFindExit);
+                                buffer.clear();
+                            }
+                            now = stack.pop();
+                            mouse.changeLocation(now);
+                            mouseMap.getCell(now).setState(Cell.State.BROKEN);
+                            mouseMap.getCell(now).setState(Cell.State.BROKEN);
+                            view.getCell(now).setState(Cell.State.BROKEN);
+                            maze.getCell(now).setState(Cell.State.BROKEN);
+                            isWallBreaker = true;
+                        }
                     } else { // 스택이 비어있지 않음(갈 수 있는 곳이 있음)
 //                        System.out.println("point012: Stack is not empty");
-
                         if (branchCounter >= 2) { // 분기점이라면
 //                            System.out.println("point013: Branch Set");
                             if (!isInitBranch) { // 출구부터 최조 분기점 이전의 경로를 추천하지 않는다.
@@ -449,6 +485,8 @@ public class CeremonyAlgorithm {
                                     System.out.println("Fail: 더 이상 갈 수 있는 곳이 없");
                                     outputResult();
                                     return;
+                                } else if (back == null && !stack.isEmpty()) {
+                                    break;
                                 }
                                 if (back.x == -1 && back.y == -1) { // 분기점의 끝이라면
 //                                    System.out.println("point016: Branch arrived");
@@ -491,9 +529,10 @@ public class CeremonyAlgorithm {
                     //System.out.println(maze.getEndPoint());
 
                     isFindExit = mouse.map.update(mouse.getLocation(), 3, maze, isFindExit);
+
                     // 경로검사, a* 알고리즘을 통해 쥐가 알고있는 맵에서 출구까지 가는 길이 있는지 확인
                     // 벽을 뚫고 A* 썼을 때, 가능한 경로가 있는가?
-                    int[][] path = isPathWithWallBreak();
+                    int[][] path = isPathWithWallBreak(mouseMap, mouse.getLocation().x, mouse.getLocation().y, mouseMap.getEndPoint().x, mouseMap.getEndPoint().y);
                     if (path != null) {
                         //System.out.println("경로가 존재합니다. 출구로 이동합니다");
                         //System.out.println("출구 위치 : " + maze.getEndPoint().x + ", " + maze.getEndPoint().y);
@@ -593,7 +632,32 @@ public class CeremonyAlgorithm {
                     //System.out.println(stack);
                     if (stack.isEmpty()) { // 스택이 완전히 비어있음(더 이상 갈 수 있는 곳이 없음)
 //                        System.out.println("point031: Stack is totally empty, Done");
-                        System.out.println("Fail: 더 이상 갈 수 있는 곳이 없음");
+                        if (isWallBreaker) {
+                            System.out.println("Fail: 더 이상 갈 수 있는 곳이 없음");
+                        } else {
+                            System.out.println("else문으로 들어옴");
+                            // 스택이 비었지만 벽을 뚫을 수 있을 때
+                            // 현재 위치에서 왼쪽, 위쪽, 아래쪽, 오른쪽 순서로(dfs와 마찬가지로) 벽이면 뚫음
+                            if (isValidPos(mouse.getLocation().x, mouse.getLocation().y-1)) {
+                                mouseMap.getCell(mouse.getLocation().x, mouse.getLocation().y-1).setState(Cell.State.AVAILABLE);
+                                stack.push(new Point(mouse.getLocation().x, mouse.getLocation().y-1));
+                                branchCounter++;
+                            } else if (isValidPos(mouse.getLocation().x-1, mouse.getLocation().y)) {
+                                mouseMap.getCell(mouse.getLocation().x-1, mouse.getLocation().y).setState(Cell.State.AVAILABLE);
+                                stack.push(new Point(mouse.getLocation().x-1, mouse.getLocation().y));
+                                branchCounter++;
+                            } else if (isValidPos(mouse.getLocation().x+1, mouse.getLocation().y)) {
+                                mouseMap.getCell(mouse.getLocation().x+1, mouse.getLocation().y).setState(Cell.State.AVAILABLE);
+                                stack.push(new Point(mouse.getLocation().x+1, mouse.getLocation().y));
+                                branchCounter++;
+                            } else {
+                                mouseMap.getCell(mouse.getLocation().x, mouse.getLocation().y-1).setState(Cell.State.AVAILABLE);
+                                stack.push(new Point(mouse.getLocation().x, mouse.getLocation().y-1));
+                                branchCounter++;
+                            }
+                            isWallBreaker = true;
+                            continue;
+                        }
                         outputResult();
 
                         return;
@@ -707,11 +771,11 @@ public class CeremonyAlgorithm {
     }
 
 
-    static int[][] isPathWithWallBreak() throws InterruptedException {
+    static int[][] isPathWithWallBreak(Maze map, int x, int y, int endX, int endY) throws InterruptedException {
         AstarAlgorithm Astar;
         Cell prevCell;
-        Astar = new AstarAlgorithm(mouseMap, mouse.getLocation().x, mouse.getLocation().y,
-                maze.getEndPoint().x, maze.getEndPoint().y);
+        Astar = new AstarAlgorithm(map, x, y,
+                endX, endY);
         int[][] path1 = Astar.run();
         int[][] path2;
         int[][] minPath = null;
@@ -745,8 +809,6 @@ public class CeremonyAlgorithm {
                 }
             }
         }
-
-
 
         if(minPath != null){
             //System.out.println("벽 부순 위치: " + wallBreakPoint);

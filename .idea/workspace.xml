@@ -4,14 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f8dce668-dfb5-47bd-bba6-3ec0536e990e" name="Changes" comment="최적 경로 출력">
+    <list default="true" id="f8dce668-dfb5-47bd-bba6-3ec0536e990e" name="Changes" comment="출구로 가는 길이 없을 때 탐색을 종료하는 기능 추가2">
+      <change afterPath="$PROJECT_DIR$/6filepathOutput.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/6mazeResult.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/6scanResult.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/6viewResult.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CeremonyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/CeremonyAlgorithm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Maze1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Maze1.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mazeResult.png" beforeDir="false" afterPath="$PROJECT_DIR$/mazeResult.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mouseMap.png" beforeDir="false" afterPath="$PROJECT_DIR$/mouseMap.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scanResult.png" beforeDir="false" afterPath="$PROJECT_DIR$/scanResult.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/viewResult.png" beforeDir="false" afterPath="$PROJECT_DIR$/viewResult.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,9 +44,10 @@
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;프로젝트&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.editor&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -187,7 +188,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685458720408</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="출구로 가는 길이 없을 때 탐색을 종료하는 기능 추가">
+      <created>1685504639915</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1685504639915</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -204,7 +212,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="feature3/feature1" />
+                        <option value="origin/feature5" />
                       </list>
                     </value>
                   </entry>
@@ -226,6 +234,19 @@
     <MESSAGE value="feat : scanCount가 불필요하게 증가하는 현상 수정" />
     <MESSAGE value="왼쪽 아래에서 위로 스캔할 때 스캔 범위가 잘리는 현상 수정" />
     <MESSAGE value="최적 경로 출력" />
-    <option name="LAST_COMMIT_MESSAGE" value="최적 경로 출력" />
+    <MESSAGE value="출구로 가는 길이 없을 때 탐색을 종료하는 기능 추가" />
+    <MESSAGE value="출구로 가는 길이 없을 때 탐색을 종료하는 기능 추가2" />
+    <option name="LAST_COMMIT_MESSAGE" value="출구로 가는 길이 없을 때 탐색을 종료하는 기능 추가2" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/CeremonyAlgorithm.java</url>
+          <line>416</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
